@@ -32,3 +32,7 @@ h1 em{background:linear-gradient(90deg,var(--accent),#fff,var(--accent));backgro
 
 /* 3.2 */
 .preset-grid{grid-template-columns:repeat(auto-fit,minmax(210px,1fr))}
+
+/* 3.4 — melhor adaptação para celular */
+@media(max-width:600px){.viewport{min-height:420px}#scene{min-height:300px}.view-actions{flex-wrap:wrap;justify-content:center}.view-actions button{min-height:36px}.preset-grid{grid-template-columns:1fr 1fr;gap:8px}.preset{padding:12px}.budget-row strong{font-size:24px}.topbar{letter-spacing:.4px}.summary-actions{justify-content:flex-start;gap:10px}.options{max-height:55vh}.option{min-height:62px}}
+@media(max-width:380px){.preset-grid{grid-template-columns:1fr}.viewport-top{font-size:9px}.top-right{gap:4px}}

@@ -71,3 +71,12 @@ export function autoBuild(B){
  const ram=C.ram.filter(r=>r.memory===x.board.memory&&r.price-x.ram.price<=left).sort((a,b)=>(Math.min(b.gb,32)*1000-b.price)-(Math.min(a.gb,32)*1000-a.price))[0]||x.ram;left-=ram.price-x.ram.price;
  const ssd=ssds.filter(o=>o.price-x.ssd.price<=left).sort((a,b)=>b.price-a.price)[0]||x.ssd;
  return [x.cas,x.board,x.cpu,ram,x.gpu,ssd,x.psu].map(o=>o.id)}
+
+/* 3.4 — refrigeração: preços demonstrativos, sem consulta a lojas. */
+catalog.cooler = [
+ {id:'cooler-stock',name:'Cooler original compatível (já disponível)',price:0,sockets:['LGA775','LGA1155','LGA1150','LGA1151','LGA1151v2','LGA1200','LGA1700','AM4','AM5','AM3+','FM2+'],tdp:65,desc:'Somente se você já possui um cooler adequado; confira fixação e capacidade.'},
+ {id:'cooler-basic',name:'Air cooler compacto 95 W',price:75,sockets:['LGA1155','LGA1150','LGA1151','LGA1151v2','LGA1200','LGA1700','AM4','AM5','AM3+','FM2+'],tdp:95,desc:'Modelo genérico ilustrativo · confira kit de fixação.'},
+ {id:'cooler-tower',name:'Air cooler torre 150 W',price:170,sockets:['LGA1155','LGA1150','LGA1151','LGA1151v2','LGA1200','LGA1700','AM4','AM5'],tdp:150,desc:'Modelo genérico ilustrativo · confira altura no gabinete.'},
+ {id:'cooler-dual',name:'Air cooler torre dupla 220 W',price:290,sockets:['LGA1155','LGA1150','LGA1151','LGA1151v2','LGA1200','LGA1700','AM4','AM5','LGA2011','LGA2011-3'],tdp:220,desc:'Modelo genérico ilustrativo · confira espaço para RAM.'},
+ {id:'cooler-xeon',name:'Air cooler para Xeon LGA2011 / 2011-3',price:125,sockets:['LGA2011','LGA2011-3'],tdp:150,desc:'Confirme fixação ILM quadrada/estreita e dissipação do kit.'}
+];
