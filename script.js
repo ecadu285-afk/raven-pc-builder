@@ -184,17 +184,39 @@ if(shoppingButton)shoppingButton.addEventListener('click',async()=>{
 
 // 3.6 Marketplace: somente ofertas cadastradas explicitamente, sem coleta automatizada.
 const RAVEN_STORES={kabum:{name:'KaBuM!',domain:'kabum.com.br'},mercadolivre:{name:'Mercado Livre',domain:'mercadolivre.com.br'},terabyte:{name:'TerabyteShop',domain:'terabyteshop.com.br'},shopee:{name:'Shopee',domain:'shopee.com.br'}};
-let ravenOffers=[];
+let ravenOffers=[];let ravenHistory=[];
 function ravenMoney(n){return Number(n).toLocaleString('pt-BR',{style:'currency',currency:'BRL'});}
 function ravenSearchUrl(part,store){return 'https://www.google.com/search?q='+encodeURIComponent('site:'+store.domain+' '+part.name);}
 function ravenVerifiedOffer(o){
  if(!o||!RAVEN_STORES[o.store]||!o.partId||!Number.isFinite(o.price)||o.price<=0||!/^\d{4}-\d{2}-\d{2}$/.test(o.checkedAt||''))return false;
  try{const u=new URL(o.url);const host=u.hostname.toLowerCase();return u.protocol==='https:'&&(host===RAVEN_STORES[o.store].domain||host.endsWith('.'+RAVEN_STORES[o.store].domain));}catch{return false;}
 }
+function ravenDaysOld(date){const ms=Date.parse(date+'T00:00:00Z');return Number.isFinite(ms)?Math.max(0,Math.floor((Date.now()-ms)/86400000)):Infinity;}
+function ravenFresh(o){return ravenDaysOld(o.checkedAt)<=14;}
+function ravenRenderInsights(selected){
+ const el=document.getElementById('marketInsights');if(!el)return;
+ const matched=selected.flatMap(({part})=>ravenOffers.filter(o=>o.partId===part.id));
+ const fresh=matched.filter(ravenFresh),stale=matched.length-fresh.length;
+ const total=selected.reduce((sum,{part})=>{const prices=fresh.filter(o=>o.partId===part.id).map(o=>o.price);return sum+(prices.length?Math.min(...prices):0)},0);
+ const covered=selected.filter(({part})=>fresh.some(o=>o.partId===part.id)).length;
+ el.replaceChildren();
+ for(const [label,value] of [['Peças com cotação recente',covered+' / '+selected.length],['Ofertas recentes',String(fresh.length)],['Cotações antigas',String(stale)],['Subtotal cotado',ravenMoney(total)]]){const item=document.createElement('div');item.className='market-insight';const a=document.createElement('small');a.textContent=label;const b=document.createElement('strong');b.textContent=value;item.append(a,b);el.append(item)}
+ const note=document.createElement('p');note.className='market-hint';note.textContent='Cotação recente = consultada há até 14 dias. Subtotal exclui peças sem cotação recente, frete e taxas; não é preço final da montagem.';el.append(note);
+}
+function ravenCopyShopping(){
+ const selected=groups.map(g=>({group:g,part:optionFor(g)})).filter(x=>x.part);
+ const byStore=new Map();const missing=[];
+ for(const {part} of selected){const available=ravenOffers.filter(o=>o.partId===part.id&&ravenFresh(o)).sort((a,b)=>a.price-b.price);if(!available.length){missing.push(part.name);continue;}const best=available[0];const store=RAVEN_STORES[best.store].name;if(!byStore.has(store))byStore.set(store,[]);byStore.get(store).push({part,best});}
+ const lines=['RAVEN PC BUILDER — Lista de compras por loja','Cotações cadastradas, não são preços em tempo real.'];let subtotal=0;
+ for(const [store,items] of byStore){lines.push('\n'+store);for(const {part,best} of items){subtotal+=best.price;lines.push('• '+part.name+' — '+ravenMoney(best.price)+' ('+best.checkedAt+')',best.url);}}
+ if(missing.length)lines.push('\nSEM COTAÇÃO RECENTE: '+missing.join(', '));lines.push('\nSubtotal parcial: '+ravenMoney(subtotal),'Confira estoque, vendedor, frete, impostos e compatibilidade antes da compra.');
+ const message=lines.join('\n');if(navigator.clipboard?.writeText){navigator.clipboard.writeText(message).then(()=>alert('Lista copiada.')).catch(()=>prompt('Copie sua lista:',message));}else prompt('Copie sua lista:',message);
+}
 function ravenRenderMarket(){
  const list=document.getElementById('marketList');if(!list)return;
  list.replaceChildren();const selected=groups.map(g=>({group:g,part:optionFor(g)})).filter(x=>x.part);
  if(!selected.length){const p=document.createElement('p');p.className='market-empty';p.textContent='Selecione componentes para visualizar ofertas e pesquisar nas lojas.';list.append(p);return;}
+ ravenRenderInsights(selected);
  const only=document.getElementById('onlyOffers')?.checked;
  for(const {group,part} of selected){
   const offers=ravenOffers.filter(o=>o.partId===part.id).sort((a,b)=>a.price-b.price);
@@ -203,18 +225,20 @@ function ravenRenderMarket(){
   const head=document.createElement('div');head.className='market-item-head';
   const names=document.createElement('div');const cat=document.createElement('small');cat.textContent=group.name;const title=document.createElement('h3');title.textContent=part.name;names.append(cat,title);
   const estimate=document.createElement('span');estimate.className='market-estimate';estimate.textContent='Estimativa: '+ravenMoney(part.price);head.append(names,estimate);card.append(head);
-  if(offers.length){const best=document.createElement('div');best.className='market-best';best.textContent='Menor oferta cadastrada: '+ravenMoney(offers[0].price)+' · '+RAVEN_STORES[offers[0].store].name;card.append(best);
-   for(const o of offers){const line=document.createElement('div');line.className='market-offer';const label=document.createElement('div');const strong=document.createElement('strong');strong.textContent=RAVEN_STORES[o.store].name+' · '+ravenMoney(o.price);const meta=document.createElement('small');meta.textContent='Consultada em '+o.checkedAt.split('-').reverse().join('/')+' · '+(o.condition==='used'?'Usado':'Novo')+' · '+(o.affiliate?'Link comissionado':'Link externo')+' · confirme estoque/frete';label.append(strong,meta);const a=document.createElement('a');a.className='market-link';a.href=o.url;a.target='_blank';a.rel=o.affiliate?'noopener noreferrer sponsored':'noopener noreferrer';a.textContent='Ver oferta ↗';line.append(label,a);card.append(line);}}
+  if(offers.length){const best=document.createElement('div');best.className='market-best';const fresh=offers.filter(ravenFresh);best.textContent=fresh.length?'Menor cotação recente: '+ravenMoney(fresh[0].price)+' · '+RAVEN_STORES[fresh[0].store].name:'Todas as ofertas desta peça precisam de nova conferência';card.append(best);
+   for(const o of offers){const line=document.createElement('div');line.className='market-offer'+(ravenFresh(o)?'':' market-stale');const label=document.createElement('div');const strong=document.createElement('strong');strong.textContent=RAVEN_STORES[o.store].name+' · '+ravenMoney(o.price);const meta=document.createElement('small');meta.textContent='Consultada em '+o.checkedAt.split('-').reverse().join('/')+' · '+(o.condition==='used'?'Usado':'Novo')+' · '+(o.affiliate?'Link comissionado':'Link externo')+' · '+(ravenFresh(o)?'Cotação recente':'DESATUALIZADA — verificar preço')+' · confirme estoque/frete';label.append(strong,meta);const a=document.createElement('a');a.className='market-link';a.href=o.url;a.target='_blank';a.rel=o.affiliate?'noopener noreferrer sponsored':'noopener noreferrer';a.textContent='Ver oferta ↗';line.append(label,a);card.append(line);}const history=ravenHistory.filter(h=>h.partId===part.id).sort((a,b)=>a.checkedAt.localeCompare(b.checkedAt)).slice(-12);if(history.length){const section=document.createElement('details');section.className='market-details';const label=document.createElement('summary');label.textContent='Histórico de preços cadastrados ('+history.length+')';section.append(label);const ul=document.createElement('ul');ul.className='market-history';for(const h of history){const li=document.createElement('li');li.textContent=h.checkedAt+' · '+(RAVEN_STORES[h.store]?.name||h.store)+' · '+ravenMoney(h.price);ul.append(li)}section.append(ul);card.append(section);}}
   else {const empty=document.createElement('p');empty.className='market-no-offer';empty.textContent='Sem oferta cadastrada e verificada para esta peça.';card.append(empty);}
   const details=document.createElement('details');details.className='market-details';const summary=document.createElement('summary');summary.textContent='Comparar preços nas lojas';details.append(summary);
   const links=document.createElement('div');links.className='market-search';for(const [key,store] of Object.entries(RAVEN_STORES)){const a=document.createElement('a');a.href=ravenSearchUrl(part,store);a.target='_blank';a.rel='noopener noreferrer';a.textContent='Pesquisar '+store.name+' ↗';a.title='Pesquisa externa; não representa oferta verificada';links.append(a);}details.append(links);card.append(details);list.append(card);
  }
  if(!list.children.length){const p=document.createElement('p');p.className='market-empty';p.textContent='Nenhuma peça selecionada possui oferta verificada. Desmarque o filtro para pesquisar nas lojas.';list.append(p);}
 }
-async function ravenLoadOffers(){try{const r=await fetch('./offers.json',{cache:'no-store'});if(!r.ok)throw Error('HTTP '+r.status);const data=await r.json();ravenOffers=Array.isArray(data.offers)?data.offers.filter(ravenVerifiedOffer):[];}catch(e){ravenOffers=[];console.warn('Ofertas indisponíveis:',e);}ravenRenderMarket();}
+async function ravenLoadOffers(){try{const r=await fetch('./offers.json',{cache:'no-store'});if(!r.ok)throw Error('HTTP '+r.status);const data=await r.json();ravenOffers=Array.isArray(data.offers)?data.offers.filter(ravenVerifiedOffer):[];ravenHistory=Array.isArray(data.history)?data.history.filter(h=>ravenVerifiedOffer({...h,url:h.url||'https://'+(RAVEN_STORES[h.store]?.domain||'invalid')})):[];}catch(e){ravenOffers=[];console.warn('Ofertas indisponíveis:',e);}ravenRenderMarket();}
 document.getElementById('onlyOffers')?.addEventListener('change',ravenRenderMarket);
 document.getElementById('marketRefresh')?.addEventListener('click',ravenLoadOffers);
 // A lista de ofertas acompanha a seleção sem alterar a lógica 3D existente.
 const ravenObserver=new MutationObserver(()=>ravenRenderMarket());
 const ravenSummary=document.getElementById('summary-items');if(ravenSummary)ravenObserver.observe(ravenSummary,{childList:true,characterData:true,subtree:true});
 ravenLoadOffers();
+
+document.getElementById('marketShopping')?.addEventListener('click',ravenCopyShopping);
