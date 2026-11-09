@@ -2,3 +2,7 @@
 
 /* Diagnóstico de montagem v2 */
 .diagnostics{background:#111719;border:1px solid #2c3b36;border-radius:18px;padding:25px;margin:20px 0}.diag-head{display:flex;justify-content:space-between;gap:16px;align-items:center}.diag-head h3{margin:5px 0 0;font-size:22px}.diag-status{border:1px solid;padding:7px 12px;border-radius:99px;font-size:11px;font-weight:800;letter-spacing:.08em}.diag-status.ok{color:#baff66;border-color:#597a39}.diag-status.danger{color:#ff9292;border-color:#8b4141}.diag-status.pending{color:#e4d8a2;border-color:#6b6546}.diag-metrics{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:12px;margin:20px 0}.diag-metric{border:1px solid #2d3c36;background:#0c1112;padding:15px;border-radius:12px}.diag-metric small{display:block;color:#9daa9e}.diag-metric strong{display:block;font-size:21px;margin-top:5px}.diag-section{margin-top:12px;border-left:3px solid #536451;padding:12px 15px;background:#151c1a;border-radius:0 10px 10px 0}.diag-section h4{margin:0 0 6px;font-size:13px}.diag-section p{margin:5px 0;color:#bac7bd;font-size:13px}.diag-section.error{border-color:#ff7a7a}.diag-section.success{border-color:#baff66}.diag-section.warning{border-color:#d2ad63}@media(max-width:750px){.diag-metrics{grid-template-columns:repeat(2,minmax(0,1fr))}.diag-head{align-items:flex-start;flex-direction:column}.diagnostics{padding:16px}}
+
+/* Visualização aprimorada 2.1 */
+#scene{background:radial-gradient(ellipse at 55% 35%,#202e32 0%,#11191c 45%,#080d10 100%)}
+.viewport{box-shadow:0 14px 45px #0005}
