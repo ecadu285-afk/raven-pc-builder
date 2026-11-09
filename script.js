@@ -180,3 +180,39 @@ if(shoppingButton)shoppingButton.addEventListener('click',async()=>{
  const message=lines.join('\n');
  try{await navigator.clipboard.writeText(message);shoppingButton.textContent='✓ Lista copiada';setTimeout(()=>shoppingButton.textContent='Lista para WhatsApp',1800)}catch{prompt('Copie a lista para o WhatsApp:',message)}
 });
+
+
+// 3.6 Marketplace: somente ofertas cadastradas explicitamente, sem coleta automatizada.
+const RAVEN_STORES={kabum:{name:'KaBuM!',domain:'kabum.com.br'},mercadolivre:{name:'Mercado Livre',domain:'mercadolivre.com.br'},terabyte:{name:'TerabyteShop',domain:'terabyteshop.com.br'},shopee:{name:'Shopee',domain:'shopee.com.br'}};
+let ravenOffers=[];
+function ravenMoney(n){return Number(n).toLocaleString('pt-BR',{style:'currency',currency:'BRL'});}
+function ravenSearchUrl(part,store){return 'https://www.google.com/search?q='+encodeURIComponent('site:'+store.domain+' '+part.name);}
+function ravenVerifiedOffer(o){
+ if(!o||!RAVEN_STORES[o.store]||!o.partId||!Number.isFinite(o.price)||o.price<=0||!/^\d{4}-\d{2}-\d{2}$/.test(o.checkedAt||''))return false;
+ try{const u=new URL(o.url);const host=u.hostname.toLowerCase();return u.protocol==='https:'&&(host===RAVEN_STORES[o.store].domain||host.endsWith('.'+RAVEN_STORES[o.store].domain));}catch{return false;}
+}
+function ravenRenderMarket(){
+ const list=document.getElementById('marketList');if(!list)return;
+ list.replaceChildren();const selected=groups.map(g=>({group:g,part:optionFor(g)})).filter(x=>x.part);
+ if(!selected.length){const p=document.createElement('p');p.className='market-empty';p.textContent='Selecione componentes para visualizar as opções de pesquisa e compra.';list.append(p);return;}
+ const only=document.getElementById('onlyOffers')?.checked;
+ for(const {group,part} of selected){
+  const offers=ravenOffers.filter(o=>o.partId===part.id).sort((a,b)=>a.price-b.price);
+  if(only&&!offers.length)continue;
+  const card=document.createElement('article');card.className='market-item';
+  const head=document.createElement('div');head.className='market-item-head';
+  const names=document.createElement('div');const cat=document.createElement('small');cat.textContent=group.name;const title=document.createElement('h3');title.textContent=part.name;names.append(cat,title);
+  const estimate=document.createElement('span');estimate.className='market-estimate';estimate.textContent='Referência ilustrativa: '+ravenMoney(part.price);head.append(names,estimate);card.append(head);
+  if(offers.length){for(const o of offers){const line=document.createElement('div');line.className='market-offer';const label=document.createElement('div');const strong=document.createElement('strong');strong.textContent=RAVEN_STORES[o.store].name+' · '+ravenMoney(o.price);const meta=document.createElement('small');meta.textContent='Cotação cadastrada em '+o.checkedAt.split('-').reverse().join('/')+' · confirme o preço e o estoque';label.append(strong,meta);const a=document.createElement('a');a.className='market-link';a.href=o.url;a.target='_blank';a.rel='noopener noreferrer sponsored';a.textContent='Ver oferta ↗';line.append(label,a);card.append(line);}}
+  else {const empty=document.createElement('p');empty.className='market-no-offer';empty.textContent='Nenhuma oferta verificada cadastrada para esta peça.';card.append(empty);}
+  const links=document.createElement('div');links.className='market-search';for(const [key,store] of Object.entries(RAVEN_STORES)){const a=document.createElement('a');a.href=ravenSearchUrl(part,store);a.target='_blank';a.rel='noopener noreferrer';a.textContent='Pesquisar '+store.name+' ↗';a.title='Abre pesquisa externa; não é oferta nem link de afiliado';links.append(a);}card.append(links);list.append(card);
+ }
+ if(!list.children.length){const p=document.createElement('p');p.className='market-empty';p.textContent='Nenhuma peça selecionada possui oferta verificada. Desmarque o filtro para pesquisar nas lojas.';list.append(p);}
+}
+async function ravenLoadOffers(){try{const r=await fetch('./offers.json',{cache:'no-store'});if(!r.ok)throw Error('HTTP '+r.status);const data=await r.json();ravenOffers=Array.isArray(data.offers)?data.offers.filter(ravenVerifiedOffer):[];}catch(e){ravenOffers=[];console.warn('Ofertas indisponíveis:',e);}ravenRenderMarket();}
+document.getElementById('onlyOffers')?.addEventListener('change',ravenRenderMarket);
+document.getElementById('marketRefresh')?.addEventListener('click',ravenLoadOffers);
+// A lista de ofertas acompanha a seleção sem alterar a lógica 3D existente.
+const ravenObserver=new MutationObserver(()=>ravenRenderMarket());
+const ravenSummary=document.getElementById('summary-items');if(ravenSummary)ravenObserver.observe(ravenSummary,{childList:true,characterData:true,subtree:true});
+ravenLoadOffers();
