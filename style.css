@@ -29,3 +29,6 @@ h1 em{background:linear-gradient(90deg,var(--accent),#fff,var(--accent));backgro
 .options{max-height:400px;overflow-y:auto;padding-right:6px;scrollbar-width:thin;scrollbar-color:#3a4a40 transparent}
 .option.dim{opacity:.55}.option[data-tag]:after{content:attr(data-tag);display:inline-block;margin-top:8px;font-size:9px;letter-spacing:1px;font-weight:800;text-transform:uppercase;color:#ffb36b;border:1px solid #6b4a2a;padding:2px 8px;border-radius:99px}
 @media(max-width:850px){.budget{grid-template-columns:1fr}.options{max-height:360px}}
+
+/* 3.2 */
+.preset-grid{grid-template-columns:repeat(auto-fit,minmax(210px,1fr))}
