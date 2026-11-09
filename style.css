@@ -6,3 +6,11 @@
 /* Visualização aprimorada 2.1 */
 #scene{background:radial-gradient(ellipse at 55% 35%,#202e32 0%,#11191c 45%,#080d10 100%)}
 .viewport{box-shadow:0 14px 45px #0005}
+
+/* 2.2 Studio visual refinement */
+#scene{background:radial-gradient(ellipse at 50% 40%,#19252b 0%,#0b1216 62%,#080b0e 100%)}
+.viewport{box-shadow:0 18px 70px #0005}
+.viewport-top{background:linear-gradient(90deg,#151d1d,#111417)}
+.option{transition:transform .2s,border-color .2s,box-shadow .2s}
+.option.selected{box-shadow:inset 3px 0 0 var(--accent)}
+@media(min-width:1200px){.workspace{grid-template-columns:minmax(0,1.6fr) minmax(340px,.9fr)}}
