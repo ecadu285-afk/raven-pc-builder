@@ -101,7 +101,7 @@ for(const category of ['case','board','cpu','ram','gpu','ssd','psu','cooler']){
       extra={form,gpuMaxMm:form==='ITX'?300:form==='mATX'?340:400,finish:white?'white':'black',style:style.toLowerCase().includes('panorama')?'panorama':style.toLowerCase().includes('mesh')?'mesh':'tower',price:220+(i%12)*42,desc:`Conceito ${form} · ${finish} · GPU até ${form==='ITX'?300:form==='mATX'?340:400} mm`};
       name=`Raven ${style} ${finish} ${form} · C${i+1}`;
     }else if(category==='board'){
-      const socket=ravenSockets[i%7],memory=['AM5'].includes(socket)?'DDR5':(socket==='LGA1700'&&i%2===0?'DDR5':socket.startsWith('LGA2011')?'DDR3':'DDR4');
+      const socket=ravenSockets[i%7],memory=['AM5'].includes(socket)?'DDR5':(socket==='LGA1700'&&i%2===0?'DDR5':socket==='LGA2011'?'DDR3':socket==='LGA2011-3'?'DDR4':socket==='LGA1155'?'DDR3':'DDR4');
       const form=ravenForms[Math.floor(i/7)%3];extra={socket,memory,form,price:280+(i%16)*95,desc:`Conceito ${form} · ${socket} · ${memory}; BIOS e ECC exigem conferência`};name=`Placa conceito ${socket} ${memory} ${form} · B${i+1}`;
     }else if(category==='cpu'){
       const socket=ravenSockets[i%7],cores=[2,4,6,8,10,12,16][Math.floor(i/7)%7],igpu=(i%4===0?1:0),watts=[45,65,88,105,125][i%5];
