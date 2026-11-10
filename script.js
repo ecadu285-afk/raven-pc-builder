@@ -271,10 +271,82 @@ function raven44Update(){
  caseG.scale.x=compact?.86:1;
 }
 
+// RAVEN 4.6 — Biblioteca procedural de familias de hardware.
+// As variacoes sao derivadas dos atributos do catalogo, nao sao replicas CAD.
+const raven46={groups:{},rotors:[],metal:new THREE.MeshStandardMaterial({color:0x7f929e,metalness:.82,roughness:.31}),
+ copper:new THREE.MeshStandardMaterial({color:0xc38b51,metalness:.84,roughness:.29}),
+ white:new THREE.MeshStandardMaterial({color:0xe7f0f5,metalness:.58,roughness:.31}),
+ graphite:new THREE.MeshStandardMaterial({color:0x151e27,metalness:.65,roughness:.42}),
+ led:new THREE.MeshStandardMaterial({color:0xbaff66,emissive:0x70dd22,emissiveIntensity:1.2})};
+function v46group(key,parent){const g=new THREE.Group();parent.add(g);raven46.groups[key]=g;return g}
+function v46fan(parent,x,y,z,r){const g=new THREE.Group();g.position.set(x,y,z);parent.add(g);
+ const ring=new THREE.Mesh(new THREE.TorusGeometry(r,.032,8,32),raven46.graphite);g.add(ring);
+ const rotor=new THREE.Group();g.add(rotor);raven46.rotors.push(rotor);
+ cylinder(rotor,r*.17,.055,0,0,.018,raven46.metal);
+ for(let i=0;i<7;i++){const pivot=new THREE.Group();pivot.rotation.z=i*Math.PI*2/7;rotor.add(pivot);const blade=box(pivot,r*.36,r*.65,.022,0,r*.4,.018,raven46.metal);blade.rotation.z=-.35}
+ return g}
+// Gabinete: tres familias de frente e acabamento; perfis laterais de vidro.
+const meshFront=v46group('caseMesh',caseG);
+for(let i=0;i<30;i++)box(meshFront,.018,2.90,.018,1.415,-0.01,-.72+i*.049,raven46.metal);
+const panoramaFront=v46group('casePanorama',caseG);
+box(panoramaFront,.018,2.92,1.42,1.413,0,.015,raven44Mat.glass);
+for(const y of [-1.43,1.43])box(panoramaFront,.024,.028,1.45,1.425,y,.015,raven46.metal);
+const solidFront=v46group('caseSolid',caseG);
+for(let i=0;i<6;i++)box(solidFront,.025,.31,1.3,1.414,-1.03+i*.42,0,raven46.graphite);
+// GPU: carenagem extra, tres configuracoes de ventoinhas e dissipador.
+const gpuDual=v46group('gpuDual',gpu),gpuTriple=v46group('gpuTriple',gpu),gpuCompact=v46group('gpuCompact',gpu);
+for(const [g,positions,r] of [[gpuCompact,[0],.22],[gpuDual,[-.48,.48],.21],[gpuTriple,[-.69,0,.69],.19]]){
+ box(g,2.15,.72,.08,-.02,-.69,.47,raven46.graphite);
+ for(const x of positions)v46fan(g,x,-.70,.535,r);
+ for(let i=0;i<14;i++)box(g,.018,.54,.07,-.96+i*.145,-.69,.43,raven46.metal);
+}
+// RAM: dissipadores e barra RGB selecionavel.
+const ramRgb=v46group('ramRgb',ram),ramPlain=v46group('ramPlain',ram);
+for(const x of [.17,.34]){box(ramRgb,.115,1.10,.09,x,.13,-.12,raven46.graphite);box(ramRgb,.12,.085,.10,x,.72,-.12,raven46.led);
+ box(ramPlain,.115,1.10,.09,x,.13,-.12,raven46.metal)}
+// CPU: heatspreader diferenciado por familia de socket.
+const cpuAm5=v46group('cpuAm5',cpu),cpuIntel=v46group('cpuIntel',cpu),cpuLegacy=v46group('cpuLegacy',cpu);
+box(cpuAm5,.46,.46,.08,-.52,.44,-.04,raven46.metal);
+for(const x of [-.76,-.28])for(const y of [.2,.68])box(cpuAm5,.09,.08,.09,x,y,-.035,raven46.copper);
+box(cpuIntel,.53,.48,.07,-.52,.44,-.04,raven46.metal);
+box(cpuLegacy,.40,.40,.065,-.52,.44,-.04,raven46.copper);
+// SSD: familia M.2 e SATA/HD com proporcoes diferentes.
+const storageM2=v46group('storageM2',ssd),storageSata=v46group('storageSata',ssd);
+box(storageM2,.75,.15,.035,-.55,-.37,-.12,raven46.graphite);
+for(let i=0;i<4;i++)box(storageM2,.12,.12,.04,-.82+i*.16,-.37,-.08,raven46.metal);
+box(storageSata,.76,.56,.11,-.55,-.38,-.06,raven46.graphite);
+box(storageSata,.62,.27,.013,-.55,-.38,.004,raven46.metal);
+// Fonte: familias modular e compacta, grelha e tomadas traseiras.
+const psuPremium=v46group('psuPremium',psu),psuBasic=v46group('psuBasic',psu);
+for(let i=0;i<8;i++)box(psuPremium,.022,.38,.024,.16+i*.12,-1.23,.64,raven46.metal);
+for(let i=0;i<5;i++)box(psuBasic,.12,.13,.028,.24+i*.16,-1.21,.64,raven46.graphite);
+// Cooler: perfil baixo, torre dupla e AIO (AIO principal ja existente).
+const coolerLow=v46group('coolerLow',cooler),coolerTower=v46group('coolerTower',cooler);
+for(let i=0;i<9;i++)box(coolerLow,.70,.018,.58,-.52,.18+i*.025,.02,raven46.metal);
+for(let i=0;i<16;i++)box(coolerTower,.83,.023,.52,-.52,.12+i*.052,-.025,raven46.metal);
+function raven46Update(pick){
+ const cs=pick('case'),gp=pick('gpu'),bd=pick('board'),cpuPart=pick('cpu'),ramPart=pick('ram'),ssdPart=pick('ssd'),psuPart=pick('psu'),coolerPart=pick('cooler');
+ const cn=(cs?.name||'').toLowerCase();const panoramic=/panoram|aquar|o11|vision|glass|vidro duplo/.test(cn);
+ const mesh=/mesh|airflow|flow|ventilad|grade|frontal perfurad/.test(cn);
+ meshFront.visible=!panoramic&&mesh;panoramaFront.visible=panoramic;solidFront.visible=!panoramic&&!mesh;
+ const white=cs?.finish==='white'||/branco|white|snow/.test(cn);
+ raven46.metal.color.set(white?0xb6c9d4:0x7f929e);
+ const gpuName=(gp?.name||'').toLowerCase();const len=gp?.lengthMm||0;
+ gpuCompact.visible=!!gp&&gp.id!=='igpu'&&(len<215||/1030|1650|compact|mini/.test(gpuName));
+ gpuTriple.visible=!!gp&&gp.id!=='igpu'&&!gpuCompact.visible&&(len>=275||/triple|trio|3 fan/.test(gpuName));
+ gpuDual.visible=!!gp&&gp.id!=='igpu'&&!gpuCompact.visible&&!gpuTriple.visible;
+ const socket=cpuPart?.socket||'';cpuAm5.visible=socket==='AM5';cpuIntel.visible=/LGA/.test(socket);cpuLegacy.visible=!!socket&&!cpuAm5.visible&&!cpuIntel.visible;
+ const rgb=/rgb|argb|led|iluminad/i.test(ramPart?.name||'');ramRgb.visible=!!ramPart&&rgb;ramPlain.visible=!!ramPart&&!rgb;
+ const storageName=(ssdPart?.name||'').toLowerCase();storageSata.visible=!!ssdPart&&/sata|hd |hdd|2.5/.test(storageName);storageM2.visible=!!ssdPart&&!storageSata.visible;
+ psuPremium.visible=!!psuPart&&(psuPart.watts>=750||/gold|platinum|modular/i.test(psuPart.name));psuBasic.visible=!!psuPart&&!psuPremium.visible;
+ const coolerName=(coolerPart?.name||'').toLowerCase();coolerLow.visible=!!coolerPart&&/stock|box|baixo|low profile/.test(coolerName);
+ coolerTower.visible=!!coolerPart&&!coolerLow.visible&&!/aio|water|líquid|liquid|radiador/.test(coolerName);
+ if(bd)board.scale.x=bd.form==='ITX'?.77:bd.form==='mATX'?.91:1;
+}
 // Luzes de preenchimento para destacar os componentes internos
 const fillLight=new THREE.PointLight(0xe9f5ff,13,8);fillLight.position.set(1,1,4);scene.add(fillLight);
 const innerLight=new THREE.PointLight(0xf0f7ff,14,6);innerLight.position.set(0,.4,.2);scene.add(innerLight);
-// RAVEN 4.5 — cenário de estúdio: piso abaixo da base, sem grade atravessando o gabinete.
+// RAVEN 4.6 — cenário de estúdio: piso abaixo da base, sem grade atravessando o gabinete.
 const studioFloor=new THREE.Mesh(new THREE.PlaneGeometry(200,200),new THREE.MeshStandardMaterial({color:0x080d12,roughness:.83,metalness:.08}));
 studioFloor.rotation.x=-Math.PI/2;studioFloor.position.y=-2.14;scene.add(studioFloor);
 const podium=new THREE.Group();scene.add(podium);
@@ -291,7 +363,7 @@ const gp=pick('gpu'),bd=pick('board'),cs=pick('case'),cp=pick('cpu');
 if(chosen.gpu==='igpu')parts.gpu.visible=false;gpu.scale.x=gp?Math.max(.8,Math.min(1.12,gp.lengthMm/245)):1;gpu.scale.z=gp&&gp.power>200?1.2:1;
 board.scale.y=bd&&bd.form==='mATX'?.9:1;
 materials.shell.color.set(cs&&(cs.finish==='white'||/branco|white/i.test(cs.name))?0xe5eaf0:cs&&cs.id==='case2'?0x0f1316:0x191e23);materials.frame.color.set(cs&&(cs.finish==='white'||/branco|white/i.test(cs.name))?0xb8c3cc:0x333b40);
-rim.color.set(cp&&cp.socket==='AM5'?0x4dd2ff:0xc2ff4d);raven44Update()}function resize(){const w=Math.max(1,target.clientWidth),h=Math.max(1,target.clientHeight);camera.aspect=w/h;camera.updateProjectionMatrix();renderer.setSize(w,h,false)}new ResizeObserver(resize).observe(target);resize();renderer.domElement.addEventListener('pointerdown',e=>{dragging=true;prevX=e.clientX;prevY=e.clientY;renderer.domElement.setPointerCapture(e.pointerId)});renderer.domElement.addEventListener('pointerup',()=>dragging=false);renderer.domElement.addEventListener('pointercancel',()=>dragging=false);renderer.domElement.addEventListener('pointermove',e=>{if(!dragging)return;yaw+=(e.clientX-prevX)*.007;pitch=Math.max(-.6,Math.min(.65,pitch+(e.clientY-prevY)*.006));prevX=e.clientX;prevY=e.clientY});renderer.domElement.addEventListener('wheel',e=>{e.preventDefault();distance=Math.max(4.9,Math.min(22,distance+e.deltaY*.007))},{passive:false});const activeTouches=new Map();let pinchSpan=null;renderer.domElement.style.touchAction='none';renderer.domElement.addEventListener('pointerdown',e=>{if(e.pointerType==='touch'){activeTouches.set(e.pointerId,{x:e.clientX,y:e.clientY});if(activeTouches.size===2){dragging=false;pinchSpan=null}}});renderer.domElement.addEventListener('pointermove',e=>{if(e.pointerType!=='touch'||!activeTouches.has(e.pointerId))return;activeTouches.set(e.pointerId,{x:e.clientX,y:e.clientY});if(activeTouches.size===2){const [a,b]=[...activeTouches.values()];const span=Math.hypot(a.x-b.x,a.y-b.y);if(pinchSpan!==null)distance=Math.max(4.9,Math.min(22,distance*pinchSpan/Math.max(1,span)));pinchSpan=span;dragging=false}});for(const eventName of ['pointerup','pointercancel','lostpointercapture'])renderer.domElement.addEventListener(eventName,e=>{activeTouches.delete(e.pointerId);pinchSpan=null});let last=0;function animate(t){requestAnimationFrame(animate);const dt=Math.min((t-last)/1000||.016,.05);last=t;if(!dragging)yaw+=dt*.045;root.rotation.y=yaw;root.rotation.x=pitch;camera.position.set(0,1.0,distance);camera.lookAt(0,0,0);for(const [id,g] of Object.entries(parts)){const v=spread[id];const targetX=expand?v[0]:0,targetY=expand?v[1]:0,targetZ=expand?v[2]:0;const factor=Math.min(1,dt*5);g.position.x+=(targetX-g.position.x)*factor;g.position.y+=(targetY-g.position.y)*factor;g.position.z+=(targetZ-g.position.z)*factor}for(const rotor of raven44.rotors)rotor.rotation.z+=dt*5.2;const col=rgb?tmp.setHSL((t/6000)%1,.9,.55):accentCol;detail.led.color.copy(col);detail.led.emissive.copy(col);railMat.color.copy(col);railMat.emissive.copy(col).multiplyScalar(.5);materials.accent.color.copy(col);materials.accent.emissive.copy(col).multiplyScalar(.4);rim.color.copy(col);raven44Mat.glow.color.copy(col);raven44Mat.glow.emissive.copy(col).multiplyScalar(.55);renderer.render(scene,camera)}let rgb=false;const accentCol=new THREE.Color(0xbaff66),tmp=new THREE.Color();update();requestAnimationFrame(animate);viewer={zoom(delta){distance=Math.max(4.9,Math.min(22,distance+delta));return distance},update,explode(v){expand=v},accent(c){accentCol.set(c)},rgb(v){rgb=v},shot(){renderer.render(scene,camera);return renderer.domElement.toDataURL('image/png')},reset(){yaw=-.88;pitch=.12;distance=window.innerWidth<700?8.4:5.35;expand=false;exploded=false;$('explode').textContent='⇱ Explodir peças'}}}catch(e){target.innerHTML='<div class="loading" style="padding:25px;text-align:center">Não foi possível carregar o motor 3D. Conecte-se à internet e abra o projeto por um servidor local (Live Server). O configurador de peças continua funcionando.</div>';console.error('Falha no 3D:',e)}}init3D();
+rim.color.set(cp&&cp.socket==='AM5'?0x4dd2ff:0xc2ff4d);raven44Update();raven46Update(pick)}function resize(){const w=Math.max(1,target.clientWidth),h=Math.max(1,target.clientHeight);camera.aspect=w/h;camera.updateProjectionMatrix();renderer.setSize(w,h,false)}new ResizeObserver(resize).observe(target);resize();renderer.domElement.addEventListener('pointerdown',e=>{dragging=true;prevX=e.clientX;prevY=e.clientY;renderer.domElement.setPointerCapture(e.pointerId)});renderer.domElement.addEventListener('pointerup',()=>dragging=false);renderer.domElement.addEventListener('pointercancel',()=>dragging=false);renderer.domElement.addEventListener('pointermove',e=>{if(!dragging)return;yaw+=(e.clientX-prevX)*.007;pitch=Math.max(-.6,Math.min(.65,pitch+(e.clientY-prevY)*.006));prevX=e.clientX;prevY=e.clientY});renderer.domElement.addEventListener('wheel',e=>{e.preventDefault();distance=Math.max(4.9,Math.min(22,distance+e.deltaY*.007))},{passive:false});const activeTouches=new Map();let pinchSpan=null;renderer.domElement.style.touchAction='none';renderer.domElement.addEventListener('pointerdown',e=>{if(e.pointerType==='touch'){activeTouches.set(e.pointerId,{x:e.clientX,y:e.clientY});if(activeTouches.size===2){dragging=false;pinchSpan=null}}});renderer.domElement.addEventListener('pointermove',e=>{if(e.pointerType!=='touch'||!activeTouches.has(e.pointerId))return;activeTouches.set(e.pointerId,{x:e.clientX,y:e.clientY});if(activeTouches.size===2){const [a,b]=[...activeTouches.values()];const span=Math.hypot(a.x-b.x,a.y-b.y);if(pinchSpan!==null)distance=Math.max(4.9,Math.min(22,distance*pinchSpan/Math.max(1,span)));pinchSpan=span;dragging=false}});for(const eventName of ['pointerup','pointercancel','lostpointercapture'])renderer.domElement.addEventListener(eventName,e=>{activeTouches.delete(e.pointerId);pinchSpan=null});let last=0;function animate(t){requestAnimationFrame(animate);const dt=Math.min((t-last)/1000||.016,.05);last=t;if(!dragging)yaw+=dt*.045;root.rotation.y=yaw;root.rotation.x=pitch;camera.position.set(0,1.0,distance);camera.lookAt(0,0,0);for(const [id,g] of Object.entries(parts)){const v=spread[id];const targetX=expand?v[0]:0,targetY=expand?v[1]:0,targetZ=expand?v[2]:0;const factor=Math.min(1,dt*5);g.position.x+=(targetX-g.position.x)*factor;g.position.y+=(targetY-g.position.y)*factor;g.position.z+=(targetZ-g.position.z)*factor}for(const rotor of raven44.rotors)rotor.rotation.z+=dt*5.2;for(const rotor of raven46.rotors)if(rotor.parent?.visible)rotor.rotation.z+=dt*4.7;const col=rgb?tmp.setHSL((t/6000)%1,.9,.55):accentCol;detail.led.color.copy(col);detail.led.emissive.copy(col);railMat.color.copy(col);railMat.emissive.copy(col).multiplyScalar(.5);materials.accent.color.copy(col);materials.accent.emissive.copy(col).multiplyScalar(.4);rim.color.copy(col);raven44Mat.glow.color.copy(col);raven44Mat.glow.emissive.copy(col).multiplyScalar(.55);renderer.render(scene,camera)}let rgb=false;const accentCol=new THREE.Color(0xbaff66),tmp=new THREE.Color();update();requestAnimationFrame(animate);viewer={zoom(delta){distance=Math.max(4.9,Math.min(22,distance+delta));return distance},update,explode(v){expand=v},accent(c){accentCol.set(c)},rgb(v){rgb=v},shot(){renderer.render(scene,camera);return renderer.domElement.toDataURL('image/png')},reset(){yaw=-.88;pitch=.12;distance=window.innerWidth<700?8.4:5.35;expand=false;exploded=false;$('explode').textContent='⇱ Explodir peças'}}}catch(e){target.innerHTML='<div class="loading" style="padding:25px;text-align:center">Não foi possível carregar o motor 3D. Conecte-se à internet e abra o projeto por um servidor local (Live Server). O configurador de peças continua funcionando.</div>';console.error('Falha no 3D:',e)}}init3D();
 
 // 3.4 — lista de compras com preços explicitamente estimados.
 const shoppingButton=document.getElementById('shopping');
