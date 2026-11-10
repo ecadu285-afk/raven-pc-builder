@@ -274,7 +274,18 @@ function raven44Update(){
 // Luzes de preenchimento para destacar os componentes internos
 const fillLight=new THREE.PointLight(0xe9f5ff,13,8);fillLight.position.set(1,1,4);scene.add(fillLight);
 const innerLight=new THREE.PointLight(0xf0f7ff,14,6);innerLight.position.set(0,.4,.2);scene.add(innerLight);
-const floor=new THREE.Mesh(new THREE.PlaneGeometry(200,200),new THREE.MeshStandardMaterial({color:0x101517,roughness:1}));floor.rotation.x=-Math.PI/2;floor.position.y=-1.81;scene.add(floor);const grid=new THREE.GridHelper(20,35,0x24322c,0x18231e);grid.position.y=-1.79;grid.material.transparent=true;grid.material.opacity=.24;scene.add(grid);let yaw=-.88,pitch=.12,distance=window.innerWidth<700?8.4:5.35,dragging=false,prevX=0,prevY=0;const spread={cooler:[-.5,.9,1.4],case:[0,0,0],board:[-1.4,.3,-.7],cpu:[-.5,.7,1.2],ram:[.5,1.3,.8],gpu:[.2,-.6,1.5],ssd:[-1.4,-.4,.9],psu:[1.2,-.8,.7]};let expand=false;function update(){for(const [id,g] of Object.entries(parts))g.visible=id==='case'||!!chosen[id];studioCables.forEach(c=>c.visible=!!chosen.psu);
+// RAVEN 4.5 — cenário de estúdio: piso abaixo da base, sem grade atravessando o gabinete.
+const studioFloor=new THREE.Mesh(new THREE.PlaneGeometry(200,200),new THREE.MeshStandardMaterial({color:0x080d12,roughness:.83,metalness:.08}));
+studioFloor.rotation.x=-Math.PI/2;studioFloor.position.y=-2.14;scene.add(studioFloor);
+const podium=new THREE.Group();scene.add(podium);
+const podiumBase=new THREE.Mesh(new THREE.CylinderGeometry(2.55,2.7,.20,96),new THREE.MeshStandardMaterial({color:0x171f25,metalness:.73,roughness:.34}));podiumBase.position.y=-2.025;podium.add(podiumBase);
+const podiumTop=new THREE.Mesh(new THREE.CylinderGeometry(2.48,2.48,.055,96),new THREE.MeshStandardMaterial({color:0x253039,metalness:.75,roughness:.27}));podiumTop.position.y=-1.9;podium.add(podiumTop);
+const ringMat=new THREE.MeshStandardMaterial({color:0xbaff66,emissive:0x5b8b1c,emissiveIntensity:.8,metalness:.2,roughness:.24});
+const ring=new THREE.Mesh(new THREE.TorusGeometry(2.49,.014,8,112),ringMat);ring.rotation.x=Math.PI/2;ring.position.y=-1.867;podium.add(ring);
+const studioBack=new THREE.Mesh(new THREE.PlaneGeometry(120,90),new THREE.MeshBasicMaterial({color:0x0b1219}));studioBack.position.z=-18;scene.add(studioBack);
+const spotL=new THREE.SpotLight(0xc3e8ff,36,18,Math.PI/5,.6);spotL.position.set(-5,7,4);spotL.target.position.set(0,-.6,0);scene.add(spotL,spotL.target);
+const spotR=new THREE.SpotLight(0xbaff66,15,16,Math.PI/6,.65);spotR.position.set(5,5,-3);spotR.target.position.set(0,0,0);scene.add(spotR,spotR.target);
+let yaw=-.88,pitch=.12,distance=window.innerWidth<700?8.4:5.35,dragging=false,prevX=0,prevY=0;const spread={cooler:[-.5,.9,1.4],case:[0,0,0],board:[-1.4,.3,-.7],cpu:[-.5,.7,1.2],ram:[.5,1.3,.8],gpu:[.2,-.6,1.5],ssd:[-1.4,-.4,.9],psu:[1.2,-.8,.7]};let expand=false;function update(){for(const [id,g] of Object.entries(parts))g.visible=id==='case'||!!chosen[id];studioCables.forEach(c=>c.visible=!!chosen.psu);
 const pick=gid=>{const gr=groups.find(x=>x.id===gid);return gr&&gr.options.find(o=>o.id===chosen[gid])};
 const gp=pick('gpu'),bd=pick('board'),cs=pick('case'),cp=pick('cpu');
 if(chosen.gpu==='igpu')parts.gpu.visible=false;gpu.scale.x=gp?Math.max(.8,Math.min(1.12,gp.lengthMm/245)):1;gpu.scale.z=gp&&gp.power>200?1.2:1;
