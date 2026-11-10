@@ -60,9 +60,9 @@ const RKc={ITX:1,mATX:2,ATX:3};
 export function autoBuild(B){
  const C=catalog,cheap=a=>a.reduce((m,o)=>!m||o.price<m.price?o:m,null),minRam=B>=1500?16:B>=700?8:4,minSsd=B>=3000?250:B>=1500?150:B>=550?75:0,minCase=B>=3000?250:B>=1500?150:0,ssds=C.ssd.filter(o=>!o.id.startsWith('hdd')&&o.price>=minSsd||o.price===cheap(C.ssd.filter(q=>!q.id.startsWith('hdd'))).price&&minSsd===0);
  let best=null,low=null;
- for(const cpu of C.cpu)for(const board of C.board){if(board.socket!==cpu.socket)continue;
+ for(const cpu of C.cpu.filter(x=>!x.conceptual))for(const board of C.board.filter(x=>!x.conceptual)){if(board.socket!==cpu.socket)continue;
   const ram=cheap(C.ram.filter(r=>r.memory===board.memory&&r.gb>=minRam)),ssd=cheap(ssds);if(!ram)continue;
-  for(const gpu of C.gpu){if(gpu.id==='igpu'&&!cpu.igpu)continue;
+  for(const gpu of C.gpu.filter(x=>!x.conceptual)){if(gpu.id==='igpu'&&!cpu.igpu)continue;
    const cl=C.case.filter(c=>RKc[c.form]>=RKc[board.form]&&c.gpuMaxMm>=gpu.lengthMm),cl2=cl.filter(c=>c.price>=minCase),cas=cheap(cl2.length?cl2:cl);if(!cas)continue;
    const need=Math.ceil(((cpu.watts||90)+gpu.power+110)*1.4/50)*50,psu=cheap(C.psu.filter(p=>p.watts>=need));if(!psu)continue;
    const total=cpu.price+board.price+ram.price+ssd.price+gpu.price+cas.price+psu.price,s=(gpu.tier*.6+cpu.tier*.4)*1000-total*.01,b={s,cpu,board,gpu,cas,psu,ram,ssd,total};
@@ -80,3 +80,49 @@ catalog.cooler = [
  {id:'cooler-dual',name:'Air cooler torre dupla 220 W',price:290,sockets:['LGA1155','LGA1150','LGA1151','LGA1151v2','LGA1200','LGA1700','AM4','AM5','LGA2011','LGA2011-3'],tdp:220,desc:'Modelo genérico ilustrativo · confira espaço para RAM.'},
  {id:'cooler-xeon',name:'Air cooler para Xeon LGA2011 / 2011-3',price:125,sockets:['LGA2011','LGA2011-3'],tdp:150,desc:'Confirme fixação ILM quadrada/estreita e dissipação do kit.'}
 ];
+
+
+/* 4.2 — Expansão conceitual: variantes de especificações, NÃO anúncios comerciais.
+   Os valores são demonstrativos e não devem ser usados como cotações. */
+const ravenForms=['mATX','ATX','ITX'];
+const ravenSockets=['AM4','AM5','LGA1700','LGA1155','LGA1200','LGA2011','LGA2011-3'];
+const ravenCoolerSockets=['AM4','AM5','LGA1700','LGA1155','LGA1200','LGA2011','LGA2011-3'];
+const conceptual=(base,category,n,extra={})=>({...base,...extra,id:`rv42-${category}-${String(n).padStart(3,'0')}`,conceptual:true,used:false});
+for(const category of ['case','board','cpu','ram','gpu','ssd','psu','cooler']){
+  const list=catalog[category];const original=[...list];
+  let n=0;
+  while(list.length<100){
+    const i=n++,base=original[i%original.length];
+    const tier=Math.floor(i/original.length),white=i%3===0;
+    let extra={};let name='';
+    if(category==='case'){
+      const form=ravenForms[i%3],style=['Airflow Mesh','Panorama Glass','Silent Tower','Compact Flow','Dual Chamber'][Math.floor(i/3)%5];
+      const finish=white?'Branco Neve':'Preto Grafite';
+      extra={form,gpuMaxMm:form==='ITX'?300:form==='mATX'?340:400,finish:white?'white':'black',style:style.toLowerCase().includes('panorama')?'panorama':style.toLowerCase().includes('mesh')?'mesh':'tower',price:220+(i%12)*42,desc:`Conceito ${form} · ${finish} · GPU até ${form==='ITX'?300:form==='mATX'?340:400} mm`};
+      name=`Raven ${style} ${finish} ${form} · C${i+1}`;
+    }else if(category==='board'){
+      const socket=ravenSockets[i%7],memory=['AM5'].includes(socket)?'DDR5':(socket==='LGA1700'&&i%2===0?'DDR5':socket.startsWith('LGA2011')?'DDR3':'DDR4');
+      const form=ravenForms[Math.floor(i/7)%3];extra={socket,memory,form,price:280+(i%16)*95,desc:`Conceito ${form} · ${socket} · ${memory}; BIOS e ECC exigem conferência`};name=`Placa conceito ${socket} ${memory} ${form} · B${i+1}`;
+    }else if(category==='cpu'){
+      const socket=ravenSockets[i%7],cores=[2,4,6,8,10,12,16][Math.floor(i/7)%7],igpu=(i%4===0?1:0),watts=[45,65,88,105,125][i%5];
+      extra={socket,cores,threads:cores*2,igpu,watts,tier:Math.min(5,1+Math.floor(cores/4)),price:230+cores*75+(i%4)*85,desc:`CPU conceitual · ${socket} · ${cores} núcleos · ${watts} W · ${igpu?'com':'sem'} vídeo integrado`};name=`CPU conceito ${socket} ${cores}C/${cores*2}T · P${i+1}`;
+    }else if(category==='ram'){
+      const memory=i%3===0?'DDR3':i%3===1?'DDR4':'DDR5',gb=[4,8,16,32,64][Math.floor(i/3)%5],mhz=memory==='DDR3'?1600:memory==='DDR4'?3200:5600;
+      extra={memory,gb,price:Math.round(gb*(memory==='DDR5'?22:memory==='DDR4'?14:10)),desc:`Memória conceitual ${memory} · ${gb} GB · ${mhz} MHz · verifique ECC e slots`};name=`Kit conceito ${gb} GB ${memory} ${mhz} · R${i+1}`;
+    }else if(category==='gpu'){
+      const power=[75,110,145,180,220,270,320][i%7],lengthMm=170+(i%10)*22,tier=1+(i%5);
+      extra={power,lengthMm,tier,price:430+tier*350+(i%4)*80,desc:`GPU conceitual · ${lengthMm} mm · ${power} W · desempenho não aferido`};name=`GPU conceito ${['Compact','Dual Fan','Triple Fan','Creator'][i%4]} ${tier} · G${i+1}`;
+    }else if(category==='ssd'){
+      const gb=[120,240,480,512,1000,2000,4000][i%7],kind=i%3===0?'SATA':i%3===1?'NVMe PCIe 3.0':'NVMe PCIe 4.0';
+      extra={price:Math.round(65+gb*(kind==='SATA'?.27:.37)),desc:`Armazenamento conceitual · ${kind} · ${gb} GB`};name=`SSD conceito ${kind} ${gb} GB · S${i+1}`;
+    }else if(category==='psu'){
+      const watts=[350,400,450,500,550,600,650,700,750,850,1000][i%11];
+      extra={watts,price:Math.round(watts*.57),desc:`Fonte conceitual ${watts} W · potência e proteções NÃO verificadas; confira modelo real`};name=`Fonte conceito ${watts} W · F${i+1}`;
+    }else if(category==='cooler'){
+      const tdp=[65,95,120,150,180,220,250][i%7],socket=ravenCoolerSockets[i%7];
+      extra={tdp,sockets:[socket],price:60+Math.round(tdp*.85),desc:`Cooler conceitual ${tdp} W · suporte declarado a ${socket}; confira fixação e altura`};name=`Cooler conceito ${socket} ${tdp} W · C${i+1}`;
+    }
+    list.push(conceptual(base,category,n,{...extra,name}));
+  }
+  list.sort((a,b)=>a.price-b.price);
+}
