@@ -80,3 +80,6 @@ h1 em{background:linear-gradient(90deg,var(--accent),#fff,var(--accent));backgro
 .option{transition:transform .18s,border-color .18s,background .18s}
 .option.selected{box-shadow:inset 3px 0 0 var(--accent),0 0 0 1px #baff661b}
 @media(max-width:700px){#scene{min-height:410px}.viewport{min-height:520px}}
+
+/* 4.7 · Inspector individual de componentes */
+.option{position:relative}.raven-inspect-option{display:inline-flex;margin-top:12px;padding:7px 11px;border:1px solid #698d48;border-radius:7px;background:#17251c;color:#c2ff4d;font-size:11px;font-weight:750;cursor:pointer}.raven-inspect-option:hover{background:#2a432a}.raven-inspect-hud{position:absolute;z-index:15;top:12px;left:12px;right:12px;display:flex;gap:7px;flex-wrap:wrap;align-items:center;padding:12px 14px;border:1px solid #506c47;border-radius:12px;background:rgba(8,15,17,.92);box-shadow:0 8px 30px #0008}.raven-inspect-hud[hidden]{display:none!important}.raven-inspect-hud strong{color:#d3ff9b;font-size:13px;max-width:100%}.raven-inspect-hud span{color:#a9b7b6;font-size:11px;flex:1 1 170px}.raven-inspect-hud button{border:1px solid #baff66;background:#baff66;color:#102008;border-radius:7px;padding:7px 9px;font-size:11px;font-weight:800;cursor:pointer}@media(max-width:600px){.raven-inspect-hud{left:7px;right:7px;top:7px;padding:9px}.raven-inspect-hud span{display:none}}

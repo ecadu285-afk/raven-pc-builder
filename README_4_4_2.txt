@@ -1,0 +1,1 @@
+RAVEN 4.4.2 — correção dos botões de zoom mobile. Os controles agora são ligados independentemente da inicialização do Three.js, com indicador de distância. Publicar todos os arquivos na raiz do GitHub Pages. Atualizar cache do navegador. Testar com F12 e em dispositivo real.
