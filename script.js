@@ -205,13 +205,61 @@ const studioCables=[studioCable([[.6,-1.05,.22],[1.0,-.6,.20],[.95,.25,-.30],[.6
 // Luzes de preenchimento para destacar os componentes internos
 const fillLight=new THREE.PointLight(0xe9f5ff,13,8);fillLight.position.set(1,1,4);scene.add(fillLight);
 const innerLight=new THREE.PointLight(0xf0f7ff,14,6);innerLight.position.set(0,.4,.2);scene.add(innerLight);
-const floor=new THREE.Mesh(new THREE.PlaneGeometry(200,200),new THREE.MeshStandardMaterial({color:0x101517,roughness:1}));floor.rotation.x=-Math.PI/2;floor.position.y=-1.81;scene.add(floor);const grid=new THREE.GridHelper(20,35,0x24322c,0x18231e);grid.position.y=-1.79;grid.material.transparent=true;grid.material.opacity=.24;scene.add(grid);let yaw=-.88,pitch=.12,distance=5.35,dragging=false,prevX=0,prevY=0;const spread={cooler:[-.5,.9,1.4],case:[0,0,0],board:[-1.4,.3,-.7],cpu:[-.5,.7,1.2],ram:[.5,1.3,.8],gpu:[.2,-.6,1.5],ssd:[-1.4,-.4,.9],psu:[1.2,-.8,.7]};let expand=false;function update(){for(const [id,g] of Object.entries(parts))g.visible=id==='case'||!!chosen[id];studioCables.forEach(c=>c.visible=!!chosen.psu);
+
+// RAVEN 4.3: Procedural premium hardware visualization. No proprietary assets.
+const ultra={rotors:[],panorama:new THREE.Group(),meshFront:new THREE.Group(),liquid:new THREE.Group(),rgbParts:[]};
+caseG.add(ultra.panorama,ultra.meshFront);
+const ultraM={black:new THREE.MeshStandardMaterial({color:0x11151a,metalness:.75,roughness:.24}),white:new THREE.MeshStandardMaterial({color:0xe9edf2,metalness:.55,roughness:.28}),chrome:new THREE.MeshStandardMaterial({color:0x9faebc,metalness:.95,roughness:.17}),rubber:new THREE.MeshStandardMaterial({color:0x111216,roughness:.93}),glass:new THREE.MeshPhysicalMaterial({color:0xb9e6ed,metalness:0,roughness:.07,transparent:true,opacity:.12,depthWrite:false,side:THREE.DoubleSide}),light:new THREE.MeshStandardMaterial({color:0xc3ff77,emissive:0x67ff24,emissiveIntensity:1.5,metalness:.2,roughness:.3})};
+function ultraBox(parent,w,h,d,x,y,z,mat){return box(parent,w,h,d,x,y,z,mat)}
+function ultraFan(parent,x,y,z,r=.27,axis='z'){
+ const assembly=new THREE.Group();assembly.position.set(x,y,z);parent.add(assembly);
+ if(axis==='x')assembly.rotation.y=Math.PI/2;
+ const frame=ultraBox(assembly,r*2.24,r*2.24,.095,0,0,0,ultraM.black);
+ const opening=new THREE.Mesh(new THREE.RingGeometry(r*.83,r,48),ultraM.chrome);opening.position.z=.057;assembly.add(opening);
+ const glow=new THREE.Mesh(new THREE.TorusGeometry(r*.88,.018,8,56),ultraM.light);glow.position.z=.067;assembly.add(glow);ultra.rgbParts.push(glow);
+ const rotor=new THREE.Group();rotor.position.z=.075;assembly.add(rotor);
+ for(let i=0;i<9;i++){const a=i*Math.PI*2/9;const blade=new THREE.Mesh(new THREE.ShapeGeometry((()=>{const shape=new THREE.Shape();shape.moveTo(.015,.025);shape.quadraticCurveTo(r*.38,r*.68,r*.8,r*.3);shape.quadraticCurveTo(r*.75,-r*.04,r*.10,-r*.045);shape.closePath();return shape})()),ultraM.chrome);blade.rotation.z=a;rotor.add(blade)}
+ const hub=new THREE.Mesh(new THREE.CylinderGeometry(r*.17,r*.17,.065,32),ultraM.black);hub.rotation.x=Math.PI/2;hub.position.z=.035;rotor.add(hub);
+ ultra.rotors.push(rotor);return assembly;
+}
+// Three front intake fans, two roof exhaust fans, one rear exhaust fan.
+for(let i=0;i<3;i++)ultraFan(caseG,1.02,1.02-i*.98,.64,.27);
+for(let i=0;i<2;i++)ultraFan(caseG,-.65+i*.8,1.48,.02,.27);
+ultraFan(caseG,-1.04,.90,-.57,.26);
+// Premium panoramic glazing and an alternative fine-mesh front.
+ultraBox(ultra.panorama,2.64,3.04,.018,0,.01,.845,ultraM.glass);
+ultraBox(ultra.panorama,.018,3.02,1.48,1.39,.01,.02,ultraM.glass);
+for(let i=0;i<45;i++){const y=-1.38+i*.063;ultraBox(ultra.meshFront,2.42,.009,.018,0,y,.865,ultraM.chrome)}
+for(let i=0;i<22;i++){const x=-1.2+i*.112;ultraBox(ultra.meshFront,.009,2.82,.018,x,0,.866,ultraM.chrome)}
+// Graphics card backplate, heatsink fins and a second fan surface.
+for(let i=0;i<23;i++)ultraBox(gpu,1.7,.012,.20,-.05,-.91+i*.016,.21,ultraM.chrome);
+ultraBox(gpu,1.85,.028,.53,-.05,-.46,.15,ultraM.black);
+for(let i=0;i<2;i++)ultraFan(gpu,-.45+i*.8,-.7,.48,.19);
+// RAM heat spreader accents and CPU cold plate.
+for(let i=0;i<4;i++)ultraBox(ram,.055,.58,.018,-.8+i*.16,.7,.47,i%2?ultraM.chrome:ultraM.light);
+ultraBox(cooler,.42,.42,.035,-.52,.44,.27,ultraM.chrome);
+// AIO radiator and flexible tubes, shown when cooler is selected.
+const rad=ultraBox(ultra.liquid,1.5,.16,.52,-.25,1.45,-.18,ultraM.black);
+for(let i=0;i<2;i++)ultraFan(ultra.liquid,-.63+i*.75,1.38,.16,.24);
+function ultraTube(pts,r=.026){const curve=new THREE.CatmullRomCurve3(pts.map(v=>new THREE.Vector3(...v)));const mesh=new THREE.Mesh(new THREE.TubeGeometry(curve,35,r,9,false),ultraM.rubber);ultra.liquid.add(mesh)}
+ultraTube([[-.52,.45,.28],[-.65,.85,.35],[-.48,1.21,.32],[-.62,1.43,.15]]);
+ultraTube([[-.44,.45,.28],[-.20,.83,.45],[.06,1.21,.29],[.14,1.43,.15]]);
+root.add(ultra.liquid);
+// Case footpads, power button, front USB and chassis detail.
+for(const x of [-1.08,1.08])for(const z of [-.58,.58])ultraBox(caseG,.33,.09,.27,x,-1.75,z,ultraM.rubber);
+const powerButton=new THREE.Mesh(new THREE.CylinderGeometry(.055,.055,.014,32),ultraM.light);powerButton.rotation.x=Math.PI/2;powerButton.position.set(1.04,1.73,.50);caseG.add(powerButton);
+for(const x of [.55,.74])ultraBox(caseG,.13,.025,.025,x,1.72,.60,ultraM.black);
+// Soft studio ground shadow to anchor the chassis visually.
+const shadow=new THREE.Mesh(new THREE.CircleGeometry(2.15,64),new THREE.MeshBasicMaterial({color:0x020605,transparent:true,opacity:.35,depthWrite:false}));shadow.rotation.x=-Math.PI/2;shadow.position.y=-1.79;scene.add(shadow);
+let ultraQuality='high';
+function ultraUpdate(){const gr=groups.find(g=>g.id==='case');const item=gr?.options.find(o=>o.id===chosen.case);const name=(item?.name||'').toLowerCase();const isPanorama=/panor|aquar|glass|vidro|showcase/.test(name);ultra.panorama.visible=isPanorama;ultra.meshFront.visible=!isPanorama;const isWhite=item&&(item.finish==='white'||/branco|white/.test(name));ultraM.black.color.set(isWhite?0xbcc8d3:0x11151a);ultraM.chrome.color.set(isWhite?0xf2f7fa:0x9faebc);ultra.liquid.visible=!!chosen.cooler&&/water|liquid|aio|240|360|refrigera/.test((groups.find(g=>g.id==='cooler')?.options.find(o=>o.id===chosen.cooler)?.name||'').toLowerCase());}
+const floor=new THREE.Mesh(new THREE.PlaneGeometry(200,200),new THREE.MeshStandardMaterial({color:0x101517,roughness:1}));floor.rotation.x=-Math.PI/2;floor.position.y=-1.81;scene.add(floor);const grid=new THREE.GridHelper(20,35,0x24322c,0x18231e);grid.position.y=-1.79;grid.material.transparent=true;grid.material.opacity=.24;scene.add(grid);let yaw=-.88,pitch=.12,distance=5.35,dragging=false,prevX=0,prevY=0;const spread={cooler:[-.5,.9,1.4],case:[0,0,0],board:[-1.4,.3,-.7],cpu:[-.5,.7,1.2],ram:[.5,1.3,.8],gpu:[.2,-.6,1.5],ssd:[-1.4,-.4,.9],psu:[1.2,-.8,.7]};let expand=false;function update(){for(const [id,g] of Object.entries(parts))g.visible=id==='case'||!!chosen[id];studioCables.forEach(c=>c.visible=!!chosen.psu);ultraUpdate();
 const pick=gid=>{const gr=groups.find(x=>x.id===gid);return gr&&gr.options.find(o=>o.id===chosen[gid])};
 const gp=pick('gpu'),bd=pick('board'),cs=pick('case'),cp=pick('cpu');
 if(chosen.gpu==='igpu')parts.gpu.visible=false;gpu.scale.x=gp?Math.max(.8,Math.min(1.12,gp.lengthMm/245)):1;gpu.scale.z=gp&&gp.power>200?1.2:1;
 board.scale.y=bd&&bd.form==='mATX'?.9:1;
 materials.shell.color.set(cs&&(cs.finish==='white'||/branco|white/i.test(cs.name))?0xe5eaf0:cs&&cs.id==='case2'?0x0f1316:0x191e23);materials.frame.color.set(cs&&(cs.finish==='white'||/branco|white/i.test(cs.name))?0xb8c3cc:0x333b40);
-rim.color.set(cp&&cp.socket==='AM5'?0x4dd2ff:0xc2ff4d)}function resize(){const w=target.clientWidth,h=target.clientHeight;camera.aspect=w/h;camera.updateProjectionMatrix();renderer.setSize(w,h,false)}new ResizeObserver(resize).observe(target);resize();renderer.domElement.addEventListener('pointerdown',e=>{dragging=true;prevX=e.clientX;prevY=e.clientY;renderer.domElement.setPointerCapture(e.pointerId)});renderer.domElement.addEventListener('pointerup',()=>dragging=false);renderer.domElement.addEventListener('pointercancel',()=>dragging=false);renderer.domElement.addEventListener('pointermove',e=>{if(!dragging)return;yaw+=(e.clientX-prevX)*.007;pitch=Math.max(-.6,Math.min(.65,pitch+(e.clientY-prevY)*.006));prevX=e.clientX;prevY=e.clientY});renderer.domElement.addEventListener('wheel',e=>{e.preventDefault();distance=Math.max(4.9,Math.min(12,distance+e.deltaY*.007))},{passive:false});let last=0;function animate(t){requestAnimationFrame(animate);const dt=Math.min((t-last)/1000||.016,.05);last=t;if(!dragging)yaw+=dt*.045;root.rotation.y=yaw;root.rotation.x=pitch;camera.position.set(0,1.0,distance);camera.lookAt(0,0,0);for(const [id,g] of Object.entries(parts)){const v=spread[id];const targetX=expand?v[0]:0,targetY=expand?v[1]:0,targetZ=expand?v[2]:0;const factor=Math.min(1,dt*5);g.position.x+=(targetX-g.position.x)*factor;g.position.y+=(targetY-g.position.y)*factor;g.position.z+=(targetZ-g.position.z)*factor}const col=rgb?tmp.setHSL((t/6000)%1,.9,.55):accentCol;detail.led.color.copy(col);detail.led.emissive.copy(col);railMat.color.copy(col);railMat.emissive.copy(col).multiplyScalar(.5);materials.accent.color.copy(col);materials.accent.emissive.copy(col).multiplyScalar(.4);rim.color.copy(col);renderer.render(scene,camera)}let rgb=false;const accentCol=new THREE.Color(0xbaff66),tmp=new THREE.Color();update();requestAnimationFrame(animate);viewer={update,explode(v){expand=v},accent(c){accentCol.set(c)},rgb(v){rgb=v},shot(){renderer.render(scene,camera);return renderer.domElement.toDataURL('image/png')},reset(){yaw=-.88;pitch=.12;distance=5.35;expand=false;exploded=false;$('explode').textContent='⇱ Explodir peças'}}}catch(e){target.innerHTML='<div class="loading" style="padding:25px;text-align:center">Não foi possível carregar o motor 3D. Conecte-se à internet e abra o projeto por um servidor local (Live Server). O configurador de peças continua funcionando.</div>';console.error('Falha no 3D:',e)}}init3D();
+rim.color.set(cp&&cp.socket==='AM5'?0x4dd2ff:0xc2ff4d)}function resize(){const w=target.clientWidth,h=target.clientHeight;camera.aspect=w/h;camera.updateProjectionMatrix();renderer.setSize(w,h,false)}new ResizeObserver(resize).observe(target);resize();renderer.domElement.addEventListener('pointerdown',e=>{dragging=true;prevX=e.clientX;prevY=e.clientY;renderer.domElement.setPointerCapture(e.pointerId)});renderer.domElement.addEventListener('pointerup',()=>dragging=false);renderer.domElement.addEventListener('pointercancel',()=>dragging=false);renderer.domElement.addEventListener('pointermove',e=>{if(!dragging)return;yaw+=(e.clientX-prevX)*.007;pitch=Math.max(-.6,Math.min(.65,pitch+(e.clientY-prevY)*.006));prevX=e.clientX;prevY=e.clientY});renderer.domElement.addEventListener('wheel',e=>{e.preventDefault();distance=Math.max(4.9,Math.min(12,distance+e.deltaY*.007))},{passive:false});let last=0;function animate(t){requestAnimationFrame(animate);const dt=Math.min((t-last)/1000||.016,.05);last=t;if(!dragging)yaw+=dt*.045;root.rotation.y=yaw;root.rotation.x=pitch;camera.position.set(0,1.0,distance);camera.lookAt(0,0,0);for(const [id,g] of Object.entries(parts)){const v=spread[id];const targetX=expand?v[0]:0,targetY=expand?v[1]:0,targetZ=expand?v[2]:0;const factor=Math.min(1,dt*5);g.position.x+=(targetX-g.position.x)*factor;g.position.y+=(targetY-g.position.y)*factor;g.position.z+=(targetZ-g.position.z)*factor}if(ultraQuality!=='low')ultra.rotors.forEach((r,i)=>{r.rotation.z+=dt*(i%2?7:-8)});const col=rgb?tmp.setHSL((t/6000)%1,.9,.55):accentCol;detail.led.color.copy(col);detail.led.emissive.copy(col);railMat.color.copy(col);railMat.emissive.copy(col).multiplyScalar(.5);materials.accent.color.copy(col);materials.accent.emissive.copy(col).multiplyScalar(.4);rim.color.copy(col);ultraM.light.color.copy(col);ultraM.light.emissive.copy(col);renderer.render(scene,camera)}let rgb=false;const accentCol=new THREE.Color(0xbaff66),tmp=new THREE.Color();update();requestAnimationFrame(animate);viewer={update,explode(v){expand=v},accent(c){accentCol.set(c)},rgb(v){rgb=v},shot(){renderer.render(scene,camera);return renderer.domElement.toDataURL('image/png')},quality(q){ultraQuality=q;renderer.setPixelRatio(Math.min(devicePixelRatio,q==='low'?1:q==='medium'?1.5:2));resize()},reset(){yaw=-.88;pitch=.12;distance=5.35;expand=false;exploded=false;$('explode').textContent='⇱ Explodir peças'}}}catch(e){target.innerHTML='<div class="loading" style="padding:25px;text-align:center">Não foi possível carregar o motor 3D. Conecte-se à internet e abra o projeto por um servidor local (Live Server). O configurador de peças continua funcionando.</div>';console.error('Falha no 3D:',e)}}init3D();
 
 // 3.4 — lista de compras com preços explicitamente estimados.
 const shoppingButton=document.getElementById('shopping');
@@ -306,3 +354,6 @@ document.getElementById('smartGenerate')?.addEventListener('click',()=>{const go
 document.getElementById('nextShare')?.addEventListener('click',()=>document.getElementById('link')?.click());
 document.getElementById('nextImage')?.addEventListener('click',()=>document.getElementById('shot')?.click());
 ravenGarageRender();
+
+// Quality setting for slower devices.
+document.getElementById("quality3d")?.addEventListener("change",e=>viewer?.quality?.(e.target.value));
