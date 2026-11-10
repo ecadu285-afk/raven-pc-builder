@@ -111,7 +111,7 @@ return [cas,board,cpu,ram,gpu,ssd,psu].map(o=>o.id).concat((catalog.cooler.find(
 $('q').oninput=e=>{ui.q=e.target.value.trim().toLowerCase();render()};$('sort').onchange=e=>{ui.sort=e.target.value;render()};$('hide').onchange=e=>{ui.hide=e.target.checked;render()};
 $('budget').oninput=e=>{ui.budget=+e.target.value;ui.on=true;$('bval').textContent=fmt(ui.budget);render()};$('auto').onclick=()=>{ui.on=true;applyPreset(autoBuildCat(ui.budget))};
 render();
-async function init3D(){const target=$('scene');try{const THREE=await import('https://cdn.jsdelivr.net/npm/three@0.160.1/build/three.module.js');target.replaceChildren();const scene=new THREE.Scene();const camera=new THREE.PerspectiveCamera(34,1,.1,100);camera.position.set(4.2,2.1,6);camera.lookAt(0,0,0);const renderer=new THREE.WebGLRenderer({antialias:true,alpha:true,preserveDrawingBuffer:true});renderer.setPixelRatio(Math.min(devicePixelRatio,window.innerWidth<700?1.4:2));renderer.outputColorSpace=THREE.SRGBColorSpace;renderer.toneMapping=THREE.ACESFilmicToneMapping;renderer.toneMappingExposure=1.5;target.append(renderer.domElement);scene.add(new THREE.HemisphereLight(0xe6f7ff,0x384e51,3.1));const key=new THREE.DirectionalLight(0xffffff,3.8);key.position.set(4,7,6);scene.add(key);const fill=new THREE.DirectionalLight(0xd9f2ff,2.8);fill.position.set(-5,3,5);scene.add(fill);const rim=new THREE.PointLight(0xc2ff4d,13,12);rim.position.set(-4,3,-3);scene.add(rim);const root=new THREE.Group();scene.add(root);const materials={shell:new THREE.MeshStandardMaterial({color:0x191e23,metalness:.72,roughness:.3}),frame:new THREE.MeshStandardMaterial({color:0x333b40,metalness:.75,roughness:.34}),dark:new THREE.MeshStandardMaterial({color:0x0a1014,metalness:.3,roughness:.65}),pcb:new THREE.MeshStandardMaterial({color:0x183026,metalness:.3,roughness:.65}),silver:new THREE.MeshStandardMaterial({color:0x8c9ba3,metalness:.9,roughness:.26}),accent:new THREE.MeshStandardMaterial({color:0xbaff66,emissive:0x456f10,emissiveIntensity:.55,metalness:.35,roughness:.35}),glass:new THREE.MeshPhysicalMaterial({color:0x738a91,metalness:.15,roughness:.12,transparent:true,opacity:.025,depthWrite:false,side:THREE.DoubleSide})};function box(parent,w,h,d,x,y,z,mat){const m=new THREE.Mesh(new THREE.BoxGeometry(w,h,d),mat);m.position.set(x,y,z);parent.add(m);return m}function cylinder(parent,r,h,x,y,z,mat){const m=new THREE.Mesh(new THREE.CylinderGeometry(r,r,h,24),mat);m.rotation.x=Math.PI/2;m.position.set(x,y,z);parent.add(m);return m}const parts={};function part(id){const g=new THREE.Group();root.add(g);parts[id]=g;return g}const caseG=part('case');box(caseG,2.8,.13,1.65,0,-1.65,0,materials.shell);box(caseG,2.8,.13,1.65,0,1.65,0,materials.shell);box(caseG,.13,3.3,1.65,-1.34,0,0,materials.shell);box(caseG,.13,3.3,1.65,1.34,0,0,materials.shell);box(caseG,2.8,3.3,.12,0,0,-.8,materials.shell);box(caseG,2.8,3.3,.12,0,0,.8,materials.glass);for(let i=0;i<3;i++){const fan=cylinder(caseG,.35,.05,.6,1.05-i*1.02,-.67,materials.frame);const inner=cylinder(caseG,.26,.06,.6,1.05-i*1.02,-.6,materials.dark);for(let j=0;j<5;j++){const a=j*Math.PI*2/5;box(caseG,.12,.35,.02,.6+Math.cos(a)*.13,1.05-i*1.02+Math.sin(a)*.13,-.54,materials.silver).rotation.z=-a}}// 4.2: painel frontal com perfurações, vidro lateral e moldura iluminada.
+async function init3D(){const target=$('scene');try{const THREE=await import('https://cdn.jsdelivr.net/npm/three@0.160.1/build/three.module.js');target.replaceChildren();const scene=new THREE.Scene();const camera=new THREE.PerspectiveCamera(34,1,.1,100);camera.position.set(4.2,2.1,6);camera.lookAt(0,0,0);const renderer=new THREE.WebGLRenderer({antialias:true,alpha:true,preserveDrawingBuffer:true});renderer.setPixelRatio(Math.min(devicePixelRatio,window.innerWidth<700?1.25:1.75));renderer.outputColorSpace=THREE.SRGBColorSpace;renderer.toneMapping=THREE.ACESFilmicToneMapping;renderer.toneMappingExposure=1.5;target.append(renderer.domElement);scene.add(new THREE.HemisphereLight(0xe6f7ff,0x384e51,3.1));const key=new THREE.DirectionalLight(0xffffff,3.8);key.position.set(4,7,6);scene.add(key);const fill=new THREE.DirectionalLight(0xd9f2ff,2.8);fill.position.set(-5,3,5);scene.add(fill);const rim=new THREE.PointLight(0xc2ff4d,13,12);rim.position.set(-4,3,-3);scene.add(rim);const root=new THREE.Group();scene.add(root);const materials={shell:new THREE.MeshStandardMaterial({color:0x191e23,metalness:.72,roughness:.3}),frame:new THREE.MeshStandardMaterial({color:0x333b40,metalness:.75,roughness:.34}),dark:new THREE.MeshStandardMaterial({color:0x0a1014,metalness:.3,roughness:.65}),pcb:new THREE.MeshStandardMaterial({color:0x183026,metalness:.3,roughness:.65}),silver:new THREE.MeshStandardMaterial({color:0x8c9ba3,metalness:.9,roughness:.26}),accent:new THREE.MeshStandardMaterial({color:0xbaff66,emissive:0x456f10,emissiveIntensity:.55,metalness:.35,roughness:.35}),glass:new THREE.MeshPhysicalMaterial({color:0x738a91,metalness:.15,roughness:.12,transparent:true,opacity:.025,depthWrite:false,side:THREE.DoubleSide})};function box(parent,w,h,d,x,y,z,mat){const m=new THREE.Mesh(new THREE.BoxGeometry(w,h,d),mat);m.position.set(x,y,z);parent.add(m);return m}function cylinder(parent,r,h,x,y,z,mat){const m=new THREE.Mesh(new THREE.CylinderGeometry(r,r,h,24),mat);m.rotation.x=Math.PI/2;m.position.set(x,y,z);parent.add(m);return m}const parts={};function part(id){const g=new THREE.Group();root.add(g);parts[id]=g;return g}const caseG=part('case');box(caseG,2.8,.13,1.65,0,-1.65,0,materials.shell);box(caseG,2.8,.13,1.65,0,1.65,0,materials.shell);box(caseG,.13,3.3,1.65,-1.34,0,0,materials.shell);box(caseG,.13,3.3,1.65,1.34,0,0,materials.shell);box(caseG,2.8,3.3,.12,0,0,-.8,materials.shell);box(caseG,2.8,3.3,.12,0,0,.8,materials.glass);for(let i=0;i<3;i++){const fan=cylinder(caseG,.35,.05,.6,1.05-i*1.02,-.67,materials.frame);const inner=cylinder(caseG,.26,.06,.6,1.05-i*1.02,-.6,materials.dark);for(let j=0;j<5;j++){const a=j*Math.PI*2/5;box(caseG,.12,.35,.02,.6+Math.cos(a)*.13,1.05-i*1.02+Math.sin(a)*.13,-.54,materials.silver).rotation.z=-a}}// 4.2: painel frontal com perfurações, vidro lateral e moldura iluminada.
 const panelTrim=new THREE.MeshStandardMaterial({color:0x65737b,metalness:.82,roughness:.23});
 for(let i=0;i<16;i++)for(let j=0;j<5;j++)box(caseG,.018,.09,.014,1.28,1.32-i*.175,-.52+j*.25,panelTrim);
 for(const x of [-1.19,1.19])for(const y of [-1.49,1.49])box(caseG,.11,.10,.11,x,y,.83,materials.silver);
@@ -202,64 +202,70 @@ for(let k=0;k<7;k++){const a=k*Math.PI*2/7;const blade=box(cooler,.105,.19,.017,
 function studioCable(points,material,radius=.018){const curve=new THREE.CatmullRomCurve3(points.map(v=>new THREE.Vector3(...v)));const mesh=new THREE.Mesh(new THREE.TubeGeometry(curve,22,radius,6,false),material);root.add(mesh);return mesh;}
 const studioCables=[studioCable([[.6,-1.05,.22],[1.0,-.6,.20],[.95,.25,-.30],[.64,.55,-.30]],studioMat.rubber),studioCable([[.65,-1.06,.3],[.90,-.8,.46],[.45,-.5,.36],[.42,-.34,.10]],studioMat.rubber)];
 
+// RAVEN 4.4 — Studio Rebuild: elementos independentes, sem redeclarar variáveis anteriores.
+const raven44={rotors:[],styles:[],glass:[],panorama:[],mesh:[],aio:[],decor:[]};
+const raven44Mat={white:new THREE.MeshStandardMaterial({color:0xe7eef3,metalness:.55,roughness:.27}),black:new THREE.MeshStandardMaterial({color:0x131a20,metalness:.7,roughness:.32}),titanium:new THREE.MeshStandardMaterial({color:0x899ca9,metalness:.82,roughness:.27}),carbon:new THREE.MeshStandardMaterial({color:0x20282e,metalness:.45,roughness:.55}),glow:new THREE.MeshStandardMaterial({color:0xc2ff4d,emissive:0x6de81e,emissiveIntensity:1.4}),glass:new THREE.MeshPhysicalMaterial({color:0xa8c8d7,transparent:true,opacity:.11,metalness:.04,roughness:.08,depthWrite:false,side:THREE.DoubleSide})};
+// Detalhes de gabinete e painéis removíveis por estilo.
+for(let i=0;i<17;i++){const bar=box(caseG,.018,.11,.025,1.403,1.35-i*.17,-.43,raven44Mat.titanium);raven44.mesh.push(bar)}
+for(let i=0;i<7;i++){const bar=box(caseG,.025,2.95,.018,-1.22+i*.40,0,.85,raven44Mat.glass);raven44.panorama.push(bar)}
+const raven44PanoramaGlass=box(caseG,2.50,3.03,.018,0,0,.858,raven44Mat.glass);raven44.panorama.push(raven44PanoramaGlass);
+for(let i=0;i<10;i++){const vent=box(caseG,1.7,.014,.026,-.25,1.73,-.57+i*.12,raven44Mat.titanium);raven44.decor.push(vent)}
+// Ventoinhas tridimensionais: rotor e pás giram juntos, sem recriar geometrias a cada frame.
+function raven44Fan(parent,x,y,z,r,orientation='front'){
+ const housing=new THREE.Group();housing.position.set(x,y,z);parent.add(housing);
+ const frame=new THREE.Mesh(new THREE.TorusGeometry(r,.052,10,48),raven44Mat.carbon);housing.add(frame);
+ const light=new THREE.Mesh(new THREE.TorusGeometry(r*.86,.022,8,48),raven44Mat.glow);housing.add(light);
+ const rotor=new THREE.Group();housing.add(rotor);
+ const hub=new THREE.Mesh(new THREE.CylinderGeometry(r*.19,r*.19,.075,24),raven44Mat.titanium);hub.rotation.x=Math.PI/2;rotor.add(hub);
+ for(let j=0;j<7;j++){const blade=new THREE.Mesh(new THREE.BoxGeometry(r*.30,r*.72,.045),raven44Mat.titanium);blade.position.y=r*.37;blade.rotation.z=-.32;const pivot=new THREE.Group();pivot.rotation.z=j*Math.PI*2/7;pivot.add(blade);rotor.add(pivot)}
+ if(orientation==='top')housing.rotation.x=-Math.PI/2;
+ raven44.rotors.push(rotor);return housing;
+}
+for(const y of [1.04,.03,-.98])raven44Fan(caseG,.60,y,-.36,.30);
+for(const x of [-.73,.02,.77])raven44Fan(caseG,x,1.53,-.07,.24,'top');
+// Water cooler ilustrativo com radiador, bomba e tubos curvos.
+const raven44Aio=new THREE.Group();root.add(raven44Aio);raven44.aio.push(raven44Aio);
+box(raven44Aio,1.90,.18,.66,0,1.42,-.10,raven44Mat.black);
+for(let i=0;i<23;i++)box(raven44Aio,1.70,.018,.46,0,1.31+i*.007,-.10,raven44Mat.titanium);
+const raven44Pump=cylinder(raven44Aio,.27,.15,-.52,.44,.24,raven44Mat.black);
+const raven44PumpRing=new THREE.Mesh(new THREE.TorusGeometry(.21,.035,12,48),raven44Mat.glow);raven44PumpRing.position.set(-.52,.44,.33);raven44Aio.add(raven44PumpRing);
+for(const offset of [-.09,.09]){const curve=new THREE.CatmullRomCurve3([new THREE.Vector3(-.36+offset,.49,.28),new THREE.Vector3(.18+offset,.92,.49),new THREE.Vector3(.65+offset,1.28,.34),new THREE.Vector3(.72+offset,1.42,.04)]);raven44Aio.add(new THREE.Mesh(new THREE.TubeGeometry(curve,32,.034,8,false),raven44Mat.carbon))}
+// GPU reforçada: três ventoinhas e backplate com acabamento premium.
+for(const x of [-.62,0,.62])raven44Fan(gpu,x,-.70,.44,.175);
+for(let i=0;i<26;i++)box(gpu,.018,.40,.23,-.92+i*.075,-.70,.05,raven44Mat.titanium);
+box(gpu,1.98,.055,.43,-.02,-.37,.09,raven44Mat.black);
+for(const x of [-.75,.75])box(gpu,.12,.06,.05,x,-.37,.36,raven44Mat.glow);
+// SSD e RAM: rótulos geométricos e dissipadores com relevo.
+for(const x of [.17,.34]){box(ram,.095,1.0,.045,x,.18,-.08,raven44Mat.titanium);for(let i=0;i<9;i++)box(ram,.075,.022,.012,x,-.28+i*.11,-.047,raven44Mat.black)}
+for(let i=0;i<4;i++)box(ssd,.08,.12,.025,-.75+i*.15,-.38,-.17,raven44Mat.carbon);
+// Piso de exposição e assinatura luminosa do gabinete.
+const raven44Base=box(caseG,3.04,.06,1.89,0,-1.84,0,raven44Mat.carbon);raven44.decor.push(raven44Base);
+for(const x of [-1.41,1.41])box(caseG,.026,2.92,.025,x,0,.83,raven44Mat.glow);
+function raven44Update(){
+ const group=groups.find(g=>g.id==='case');const selected=group?.options.find(o=>o.id===chosen.case);
+ const white=!!selected&&(selected.finish==='white'||/branco|white/i.test(selected.name));
+ const panoramic=!!selected&&/panor|aquar|o11|evo|vision|glass/i.test(selected.name+' '+(selected.desc||''));
+ const compact=!!selected&&selected.form==='ITX';
+ raven44Mat.titanium.color.set(white?0xd6e0e8:0x84949e);
+ raven44Mat.carbon.color.set(white?0xb8c7d1:0x20282e);
+ raven44Mat.black.color.set(white?0xe2e8ed:0x131a20);
+ raven44.panorama.forEach(o=>o.visible=panoramic);
+ raven44.mesh.forEach(o=>o.visible=!panoramic);
+ raven44.aio.forEach(o=>o.visible=!!chosen.cooler&&/water|aio|líquid|liquid|radiador/i.test(groups.find(g=>g.id==='cooler')?.options.find(o=>o.id===chosen.cooler)?.name||''));
+ cooler.visible=!!chosen.cooler&&!raven44Aio.visible;
+ caseG.scale.x=compact?.86:1;
+}
+
 // Luzes de preenchimento para destacar os componentes internos
 const fillLight=new THREE.PointLight(0xe9f5ff,13,8);fillLight.position.set(1,1,4);scene.add(fillLight);
 const innerLight=new THREE.PointLight(0xf0f7ff,14,6);innerLight.position.set(0,.4,.2);scene.add(innerLight);
-
-// RAVEN 4.3: Procedural premium hardware visualization. No proprietary assets.
-const ultra={rotors:[],panorama:new THREE.Group(),meshFront:new THREE.Group(),liquid:new THREE.Group(),rgbParts:[]};
-caseG.add(ultra.panorama,ultra.meshFront);
-const ultraM={black:new THREE.MeshStandardMaterial({color:0x11151a,metalness:.75,roughness:.24}),white:new THREE.MeshStandardMaterial({color:0xe9edf2,metalness:.55,roughness:.28}),chrome:new THREE.MeshStandardMaterial({color:0x9faebc,metalness:.95,roughness:.17}),rubber:new THREE.MeshStandardMaterial({color:0x111216,roughness:.93}),glass:new THREE.MeshPhysicalMaterial({color:0xb9e6ed,metalness:0,roughness:.07,transparent:true,opacity:.12,depthWrite:false,side:THREE.DoubleSide}),light:new THREE.MeshStandardMaterial({color:0xc3ff77,emissive:0x67ff24,emissiveIntensity:1.5,metalness:.2,roughness:.3})};
-function ultraBox(parent,w,h,d,x,y,z,mat){return box(parent,w,h,d,x,y,z,mat)}
-function ultraFan(parent,x,y,z,r=.27,axis='z'){
- const assembly=new THREE.Group();assembly.position.set(x,y,z);parent.add(assembly);
- if(axis==='x')assembly.rotation.y=Math.PI/2;
- const frame=ultraBox(assembly,r*2.24,r*2.24,.095,0,0,0,ultraM.black);
- const opening=new THREE.Mesh(new THREE.RingGeometry(r*.83,r,48),ultraM.chrome);opening.position.z=.057;assembly.add(opening);
- const glow=new THREE.Mesh(new THREE.TorusGeometry(r*.88,.018,8,56),ultraM.light);glow.position.z=.067;assembly.add(glow);ultra.rgbParts.push(glow);
- const rotor=new THREE.Group();rotor.position.z=.075;assembly.add(rotor);
- for(let i=0;i<9;i++){const a=i*Math.PI*2/9;const blade=new THREE.Mesh(new THREE.ShapeGeometry((()=>{const shape=new THREE.Shape();shape.moveTo(.015,.025);shape.quadraticCurveTo(r*.38,r*.68,r*.8,r*.3);shape.quadraticCurveTo(r*.75,-r*.04,r*.10,-r*.045);shape.closePath();return shape})()),ultraM.chrome);blade.rotation.z=a;rotor.add(blade)}
- const hub=new THREE.Mesh(new THREE.CylinderGeometry(r*.17,r*.17,.065,32),ultraM.black);hub.rotation.x=Math.PI/2;hub.position.z=.035;rotor.add(hub);
- ultra.rotors.push(rotor);return assembly;
-}
-// Three front intake fans, two roof exhaust fans, one rear exhaust fan.
-for(let i=0;i<3;i++)ultraFan(caseG,1.02,1.02-i*.98,.64,.27);
-for(let i=0;i<2;i++)ultraFan(caseG,-.65+i*.8,1.48,.02,.27);
-ultraFan(caseG,-1.04,.90,-.57,.26);
-// Premium panoramic glazing and an alternative fine-mesh front.
-ultraBox(ultra.panorama,2.64,3.04,.018,0,.01,.845,ultraM.glass);
-ultraBox(ultra.panorama,.018,3.02,1.48,1.39,.01,.02,ultraM.glass);
-for(let i=0;i<45;i++){const y=-1.38+i*.063;ultraBox(ultra.meshFront,2.42,.009,.018,0,y,.865,ultraM.chrome)}
-for(let i=0;i<22;i++){const x=-1.2+i*.112;ultraBox(ultra.meshFront,.009,2.82,.018,x,0,.866,ultraM.chrome)}
-// Graphics card backplate, heatsink fins and a second fan surface.
-for(let i=0;i<23;i++)ultraBox(gpu,1.7,.012,.20,-.05,-.91+i*.016,.21,ultraM.chrome);
-ultraBox(gpu,1.85,.028,.53,-.05,-.46,.15,ultraM.black);
-for(let i=0;i<2;i++)ultraFan(gpu,-.45+i*.8,-.7,.48,.19);
-// RAM heat spreader accents and CPU cold plate.
-for(let i=0;i<4;i++)ultraBox(ram,.055,.58,.018,-.8+i*.16,.7,.47,i%2?ultraM.chrome:ultraM.light);
-ultraBox(cooler,.42,.42,.035,-.52,.44,.27,ultraM.chrome);
-// AIO radiator and flexible tubes, shown when cooler is selected.
-const rad=ultraBox(ultra.liquid,1.5,.16,.52,-.25,1.45,-.18,ultraM.black);
-for(let i=0;i<2;i++)ultraFan(ultra.liquid,-.63+i*.75,1.38,.16,.24);
-function ultraTube(pts,r=.026){const curve=new THREE.CatmullRomCurve3(pts.map(v=>new THREE.Vector3(...v)));const mesh=new THREE.Mesh(new THREE.TubeGeometry(curve,35,r,9,false),ultraM.rubber);ultra.liquid.add(mesh)}
-ultraTube([[-.52,.45,.28],[-.65,.85,.35],[-.48,1.21,.32],[-.62,1.43,.15]]);
-ultraTube([[-.44,.45,.28],[-.20,.83,.45],[.06,1.21,.29],[.14,1.43,.15]]);
-root.add(ultra.liquid);
-// Case footpads, power button, front USB and chassis detail.
-for(const x of [-1.08,1.08])for(const z of [-.58,.58])ultraBox(caseG,.33,.09,.27,x,-1.75,z,ultraM.rubber);
-const powerButton=new THREE.Mesh(new THREE.CylinderGeometry(.055,.055,.014,32),ultraM.light);powerButton.rotation.x=Math.PI/2;powerButton.position.set(1.04,1.73,.50);caseG.add(powerButton);
-for(const x of [.55,.74])ultraBox(caseG,.13,.025,.025,x,1.72,.60,ultraM.black);
-// Soft studio ground shadow to anchor the chassis visually.
-const shadow=new THREE.Mesh(new THREE.CircleGeometry(2.15,64),new THREE.MeshBasicMaterial({color:0x020605,transparent:true,opacity:.35,depthWrite:false}));shadow.rotation.x=-Math.PI/2;shadow.position.y=-1.79;scene.add(shadow);
-let ultraQuality='high';
-function ultraUpdate(){const gr=groups.find(g=>g.id==='case');const item=gr?.options.find(o=>o.id===chosen.case);const name=(item?.name||'').toLowerCase();const isPanorama=/panor|aquar|glass|vidro|showcase/.test(name);ultra.panorama.visible=isPanorama;ultra.meshFront.visible=!isPanorama;const isWhite=item&&(item.finish==='white'||/branco|white/.test(name));ultraM.black.color.set(isWhite?0xbcc8d3:0x11151a);ultraM.chrome.color.set(isWhite?0xf2f7fa:0x9faebc);ultra.liquid.visible=!!chosen.cooler&&/water|liquid|aio|240|360|refrigera/.test((groups.find(g=>g.id==='cooler')?.options.find(o=>o.id===chosen.cooler)?.name||'').toLowerCase());}
-const floor=new THREE.Mesh(new THREE.PlaneGeometry(200,200),new THREE.MeshStandardMaterial({color:0x101517,roughness:1}));floor.rotation.x=-Math.PI/2;floor.position.y=-1.81;scene.add(floor);const grid=new THREE.GridHelper(20,35,0x24322c,0x18231e);grid.position.y=-1.79;grid.material.transparent=true;grid.material.opacity=.24;scene.add(grid);let yaw=-.88,pitch=.12,distance=5.35,dragging=false,prevX=0,prevY=0;const spread={cooler:[-.5,.9,1.4],case:[0,0,0],board:[-1.4,.3,-.7],cpu:[-.5,.7,1.2],ram:[.5,1.3,.8],gpu:[.2,-.6,1.5],ssd:[-1.4,-.4,.9],psu:[1.2,-.8,.7]};let expand=false;function update(){for(const [id,g] of Object.entries(parts))g.visible=id==='case'||!!chosen[id];studioCables.forEach(c=>c.visible=!!chosen.psu);ultraUpdate();
+const floor=new THREE.Mesh(new THREE.PlaneGeometry(200,200),new THREE.MeshStandardMaterial({color:0x101517,roughness:1}));floor.rotation.x=-Math.PI/2;floor.position.y=-1.81;scene.add(floor);const grid=new THREE.GridHelper(20,35,0x24322c,0x18231e);grid.position.y=-1.79;grid.material.transparent=true;grid.material.opacity=.24;scene.add(grid);let yaw=-.88,pitch=.12,distance=5.35,dragging=false,prevX=0,prevY=0;const spread={cooler:[-.5,.9,1.4],case:[0,0,0],board:[-1.4,.3,-.7],cpu:[-.5,.7,1.2],ram:[.5,1.3,.8],gpu:[.2,-.6,1.5],ssd:[-1.4,-.4,.9],psu:[1.2,-.8,.7]};let expand=false;function update(){for(const [id,g] of Object.entries(parts))g.visible=id==='case'||!!chosen[id];studioCables.forEach(c=>c.visible=!!chosen.psu);
 const pick=gid=>{const gr=groups.find(x=>x.id===gid);return gr&&gr.options.find(o=>o.id===chosen[gid])};
 const gp=pick('gpu'),bd=pick('board'),cs=pick('case'),cp=pick('cpu');
 if(chosen.gpu==='igpu')parts.gpu.visible=false;gpu.scale.x=gp?Math.max(.8,Math.min(1.12,gp.lengthMm/245)):1;gpu.scale.z=gp&&gp.power>200?1.2:1;
 board.scale.y=bd&&bd.form==='mATX'?.9:1;
 materials.shell.color.set(cs&&(cs.finish==='white'||/branco|white/i.test(cs.name))?0xe5eaf0:cs&&cs.id==='case2'?0x0f1316:0x191e23);materials.frame.color.set(cs&&(cs.finish==='white'||/branco|white/i.test(cs.name))?0xb8c3cc:0x333b40);
-rim.color.set(cp&&cp.socket==='AM5'?0x4dd2ff:0xc2ff4d)}function resize(){const w=target.clientWidth,h=target.clientHeight;camera.aspect=w/h;camera.updateProjectionMatrix();renderer.setSize(w,h,false)}new ResizeObserver(resize).observe(target);resize();renderer.domElement.addEventListener('pointerdown',e=>{dragging=true;prevX=e.clientX;prevY=e.clientY;renderer.domElement.setPointerCapture(e.pointerId)});renderer.domElement.addEventListener('pointerup',()=>dragging=false);renderer.domElement.addEventListener('pointercancel',()=>dragging=false);renderer.domElement.addEventListener('pointermove',e=>{if(!dragging)return;yaw+=(e.clientX-prevX)*.007;pitch=Math.max(-.6,Math.min(.65,pitch+(e.clientY-prevY)*.006));prevX=e.clientX;prevY=e.clientY});renderer.domElement.addEventListener('wheel',e=>{e.preventDefault();distance=Math.max(4.9,Math.min(12,distance+e.deltaY*.007))},{passive:false});let last=0;function animate(t){requestAnimationFrame(animate);const dt=Math.min((t-last)/1000||.016,.05);last=t;if(!dragging)yaw+=dt*.045;root.rotation.y=yaw;root.rotation.x=pitch;camera.position.set(0,1.0,distance);camera.lookAt(0,0,0);for(const [id,g] of Object.entries(parts)){const v=spread[id];const targetX=expand?v[0]:0,targetY=expand?v[1]:0,targetZ=expand?v[2]:0;const factor=Math.min(1,dt*5);g.position.x+=(targetX-g.position.x)*factor;g.position.y+=(targetY-g.position.y)*factor;g.position.z+=(targetZ-g.position.z)*factor}if(ultraQuality!=='low')ultra.rotors.forEach((r,i)=>{r.rotation.z+=dt*(i%2?7:-8)});const col=rgb?tmp.setHSL((t/6000)%1,.9,.55):accentCol;detail.led.color.copy(col);detail.led.emissive.copy(col);railMat.color.copy(col);railMat.emissive.copy(col).multiplyScalar(.5);materials.accent.color.copy(col);materials.accent.emissive.copy(col).multiplyScalar(.4);rim.color.copy(col);ultraM.light.color.copy(col);ultraM.light.emissive.copy(col);renderer.render(scene,camera)}let rgb=false;const accentCol=new THREE.Color(0xbaff66),tmp=new THREE.Color();update();requestAnimationFrame(animate);viewer={update,explode(v){expand=v},accent(c){accentCol.set(c)},rgb(v){rgb=v},shot(){renderer.render(scene,camera);return renderer.domElement.toDataURL('image/png')},quality(q){ultraQuality=q;renderer.setPixelRatio(Math.min(devicePixelRatio,q==='low'?1:q==='medium'?1.5:2));resize()},reset(){yaw=-.88;pitch=.12;distance=5.35;expand=false;exploded=false;$('explode').textContent='⇱ Explodir peças'}}}catch(e){target.innerHTML='<div class="loading" style="padding:25px;text-align:center">Não foi possível carregar o motor 3D. Conecte-se à internet e abra o projeto por um servidor local (Live Server). O configurador de peças continua funcionando.</div>';console.error('Falha no 3D:',e)}}init3D();
+rim.color.set(cp&&cp.socket==='AM5'?0x4dd2ff:0xc2ff4d);raven44Update()}function resize(){const w=Math.max(1,target.clientWidth),h=Math.max(1,target.clientHeight);camera.aspect=w/h;camera.updateProjectionMatrix();renderer.setSize(w,h,false)}new ResizeObserver(resize).observe(target);resize();renderer.domElement.addEventListener('pointerdown',e=>{dragging=true;prevX=e.clientX;prevY=e.clientY;renderer.domElement.setPointerCapture(e.pointerId)});renderer.domElement.addEventListener('pointerup',()=>dragging=false);renderer.domElement.addEventListener('pointercancel',()=>dragging=false);renderer.domElement.addEventListener('pointermove',e=>{if(!dragging)return;yaw+=(e.clientX-prevX)*.007;pitch=Math.max(-.6,Math.min(.65,pitch+(e.clientY-prevY)*.006));prevX=e.clientX;prevY=e.clientY});renderer.domElement.addEventListener('wheel',e=>{e.preventDefault();distance=Math.max(4.9,Math.min(12,distance+e.deltaY*.007))},{passive:false});let last=0;function animate(t){requestAnimationFrame(animate);const dt=Math.min((t-last)/1000||.016,.05);last=t;if(!dragging)yaw+=dt*.045;root.rotation.y=yaw;root.rotation.x=pitch;camera.position.set(0,1.0,distance);camera.lookAt(0,0,0);for(const [id,g] of Object.entries(parts)){const v=spread[id];const targetX=expand?v[0]:0,targetY=expand?v[1]:0,targetZ=expand?v[2]:0;const factor=Math.min(1,dt*5);g.position.x+=(targetX-g.position.x)*factor;g.position.y+=(targetY-g.position.y)*factor;g.position.z+=(targetZ-g.position.z)*factor}for(const rotor of raven44.rotors)rotor.rotation.z+=dt*5.2;const col=rgb?tmp.setHSL((t/6000)%1,.9,.55):accentCol;detail.led.color.copy(col);detail.led.emissive.copy(col);railMat.color.copy(col);railMat.emissive.copy(col).multiplyScalar(.5);materials.accent.color.copy(col);materials.accent.emissive.copy(col).multiplyScalar(.4);rim.color.copy(col);raven44Mat.glow.color.copy(col);raven44Mat.glow.emissive.copy(col).multiplyScalar(.55);renderer.render(scene,camera)}let rgb=false;const accentCol=new THREE.Color(0xbaff66),tmp=new THREE.Color();update();requestAnimationFrame(animate);viewer={update,explode(v){expand=v},accent(c){accentCol.set(c)},rgb(v){rgb=v},shot(){renderer.render(scene,camera);return renderer.domElement.toDataURL('image/png')},reset(){yaw=-.88;pitch=.12;distance=5.35;expand=false;exploded=false;$('explode').textContent='⇱ Explodir peças'}}}catch(e){target.innerHTML='<div class="loading" style="padding:25px;text-align:center">Não foi possível carregar o motor 3D. Conecte-se à internet e abra o projeto por um servidor local (Live Server). O configurador de peças continua funcionando.</div>';console.error('Falha no 3D:',e)}}init3D();
 
 // 3.4 — lista de compras com preços explicitamente estimados.
 const shoppingButton=document.getElementById('shopping');
@@ -354,6 +360,3 @@ document.getElementById('smartGenerate')?.addEventListener('click',()=>{const go
 document.getElementById('nextShare')?.addEventListener('click',()=>document.getElementById('link')?.click());
 document.getElementById('nextImage')?.addEventListener('click',()=>document.getElementById('shot')?.click());
 ravenGarageRender();
-
-// Quality setting for slower devices.
-document.getElementById("quality3d")?.addEventListener("change",e=>viewer?.quality?.(e.target.value));
