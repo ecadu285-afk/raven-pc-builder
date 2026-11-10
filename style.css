@@ -94,3 +94,10 @@ h1 em{background:linear-gradient(90deg,var(--accent),#fff,var(--accent));backgro
 .options .option.dim .raven-inspect-option{opacity:1}
 .options .option:focus-within{border-color:#baff66}
 @media(max-width:650px){.options .option{padding:13px 12px 11px}.options .option-top{column-gap:8px}.options .option-price{font-size:12px}.options .raven-inspect-option{min-height:42px}}
+
+/* 4.7.2 — corrige compressao de linhas no CSS Grid da lista de 100 pecas */
+#options.options{display:grid!important;grid-template-columns:minmax(0,1fr)!important;grid-auto-rows:max-content!important;align-content:start!important;align-items:start!important;gap:12px!important;overflow-y:auto!important;overflow-x:hidden!important;min-height:0!important;padding:3px 8px 10px 2px!important;}
+#options.options>.option{height:auto!important;min-height:max-content!important;max-height:none!important;align-self:start!important;flex-shrink:0!important;position:relative!important;transform:none!important;contain:none!important;}
+#options.options>.option:hover{transform:none!important;}
+#options.options>.option .option-top,#options.options>.option .option-desc,#options.options>.option .raven-inspect-option{flex-shrink:0!important;}
+#options.options>.option .raven-inspect-option{position:relative!important;inset:auto!important;display:flex!important;clear:both!important;}
