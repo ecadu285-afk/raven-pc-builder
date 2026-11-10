@@ -343,6 +343,82 @@ function raven46Update(pick){
  coolerTower.visible=!!coolerPart&&!coolerLow.visible&&!/aio|water|líquid|liquid|radiador/.test(coolerName);
  if(bd)board.scale.x=bd.form==='ITX'?.77:bd.form==='mATX'?.91:1;
 }
+
+// RAVEN 4.8 — assinatura geométrica determinística por SKU.
+// Cada identificador gera um conjunto exclusivo de relevos, circuitos, grelhas,
+// acabamentos e detalhes. Não é uma reprodução oficial do fabricante.
+const raven48={active:{}, ids:{},rotors:[]};
+function raven48Hash(str){let h=2166136261;for(const c of String(str)){h=Math.imul(h^c.charCodeAt(0),16777619)}return h>>>0}
+function raven48Rand(seed){let x=seed>>>0;return ()=>{x^=x<<13;x^=x>>>17;x^=x<<5;return (x>>>0)/4294967296}}
+function raven48Material(hex,metal=.55){return new THREE.MeshStandardMaterial({color:hex,metalness:metal,roughness:.32})}
+function raven48Dispose(group){group.traverse(obj=>{if(obj.isMesh){obj.geometry?.dispose();if(Array.isArray(obj.material))obj.material.forEach(m=>m.dispose());else obj.material?.dispose()}});group.removeFromParent()}
+function raven48Build(kind,item){
+ const g=new THREE.Group(),rand=raven48Rand(raven48Hash(kind+':'+item.id)),n=(a,b)=>a+(b-a)*rand();
+ const finish=/branco|white|snow/i.test(item.name)||item.finish==='white';
+ const body=raven48Material(finish?0xdbe5ed:0x202b34,.78),metal=raven48Material(finish?0x8fa9b7:0x657d8d,.88);
+ const bright=raven48Material([0xbaff66,0x55d9ed,0xffb15c,0x9d8aff,0xff5c91][Math.floor(rand()*5)],.35);
+ bright.emissive=bright.color.clone().multiplyScalar(.25);
+ const dark=raven48Material(0x10161b,.48),gold=raven48Material(0xb49a69,.85);
+ const cube=(w,h,d,x,y,z,mat=body)=>box(g,w,h,d,x,y,z,mat);
+ const stud=(x,y,z,r=.022,mat=metal)=>{const o=cylinder(g,r,.022,x,y,z,mat);o.rotation.x=Math.PI/2};
+ const fan=(x,y,z,r)=>{const fg=new THREE.Group();fg.position.set(x,y,z);g.add(fg);const rim=new THREE.Mesh(new THREE.TorusGeometry(r,.027,8,28),metal);fg.add(rim);const rotor=new THREE.Group();fg.add(rotor);const hub=new THREE.Mesh(new THREE.CylinderGeometry(r*.19,r*.19,.035,14),bright);hub.rotation.x=Math.PI/2;rotor.add(hub);for(let i=0;i<7;i++){const a=i*Math.PI*2/7;const b=new THREE.Mesh(new THREE.BoxGeometry(r*.32,r*.68,.018),body);b.position.set(Math.cos(a)*r*.43,Math.sin(a)*r*.43,.016);b.rotation.z=a-.35;rotor.add(b)}raven48.rotors.push(rotor)};
+ if(kind==='case'){
+  const mesh=/mesh|airflow|flow|grade/i.test(item.name),pan=/panoram|glass|aquar|vision|dual chamber/i.test(item.name);
+  const count=mesh?34:pan?4:10;
+  for(let i=0;i<count;i++){const y=-1.32+(i+.5)*2.64/count;cube(.022,mesh?.027:.045,n(.05,.10),1.433,y,-.52+n(-.13,.13),i%5===0?bright:metal)}
+  for(let i=0;i<6;i++){const x=-1.12+i*.44;cube(.20,.016,.024,x,1.77,-.46+n(0,.6),i%3===0?bright:dark)}
+  if(pan){cube(.025,2.8,1.48,1.43,0,.04,metal);for(let i=0;i<4;i++)stud(1.46,-1.1+i*.72,.65,.034,bright)}
+  else {for(let i=0;i<3;i++)cube(.024,.12,.7,1.43,-1+i*.92,.15,bright)}
+  for(let i=0;i<4;i++)stud(-1.23,-1.40+i*.94,.87,.026,gold);
+ }else if(kind==='board'){
+  const cols=item.form==='ITX'?5:item.form==='mATX'?8:11;
+  for(let i=0;i<cols*3;i++){const x=-1.03+(i%cols)*1.48/cols,y=-.95+Math.floor(i/cols)*.60+n(-.08,.08);cube(n(.035,.15),.012,.016,x,y,-.285,i%7===0?bright:gold)}
+  for(let i=0;i<6;i++)cube(.14,.09,.07,-1.04+i*.18,.88,-.25,i%2?dark:metal);
+  for(let i=0;i<4;i++)cube(.06,.24,.06,.67,-.7+i*.38,-.29,bright);
+ }else if(kind==='cpu'){
+  const intel=/LGA/.test(item.socket||'');const size=intel?.56:.49;
+  cube(size,size,.035,-.52,.44,-.005,metal);
+  for(let i=0;i<4;i++){const a=i*Math.PI/2;cube(.07,.06,.025,-.52+Math.cos(a)*size*.36,.44+Math.sin(a)*size*.36,.026,gold)}
+  for(let i=0;i<4;i++)cube(.065,.013,.012,-.68+i*.11,.39+n(-.1,.13),.033,bright);
+ }else if(kind==='ram'){
+  const sticks=/4\s*[x×]|4x|quad/i.test(item.name)?4:2;
+  for(let j=0;j<sticks;j++){const x=.13+j*.13;cube(.11,1.10,.075,x,.14,.015,j%2?body:metal);for(let k=0;k<7;k++)cube(.092,.035,.009,x,-.28+k*.14,.06,k%3===0?bright:dark);cube(.12,.045,.08,x,.72,.015,bright)}
+ }else if(kind==='gpu'){
+  if(item.id==='igpu')return g;
+  const count=(item.lengthMm||230)>275?3:(item.lengthMm||230)<180?1:2;
+  const length=count===3?2.15:count===2?1.72:1.15;
+  cube(length,.72,.07,-.02,-.70,.57,body);
+  for(let i=0;i<count;i++)fan(-.02+(i-(count-1)/2)*length/(count+.12),-.70,.635,Math.min(.25,length/(count*2.8)));
+  for(let i=0;i<16;i++)cube(.012,.49,.08,-length*.46+i*length/16,-.70,.48,i%4===0?bright:metal);
+  for(let i=0;i<5;i++)stud(-length*.4+i*length*.2,-.35,.58,.024,gold);
+  cube(.28,.055,.09,length*.32,-.32,.50,bright);
+ }else if(kind==='ssd'){
+  const sata=/sata|hdd|hd |2.5/i.test(item.name);
+  if(sata){cube(.78,.50,.075,-.52,-.39,.04,body);cube(.62,.32,.013,-.52,-.39,.087,metal)}
+  else{cube(.78,.15,.04,-.52,-.38,.05,dark);for(let i=0;i<4;i++)cube(.12,.12,.025,-.78+i*.17,-.38,.085,i%2?metal:body)}
+  for(let i=0;i<4;i++)cube(.065,.013,.01,-.72+i*.13,-.39,.11,bright);
+ }else if(kind==='psu'){
+  cube(.88,.59,.04,.52,-1.12,.64,body);
+  const count=5+Math.floor(rand()*8);
+  for(let i=0;i<count;i++)cube(.72,.016,.016,.52,-1.36+i*.49/count,.672,i%4===0?bright:dark);
+  for(let i=0;i<3;i++)cube(.10,.065,.035,.24+i*.25,-1.42,.69,gold);
+ }else if(kind==='cooler'){
+  const aio=/aio|water|líquid|liquid|radiador/i.test(item.name),low=/stock|box|low|baixo/i.test(item.name);
+  if(aio){cube(1.30,.30,.18,-.23,1.33,.03,dark);for(let i=0;i<2;i++)fan(-.65+i*.75,1.33,.16,.17);cube(.40,.40,.07,-.52,.44,.39,body);fan(-.52,.44,.45,.16)}
+  else{const fins=low?7:16;for(let i=0;i<fins;i++)cube(low?.67:.82,.015,low?.35:.48,-.52,.11+i*(low?.035:.048),.22,metal);fan(-.52,.42,.49,low?.20:.28)}
+ }
+ return g;
+}
+function raven48Update(pick){
+ for(const [kind,parent] of Object.entries(parts)){
+  const item=pick(kind),id=item?.id||'';
+  if(raven48.ids[kind]===id)continue;
+  if(raven48.active[kind])raven48Dispose(raven48.active[kind]);
+  raven48.ids[kind]=id;
+  if(item){const overlay=raven48Build(kind,item);parent.add(overlay);raven48.active[kind]=overlay}else delete raven48.active[kind];
+ }
+}
+
 // Luzes de preenchimento para destacar os componentes internos
 const fillLight=new THREE.PointLight(0xe9f5ff,13,8);fillLight.position.set(1,1,4);scene.add(fillLight);
 const innerLight=new THREE.PointLight(0xf0f7ff,14,6);innerLight.position.set(0,.4,.2);scene.add(innerLight);
@@ -363,7 +439,7 @@ const gp=pick('gpu'),bd=pick('board'),cs=pick('case'),cp=pick('cpu');
 if(chosen.gpu==='igpu')parts.gpu.visible=false;gpu.scale.x=gp?Math.max(.8,Math.min(1.12,gp.lengthMm/245)):1;gpu.scale.z=gp&&gp.power>200?1.2:1;
 board.scale.y=bd&&bd.form==='mATX'?.9:1;
 materials.shell.color.set(cs&&(cs.finish==='white'||/branco|white/i.test(cs.name))?0xe5eaf0:cs&&cs.id==='case2'?0x0f1316:0x191e23);materials.frame.color.set(cs&&(cs.finish==='white'||/branco|white/i.test(cs.name))?0xb8c3cc:0x333b40);
-rim.color.set(cp&&cp.socket==='AM5'?0x4dd2ff:0xc2ff4d);raven44Update();raven46Update(pick)}function resize(){const w=Math.max(1,target.clientWidth),h=Math.max(1,target.clientHeight);camera.aspect=w/h;camera.updateProjectionMatrix();renderer.setSize(w,h,false)}new ResizeObserver(resize).observe(target);resize();renderer.domElement.addEventListener('pointerdown',e=>{dragging=true;prevX=e.clientX;prevY=e.clientY;renderer.domElement.setPointerCapture(e.pointerId)});renderer.domElement.addEventListener('pointerup',()=>dragging=false);renderer.domElement.addEventListener('pointercancel',()=>dragging=false);renderer.domElement.addEventListener('pointermove',e=>{if(!dragging)return;yaw+=(e.clientX-prevX)*.007;pitch=Math.max(-.6,Math.min(.65,pitch+(e.clientY-prevY)*.006));prevX=e.clientX;prevY=e.clientY});renderer.domElement.addEventListener('wheel',e=>{e.preventDefault();distance=Math.max(inspecting?2.3:4.9,Math.min(22,distance+e.deltaY*.007))},{passive:false});const activeTouches=new Map();let pinchSpan=null;renderer.domElement.style.touchAction='none';renderer.domElement.addEventListener('pointerdown',e=>{if(e.pointerType==='touch'){activeTouches.set(e.pointerId,{x:e.clientX,y:e.clientY});if(activeTouches.size===2){dragging=false;pinchSpan=null}}});renderer.domElement.addEventListener('pointermove',e=>{if(e.pointerType!=='touch'||!activeTouches.has(e.pointerId))return;activeTouches.set(e.pointerId,{x:e.clientX,y:e.clientY});if(activeTouches.size===2){const [a,b]=[...activeTouches.values()];const span=Math.hypot(a.x-b.x,a.y-b.y);if(pinchSpan!==null)distance=Math.max(inspecting?2.3:4.9,Math.min(22,distance*pinchSpan/Math.max(1,span)));pinchSpan=span;dragging=false}});for(const eventName of ['pointerup','pointercancel','lostpointercapture'])renderer.domElement.addEventListener(eventName,e=>{activeTouches.delete(e.pointerId);pinchSpan=null});let inspecting=null;const restoreParts=()=>{inspecting=null;inspectHud.hidden=true;podium.visible=true;studioFloor.visible=true;update();distance=window.innerWidth<700?8.4:5.35;};inspectClose.onclick=restoreParts;document.addEventListener('keydown',e=>{if(e.key==='Escape'&&inspecting)restoreParts()});function isolate(){if(!inspecting)return;for(const [id,g] of Object.entries(parts))g.visible=(id===inspecting);podium.visible=false;studioFloor.visible=false;}let last=0;function animate(t){requestAnimationFrame(animate);const dt=Math.min((t-last)/1000||.016,.05);last=t;if(!dragging)yaw+=dt*.045;root.rotation.y=yaw;root.rotation.x=pitch;camera.position.set(0,1.0,distance);camera.lookAt(0,0,0);for(const [id,g] of Object.entries(parts)){const v=spread[id];const targetX=expand?v[0]:0,targetY=expand?v[1]:0,targetZ=expand?v[2]:0;const factor=Math.min(1,dt*5);g.position.x+=(targetX-g.position.x)*factor;g.position.y+=(targetY-g.position.y)*factor;g.position.z+=(targetZ-g.position.z)*factor}if(inspecting)isolate();for(const rotor of raven44.rotors)rotor.rotation.z+=dt*5.2;for(const rotor of raven46.rotors)if(rotor.parent?.visible)rotor.rotation.z+=dt*4.7;const col=rgb?tmp.setHSL((t/6000)%1,.9,.55):accentCol;detail.led.color.copy(col);detail.led.emissive.copy(col);railMat.color.copy(col);railMat.emissive.copy(col).multiplyScalar(.5);materials.accent.color.copy(col);materials.accent.emissive.copy(col).multiplyScalar(.4);rim.color.copy(col);raven44Mat.glow.color.copy(col);raven44Mat.glow.emissive.copy(col).multiplyScalar(.55);renderer.render(scene,camera)}let rgb=false;const accentCol=new THREE.Color(0xbaff66),tmp=new THREE.Color();update();requestAnimationFrame(animate);viewer={zoom(delta){distance=Math.max(inspecting?2.3:4.9,Math.min(22,distance+delta));return distance},inspect(id,name){if(!parts[id])return;update();inspecting=id;inspectTitle.textContent=name;inspectHud.hidden=false;isolate();yaw=-.6;pitch=.1;distance=id==='case'?(window.innerWidth<700?5.3:4.6):(window.innerWidth<700?3.9:3.1);expand=false;},closeInspect:restoreParts,update,explode(v){expand=v},accent(c){accentCol.set(c)},rgb(v){rgb=v},shot(){renderer.render(scene,camera);return renderer.domElement.toDataURL('image/png')},reset(){restoreParts();yaw=-.88;pitch=.12;distance=window.innerWidth<700?8.4:5.35;expand=false;exploded=false;$('explode').textContent='⇱ Explodir peças'}}}catch(e){target.innerHTML='<div class="loading" style="padding:25px;text-align:center">Não foi possível carregar o motor 3D. Conecte-se à internet e abra o projeto por um servidor local (Live Server). O configurador de peças continua funcionando.</div>';console.error('Falha no 3D:',e)}}init3D();
+rim.color.set(cp&&cp.socket==='AM5'?0x4dd2ff:0xc2ff4d);raven44Update();raven46Update(pick);raven48Update(pick)}function resize(){const w=Math.max(1,target.clientWidth),h=Math.max(1,target.clientHeight);camera.aspect=w/h;camera.updateProjectionMatrix();renderer.setSize(w,h,false)}new ResizeObserver(resize).observe(target);resize();renderer.domElement.addEventListener('pointerdown',e=>{dragging=true;prevX=e.clientX;prevY=e.clientY;renderer.domElement.setPointerCapture(e.pointerId)});renderer.domElement.addEventListener('pointerup',()=>dragging=false);renderer.domElement.addEventListener('pointercancel',()=>dragging=false);renderer.domElement.addEventListener('pointermove',e=>{if(!dragging)return;yaw+=(e.clientX-prevX)*.007;pitch=Math.max(-.6,Math.min(.65,pitch+(e.clientY-prevY)*.006));prevX=e.clientX;prevY=e.clientY});renderer.domElement.addEventListener('wheel',e=>{e.preventDefault();distance=Math.max(inspecting?2.3:4.9,Math.min(22,distance+e.deltaY*.007))},{passive:false});const activeTouches=new Map();let pinchSpan=null;renderer.domElement.style.touchAction='none';renderer.domElement.addEventListener('pointerdown',e=>{if(e.pointerType==='touch'){activeTouches.set(e.pointerId,{x:e.clientX,y:e.clientY});if(activeTouches.size===2){dragging=false;pinchSpan=null}}});renderer.domElement.addEventListener('pointermove',e=>{if(e.pointerType!=='touch'||!activeTouches.has(e.pointerId))return;activeTouches.set(e.pointerId,{x:e.clientX,y:e.clientY});if(activeTouches.size===2){const [a,b]=[...activeTouches.values()];const span=Math.hypot(a.x-b.x,a.y-b.y);if(pinchSpan!==null)distance=Math.max(inspecting?2.3:4.9,Math.min(22,distance*pinchSpan/Math.max(1,span)));pinchSpan=span;dragging=false}});for(const eventName of ['pointerup','pointercancel','lostpointercapture'])renderer.domElement.addEventListener(eventName,e=>{activeTouches.delete(e.pointerId);pinchSpan=null});let inspecting=null;const restoreParts=()=>{inspecting=null;inspectHud.hidden=true;podium.visible=true;studioFloor.visible=true;update();distance=window.innerWidth<700?8.4:5.35;};inspectClose.onclick=restoreParts;document.addEventListener('keydown',e=>{if(e.key==='Escape'&&inspecting)restoreParts()});function isolate(){if(!inspecting)return;for(const [id,g] of Object.entries(parts))g.visible=(id===inspecting);podium.visible=false;studioFloor.visible=false;}let last=0;function animate(t){requestAnimationFrame(animate);const dt=Math.min((t-last)/1000||.016,.05);last=t;if(!dragging)yaw+=dt*.045;root.rotation.y=yaw;root.rotation.x=pitch;camera.position.set(0,1.0,distance);camera.lookAt(0,0,0);for(const [id,g] of Object.entries(parts)){const v=spread[id];const targetX=expand?v[0]:0,targetY=expand?v[1]:0,targetZ=expand?v[2]:0;const factor=Math.min(1,dt*5);g.position.x+=(targetX-g.position.x)*factor;g.position.y+=(targetY-g.position.y)*factor;g.position.z+=(targetZ-g.position.z)*factor}if(inspecting)isolate();for(const rotor of raven44.rotors)rotor.rotation.z+=dt*5.2;for(const rotor of raven46.rotors)if(rotor.parent?.visible)rotor.rotation.z+=dt*4.7;for(const rotor of raven48.rotors)if(rotor.parent?.visible)rotor.rotation.z+=dt*4.1;const col=rgb?tmp.setHSL((t/6000)%1,.9,.55):accentCol;detail.led.color.copy(col);detail.led.emissive.copy(col);railMat.color.copy(col);railMat.emissive.copy(col).multiplyScalar(.5);materials.accent.color.copy(col);materials.accent.emissive.copy(col).multiplyScalar(.4);rim.color.copy(col);raven44Mat.glow.color.copy(col);raven44Mat.glow.emissive.copy(col).multiplyScalar(.55);renderer.render(scene,camera)}let rgb=false;const accentCol=new THREE.Color(0xbaff66),tmp=new THREE.Color();update();requestAnimationFrame(animate);viewer={zoom(delta){distance=Math.max(inspecting?2.3:4.9,Math.min(22,distance+delta));return distance},inspect(id,name){if(!parts[id])return;update();inspecting=id;inspectTitle.textContent=name;inspectHud.hidden=false;isolate();yaw=-.6;pitch=.1;distance=id==='case'?(window.innerWidth<700?5.3:4.6):(window.innerWidth<700?3.9:3.1);expand=false;},closeInspect:restoreParts,update,explode(v){expand=v},accent(c){accentCol.set(c)},rgb(v){rgb=v},shot(){renderer.render(scene,camera);return renderer.domElement.toDataURL('image/png')},reset(){restoreParts();yaw=-.88;pitch=.12;distance=window.innerWidth<700?8.4:5.35;expand=false;exploded=false;$('explode').textContent='⇱ Explodir peças'}}}catch(e){target.innerHTML='<div class="loading" style="padding:25px;text-align:center">Não foi possível carregar o motor 3D. Conecte-se à internet e abra o projeto por um servidor local (Live Server). O configurador de peças continua funcionando.</div>';console.error('Falha no 3D:',e)}}init3D();
 
 // 3.4 — lista de compras com preços explicitamente estimados.
 const shoppingButton=document.getElementById('shopping');
