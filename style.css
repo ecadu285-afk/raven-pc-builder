@@ -101,3 +101,8 @@ h1 em{background:linear-gradient(90deg,var(--accent),#fff,var(--accent));backgro
 #options.options>.option:hover{transform:none!important;}
 #options.options>.option .option-top,#options.options>.option .option-desc,#options.options>.option .raven-inspect-option{flex-shrink:0!important;}
 #options.options>.option .raven-inspect-option{position:relative!important;inset:auto!important;display:flex!important;clear:both!important;}
+
+/* RAVEN 5.2 — clareza de custos parciais */
+#build-completeness{margin:6px 0 10px;font-size:12px;line-height:1.55}
+#build-completeness.raven52-incomplete{color:#f2bf69;font-weight:700}
+#build-completeness.raven52-complete{color:#a5d9b4}
