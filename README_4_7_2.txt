@@ -1,0 +1,1 @@
+RAVEN 4.7.2 - Correcao de sobreposicao dos cartoes. Causa: linhas do CSS Grid comprimidas dentro da lista com altura maxima. Solucao: grid-auto-rows:max-content e align-content:start. Substitua todos os arquivos na raiz do GitHub Pages.
