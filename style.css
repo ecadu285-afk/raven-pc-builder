@@ -83,3 +83,14 @@ h1 em{background:linear-gradient(90deg,var(--accent),#fff,var(--accent));backgro
 
 /* 4.7 · Inspector individual de componentes */
 .option{position:relative}.raven-inspect-option{display:inline-flex;margin-top:12px;padding:7px 11px;border:1px solid #698d48;border-radius:7px;background:#17251c;color:#c2ff4d;font-size:11px;font-weight:750;cursor:pointer}.raven-inspect-option:hover{background:#2a432a}.raven-inspect-hud{position:absolute;z-index:15;top:12px;left:12px;right:12px;display:flex;gap:7px;flex-wrap:wrap;align-items:center;padding:12px 14px;border:1px solid #506c47;border-radius:12px;background:rgba(8,15,17,.92);box-shadow:0 8px 30px #0008}.raven-inspect-hud[hidden]{display:none!important}.raven-inspect-hud strong{color:#d3ff9b;font-size:13px;max-width:100%}.raven-inspect-hud span{color:#a9b7b6;font-size:11px;flex:1 1 170px}.raven-inspect-hud button{border:1px solid #baff66;background:#baff66;color:#102008;border-radius:7px;padding:7px 9px;font-size:11px;font-weight:800;cursor:pointer}@media(max-width:600px){.raven-inspect-hud{left:7px;right:7px;top:7px;padding:9px}.raven-inspect-hud span{display:none}}
+
+/* 4.7.1 — cartoes de pecas com acao 3D em linha propria */
+.options .option{display:flex;flex-direction:column;align-items:stretch;gap:0;min-height:0;padding:14px 13px 12px;overflow:visible;isolation:isolate}
+.options .option-top{display:grid;grid-template-columns:minmax(0,1fr) auto;align-items:start;column-gap:10px;min-width:0}
+.options .option-name{min-width:0;overflow-wrap:anywhere;line-height:1.4;white-space:normal}
+.options .option-price{align-self:start;white-space:nowrap;font-variant-numeric:tabular-nums;line-height:1.5}
+.options .option-desc{position:static;display:block;min-width:0;margin-top:7px;line-height:1.5;overflow-wrap:anywhere;color:#a1adb0}
+.options .raven-inspect-option{position:static!important;float:none!important;display:flex!important;align-items:center;justify-content:center;width:100%;min-height:37px;flex:0 0 auto;margin:12px 0 0!important;padding:8px 10px;border-radius:8px;line-height:1.35;text-align:center;white-space:normal;box-sizing:border-box;z-index:1}
+.options .option.dim .raven-inspect-option{opacity:1}
+.options .option:focus-within{border-color:#baff66}
+@media(max-width:650px){.options .option{padding:13px 12px 11px}.options .option-top{column-gap:8px}.options .option-price{font-size:12px}.options .raven-inspect-option{min-height:42px}}
