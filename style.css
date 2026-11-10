@@ -68,3 +68,6 @@ h1 em{background:linear-gradient(90deg,var(--accent),#fff,var(--accent));backgro
 .option{transition:transform .18s,border-color .18s,background .18s}
 .option:focus-visible{outline:2px solid var(--accent);outline-offset:2px}
 @media(max-width:600px){.view-actions{flex-wrap:wrap;justify-content:center}.viewport-top{flex-wrap:wrap}#scene{min-height:390px}.budget-row{flex-wrap:wrap}.next-inline{flex-wrap:wrap}}
+
+/* 4.4.1: controles de zoom acessíveis em dispositivos móveis */
+#scene canvas{touch-action:none}#zoomOut,#zoomIn{white-space:nowrap;min-width:66px}@media(max-width:700px){.view-actions{display:flex;flex-wrap:wrap;justify-content:center;gap:7px}.view-actions button{min-height:38px}#scene{min-height:390px}}
