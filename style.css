@@ -59,12 +59,3 @@ h1 em{background:linear-gradient(90deg,var(--accent),#fff,var(--accent));backgro
 
 /* 4.2 Hardware Universe */
 .option{position:relative}.option:has(.option-desc){min-height:74px}.option-desc{line-height:1.5}.viewport{border-color:#36413d}#scene{background:radial-gradient(ellipse at 48% 38%,#26313a 0%,#11191e 58%,#080c10 100%)}.options{max-height:470px}.config-head{align-items:flex-start}@media(max-width:650px){.options{max-height:360px}.viewport{min-height:430px}#scene{min-height:340px}}
-
-/* RAVEN 4.4: refinamento visual responsivo */
-#scene{background:radial-gradient(ellipse at 50% 42%,#29343b 0%,#121a20 47%,#080c10 100%)}
-.viewport{box-shadow:0 20px 60px #0008;border-color:#34433d}
-.viewport-top{background:linear-gradient(95deg,#141e1c,#101519)}
-.config,.next-panel,.marketplace{box-shadow:0 10px 35px #0003}
-.option{transition:transform .18s,border-color .18s,background .18s}
-.option:focus-visible{outline:2px solid var(--accent);outline-offset:2px}
-@media(max-width:600px){.view-actions{flex-wrap:wrap;justify-content:center}.viewport-top{flex-wrap:wrap}#scene{min-height:390px}.budget-row{flex-wrap:wrap}.next-inline{flex-wrap:wrap}}
