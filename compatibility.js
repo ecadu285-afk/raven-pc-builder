@@ -2,6 +2,29 @@
 // Dados desconhecidos não equivalem a compatibilidade confirmada.
 const rank={ITX:1,mATX:2,ATX:3};
 const unique=xs=>[...new Set(xs)];
+// Famílias de controladoras de memória. Não confundir geração da placa com a da CPU.
+export function cpuMemoryGenerations(cpu){
+ if(!cpu)return null;
+ if(Array.isArray(cpu.memoryTypes)&&cpu.memoryTypes.length)return cpu.memoryTypes;
+ const id=String(cpu.id||'').toLowerCase(), name=String(cpu.name||'').toLowerCase();
+ if(/^e5-\d+v[34]$/.test(id)||/xeon e5-\d+ v[34]/i.test(name))return ['DDR4'];
+ if(/^e5-\d+(v2)?$/.test(id)||/xeon e5-\d+( v2)?$/i.test(name))return ['DDR3'];
+ const socket=cpu.socket;
+ const map={'AM5':['DDR5'],'AM4':['DDR4'],'AM3+':['DDR3'],'FM2+':['DDR3'],
+  'LGA1155':['DDR3'],'LGA1150':['DDR3'],'LGA1151':['DDR4','DDR3L'],
+  'LGA1151v2':['DDR4'],'LGA1200':['DDR4'],'LGA1700':['DDR4','DDR5'],
+  'LGA2011':['DDR3'],'LGA2011-3':['DDR4']};
+ if(socket==='LGA1700'||socket==='LGA1151')return map[socket]; // a placa define qual opção
+ if(cpu.conceptual)return null; // CPU conceitual não é especificação validada
+ return map[socket]||null;
+}
+export function memoryConflicts(parts){
+ const {cpu,board,ram}=parts, errors=[];
+ const allowed=cpuMemoryGenerations(cpu);
+ if(cpu&&board&&allowed&&board.memory&&!allowed.includes(board.memory))errors.push(`Controladora de memória do processador ${cpu.name}: ${allowed.join(' ou ')}; placa-mãe ${board.name} declara ${board.memory}. Combinação incompatível.`);
+ if(cpu&&ram&&allowed&&ram.memory&&!allowed.includes(ram.memory))errors.push(`Processador ${cpu.name} não suporta memória ${ram.memory}; geração esperada: ${allowed.join(' ou ')}.`);
+ return unique(errors);
+}
 export function evaluateCompatibility(parts){
  const {case:chassis,board,cpu,ram,gpu,ssd,psu,cooler}=parts;
  const errors=[],warnings=[],passed=[],unknown=[];
@@ -13,8 +36,10 @@ export function evaluateCompatibility(parts){
    check(`BIOS: confirme o suporte ao processador ${cpu.name} na lista oficial da placa-mãe ${board.name}, incluindo revisão e versão mínima.`);
    if(['LGA2011','LGA2011-3'].includes(board.socket))check('Plataforma X79/X99: confirme chipset real, revisão da placa, suporte ao Xeon, firmware e tipo de memória aceito.');
  }
+ for(const problem of memoryConflicts(parts))fail(problem);
+ if(cpu&&board&&!cpuMemoryGenerations(cpu))check('Controladora de memória da CPU não verificada; confirme a ficha técnica do processador real.');
  if(ram&&board){
-   if(ram.memory&&board.memory){if(ram.memory!==board.memory)fail(`RAM ${ram.memory} incompatível com placa-mãe ${board.memory}.`);else ok(`Geração ${ram.memory} corresponde à placa-mãe.`)}else check('Tipo DDR da RAM ou placa-mãe não informado.');
+   if(ram.memory&&board.memory){if(ram.memory!==board.memory)fail(`RAM ${ram.memory} incompatível com placa-mãe ${board.memory}.`);else if(!memoryConflicts(parts).length)ok(`Geração ${ram.memory} corresponde à placa-mãe e não conflita com a controladora conhecida da CPU.`)}else check('Tipo DDR da RAM ou placa-mãe não informado.');
    const moduleCount=ram.modules || Number(ram.name?.match(/\((\d+)\s*[×x]/)?.[1]) || null;
    if(moduleCount&&board.ramSlots){if(moduleCount>board.ramSlots)fail(`${moduleCount} módulos de RAM excedem ${board.ramSlots} slots disponíveis.`);else ok(`${moduleCount} módulos cabem nos ${board.ramSlots} slots informados.`)}else check('Quantidade de slots de RAM da placa-mãe não verificada para este modelo.');
    if(ram.gb&&board.maxRamGb){if(ram.gb>board.maxRamGb)fail(`${ram.gb} GB excedem o limite de ${board.maxRamGb} GB.`);else ok('Capacidade total de RAM dentro do limite cadastrado.')}else check('Capacidade máxima de RAM suportada não confirmada.');
@@ -28,10 +53,11 @@ export function evaluateCompatibility(parts){
  if(ssd&&board){const isNvme=/NVMe|PCIe/i.test(ssd.name+' '+ssd.desc);if(isNvme){if(board.m2Nvme===false)fail('SSD NVMe exige slot M.2 PCIe ou adaptador compatível; placa-mãe declarada sem suporte.');else if(board.m2Nvme===true)ok('Placa-mãe declara suporte a SSD M.2 NVMe.');else check('Verifique slot M.2 com suporte NVMe, geração PCIe e compartilhamento de pistas/portas SATA.')}else check('Confirme portas SATA disponíveis, cabos e alimentação para o armazenamento.');}
  const cpuW=cpu?(Number(cpu.watts)||90):0,gpuW=gpu?(Number(gpu.power)||0):0;
  const estimatedWatts=cpuW+gpuW+(board?65:0)+(ram?12:0)+(ssd?8:0)+25;
- if(psu&&cpu&&gpu){const recommended=Math.ceil(estimatedWatts*1.4/50)*50;if(psu.watts<recommended)warn(`Fonte de ${psu.watts} W abaixo da margem conservadora estimada de ${recommended} W. Revise consumo de pico e recomendações dos fabricantes.`);else ok(`Potência nominal de ${psu.watts} W supera a margem ilustrativa de ${recommended} W.`);check('Conectores EPS/PCIe/12V-2x6, cabos, transientes e qualidade real da fonte não verificados. Certificação 80 Plus não garante qualidade.');}
+ if(psu&&cpu&&gpu){const recommended=Math.ceil(estimatedWatts*1.4/50)*50;if(psu.watts<recommended)warn(`Fonte de ${psu.watts} W abaixo da margem conservadora estimada de ${recommended} W. Revise consumo de pico e recomendações dos fabricantes.`);else if(psu.watts===recommended)warn(`Fonte de ${psu.watts} W iguala a margem estimada de ${recommended} W, sem folga adicional. Confirme o modelo real e os picos de consumo.`);else ok(`Potência nominal de ${psu.watts} W excede a margem ilustrativa de ${recommended} W; conectores e qualidade ainda precisam de confirmação.`);check('Conectores EPS/PCIe/12V-2x6, cabos, transientes e qualidade real da fonte não verificados. Certificação 80 Plus não garante qualidade.');}
+ if(board?.conceptual||cpu?.conceptual||ram?.conceptual||psu?.conceptual)check('Há componentes conceituais: características informadas são simulações e não certificam um produto comercial.');
  if(cpu&&gpu&&gpu.id==='igpu'&&!cpu.igpu)fail('Processador sem vídeo integrado selecionado com opção de vídeo integrado.');
  if(cpu&&gpu&&cpu.tier&&gpu.tier&&Math.abs(cpu.tier-gpu.tier)>=3)warn('Desempenho de CPU e GPU pode ser desequilibrado conforme jogo, resolução e uso; não é incompatibilidade física.');
  if(Object.values(parts).some(p=>p?.used))warn('Há peças usadas: solicite testes, estado de conservação e garantia.');
  if(!complete)check('Montagem incompleta: selecione as oito categorias para uma análise mais abrangente.');
- return {errors:unique(errors),warnings:unique(warnings),passed:unique(passed),unknown:unique(unknown),estimatedWatts,complete};
+ return {errors:unique(errors),warnings:unique(warnings),passed:unique(passed).filter(x=>!errors.some(e=>e.includes('Controladora de memória')&&x.includes('Geração'))),unknown:unique(unknown),estimatedWatts,complete};
 }

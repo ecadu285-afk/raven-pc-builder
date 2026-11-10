@@ -1,4 +1,4 @@
-import {evaluateCompatibility} from './compatibility.js';
+import {evaluateCompatibility,memoryConflicts} from './compatibility.js';
 import {catalog,autoBuild as autoBuildCat} from './catalog.js';
 const groups=[
  {id:'case',name:'Gabinete',icon:'▣',desc:'Escolha a estrutura e o visual da sua máquina.',options:[{id:'case1',name:'Raven Noir M-ATX',desc:'Preto fosco · vidro lateral · micro-ATX',price:320,form:'mATX',gpuMaxMm:300},{id:'case2',name:'Raven Obsidian ATX',desc:'Preto fosco · vidro lateral · ATX',price:490,form:'ATX',gpuMaxMm:360}]},
@@ -42,7 +42,7 @@ function renderAssistant(target,d){
   tip('Cooler incompatível com '+cpu.socket,candidate?'Opção genérica cadastrada: '+candidate.name+' ('+fmt(candidate.price)+'). Confirme fixação, ILM e altura do gabinete.':'Nenhum cooler cadastrado atende aos requisitos básicos. Pesquise o modelo exato e a fixação.',candidate?'Selecionar cooler':'',candidate?()=>change('cooler',candidate):undefined);
  }
  if(cpu&&board&&cpu.socket!==board.socket){const alt=catalog.board.filter(b=>b.socket===cpu.socket&&(!ram||b.memory===ram.memory)&&(!sel('case')||RK[b.form]<=RK[sel('case').form])).sort((a,b)=>a.price-b.price)[0];tip('Socket da CPU e placa-mãe não coincide','Troque a CPU ou escolha uma placa-mãe de socket '+cpu.socket+'.',alt?'Ver placa compatível':'',alt?()=>{current=1;render();document.querySelector('.config')?.scrollIntoView({behavior:'smooth'})}:undefined)}
- if(board&&ram&&board.memory!==ram.memory){const alt=catalog.ram.filter(r=>r.memory===board.memory&&r.gb>=ram.gb).sort((a,b)=>a.price-b.price)[0];tip('Memória incompatível','A placa selecionada usa '+board.memory+'.',alt?'Selecionar RAM':'',alt?()=>change('ram',alt):undefined)}
+ if(board&&ram&&(board.memory!==ram.memory||memoryConflicts({cpu,board,ram}).length)){const alt=catalog.ram.filter(r=>r.memory===board.memory&&r.gb>=ram.gb&&!memoryConflicts({cpu,board,ram:r}).length).sort((a,b)=>a.price-b.price)[0];tip('Memória incompatível','Confira o padrão de memória aceito simultaneamente pela CPU e pela placa-mãe.',alt?'Selecionar RAM':'',alt?()=>change('ram',alt):undefined)}
  if(cpu&&gpu&&gpu.id==='igpu'&&!cpu.igpu)tip('Sem vídeo integrado','Este processador precisa de uma placa de vídeo dedicada.','Escolher GPU',()=>{current=4;render();document.querySelector('.config')?.scrollIntoView({behavior:'smooth'})});
  if(ram&&ram.gb<16&&board){const alt=catalog.ram.filter(r=>r.memory===board.memory&&r.gb>=16).sort((a,b)=>a.price-b.price)[0];if(alt)tip('Upgrade de memória','Passar de '+ram.gb+' GB para '+alt.gb+' GB custa '+fmt(alt.price-ram.price)+' a mais (valor ilustrativo).','Aplicar upgrade',()=>change('ram',alt))}
  if(psu&&cpu&&gpu){const rec=Math.ceil(d.estimatedWatts*1.4/50)*50;if(psu.watts<rec){const alt=catalog.psu.filter(p=>p.watts>=rec).sort((a,b)=>a.price-b.price)[0];if(alt)tip('Fonte com margem insuficiente','Estimativa sugere ao menos '+rec+' W; confira também conectores e qualidade.','Selecionar fonte',()=>change('psu',alt))}}
@@ -73,9 +73,9 @@ function perf(t){const o=id=>optionFor(groups.find(g=>g.id===id));const c=o('cpu
 let lastCat=-1,lastY=0;const ui={q:'',sort:'def',hide:false,budget:1000,on:false};
 const sel=id=>optionFor(groups.find(x=>x.id===id));
 function bad(g,o){const c=sel('cpu'),b=sel('board'),r=sel('ram'),k=sel('case'),u=sel('gpu');
- if(g.id==='cpu')return !!b&&o.socket!==b.socket;
- if(g.id==='board')return !!((c&&o.socket!==c.socket)||(r&&o.memory!==r.memory)||(k&&RK[o.form]>RK[k.form]));
- if(g.id==='ram')return !!b&&o.memory!==b.memory;
+ if(g.id==='cpu')return !!b&&(o.socket!==b.socket||memoryConflicts({cpu:o,board:b,ram:r}).length>0);
+ if(g.id==='board')return !!((c&&o.socket!==c.socket)||(r&&o.memory!==r.memory)||(memoryConflicts({cpu:c,board:o,ram:r}).length>0)||(k&&RK[o.form]>RK[k.form]));
+ if(g.id==='ram')return !!((b&&o.memory!==b.memory)||memoryConflicts({cpu:c,board:b,ram:o}).length);
  if(g.id==='gpu')return !!((k&&o.lengthMm>k.gpuMaxMm)||(o.id==='igpu'&&c&&!c.igpu));
  if(g.id==='cooler')return !!(c&&!o.sockets.includes(c.socket));
  if(g.id==='case')return !!((b&&RK[b.form]>RK[o.form])||(u&&u.lengthMm>o.gpuMaxMm));
