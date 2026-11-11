@@ -524,13 +524,13 @@ if(shoppingButton)shoppingButton.addEventListener('click',async()=>{
 
 
 // 3.6 Marketplace: somente ofertas cadastradas explicitamente, sem coleta automatizada.
-const RAVEN_STORES={kabum:{name:'KaBuM!',domain:'kabum.com.br'},mercadolivre:{name:'Mercado Livre',domain:'mercadolivre.com.br'},terabyte:{name:'TerabyteShop',domain:'terabyteshop.com.br'},shopee:{name:'Shopee',domain:'shopee.com.br'}};
+const RAVEN_STORES={kabum:{name:'KaBuM!',domain:'kabum.com.br',hosts:['kabum.com.br']},mercadolivre:{name:'Mercado Livre',domain:'mercadolivre.com.br',hosts:['mercadolivre.com.br','mercadolivre.com','meli.la']},terabyte:{name:'TerabyteShop',domain:'terabyteshop.com.br',hosts:['terabyteshop.com.br']},shopee:{name:'Shopee',domain:'shopee.com.br',hosts:['shopee.com.br','shopee.com','shope.ee']}};
 let ravenOffers=[];let ravenHistory=[];
 function ravenMoney(n){return Number(n).toLocaleString('pt-BR',{style:'currency',currency:'BRL'});}
 function ravenSearchUrl(part,store){return 'https://www.google.com/search?q='+encodeURIComponent('site:'+store.domain+' '+part.name);}
 function ravenVerifiedOffer(o){
  if(!o||!RAVEN_STORES[o.store]||!o.partId||!Number.isFinite(o.price)||o.price<=0||!/^\d{4}-\d{2}-\d{2}$/.test(o.checkedAt||''))return false;
- try{const u=new URL(o.url);const host=u.hostname.toLowerCase();return u.protocol==='https:'&&(host===RAVEN_STORES[o.store].domain||host.endsWith('.'+RAVEN_STORES[o.store].domain));}catch{return false;}
+ try{const u=new URL(o.url);const host=u.hostname.toLowerCase();return u.protocol==='https:'&&RAVEN_STORES[o.store].hosts.some(h=>host===h||host.endsWith('.'+h));}catch{return false;}
 }
 function ravenDaysOld(date){const ms=Date.parse(date+'T00:00:00Z');return Number.isFinite(ms)?Math.max(0,Math.floor((Date.now()-ms)/86400000)):Infinity;}
 function ravenFresh(o){return ravenDaysOld(o.checkedAt)<=14;}

@@ -1,0 +1,25 @@
+RAVEN PC BUILDER 5.4 — PRIMEIRA OFERTA INTEGRADA
+
+Esta pasta contem apenas o SITE (nao o robô). Mantem visualizacao 3D, catalogo e verificacoes de compatibilidade.
+
+OFERTA IMPORTADA DO ROBÔ:
+- partId: c-eco-m — Gabinete micro-ATX Simples
+- Mercado Livre — R$ 160,00 — link meli.la
+- Conferencia: 10/11/2026 — marcada como afiliada pelo usuario
+- No configurador, R$ 80,00 continua como PRECO ILUSTRATIVO do catalogo, nao como preco da loja.
+
+PUBLICACAO NO GITHUB:
+1. Faca backup do repositorio antes de modificar arquivos.
+2. Extraia o ZIP. Abra a pasta raven-pc-builder.
+3. No repo ecadu285-afk/raven-pc-builder do GitHub, envie os arquivos que estao DENTRO dessa pasta para a RAIZ do repositorio (nao crie uma pasta adicional). Substitua os arquivos correspondentes.
+4. Confira que offers.json foi enviado na raiz e que index.html referencia script.js?v=54.
+5. Aguarde o GitHub Pages publicar. Atualize a pagina com Ctrl+Shift+R.
+6. No site escolha "Gabinete micro-ATX Simples", desca ate Marketplace e confira: menor cotacao recente R$ 160, Mercado Livre e botao "Ver oferta".
+7. Confirme se o destino do link corresponde ao anuncio correto, inclusive frete, estoque e condicao.
+
+DADOS / LIMITACOES:
+- A exportacao e manual: o site estatico nao se atualiza automaticamente quando o bot recebe novas ofertas.
+- O site nao compra nem recebe pagamentos, so encaminha ao vendedor externo.
+- O arquivo offers.json NAO prova atribuicao de comissoes. Confirme com sua conta de afiliado.
+- Nao inclua private/config.json, tokens, chaves, senhas ou pasta data/market.json no repositorio publico.
+- Para novas ofertas, exporte offers.json de novo no bot e substitua o arquivo no repositorio.

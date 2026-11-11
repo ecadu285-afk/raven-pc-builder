@@ -1,5 +1,16 @@
 {
-  "schemaVersion": 1,
-  "updatedAt": null,
-  "offers": []
+  "schemaVersion": 2,
+  "updatedAt": "2026-11-11",
+  "offers": [
+    {
+      "partId": "c-eco-m",
+      "store": "mercadolivre",
+      "price": 160,
+      "checkedAt": "2026-11-10",
+      "url": "https://meli.la/1rwCzx4",
+      "condition": "new",
+      "affiliate": true
+    }
+  ],
+  "history": []
 }
