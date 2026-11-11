@@ -1,0 +1,86 @@
+RAVEN CREATIVES STUDIOS
+ENTREGA DE DESENVOLVIMENTO — RAVEN PC BUILDER 5.5 + MARKET BOT 1.3
+
+O pacote tem DUAS pastas independentes:
+  01-PC-BUILDER-5.5/   -> ARQUIVOS DO SITE PARA GITHUB PAGES
+  02-MARKET-BOT-1.3/   -> PROGRAMA LOCAL PARA WINDOWS (NODE.JS)
+
+NÃO MISTURE ARQUIVOS DAS DUAS PASTAS.
+
+===== 1. ANTES DE INSTALAR =====
+Crie uma cópia de segurança da pasta do bot antigo 1.2 e do PC Builder 5.4.
+Especialmente importantes (NÃO APAGUE, NÃO ENVIE AO GITHUB, NÃO MANDE EM PRINTS):
+  raven-market-bot/data/market.json
+  raven-market-bot/private/config.json
+  raven-market-bot/private/token.json
+Os dois últimos são opcionais: se ainda não existirem, sua conta deverá ser conectada novamente.
+
+===== 2. ATUALIZAR O BOT =====
+1) Pare o bot antigo no VS Code com Ctrl+C.
+2) Abra a pasta "02-MARKET-BOT-1.3" extraída do ZIP.
+3) Copie estes arquivos da versão ANTIGA para as MESMAS subpastas da NOVA:
+   ANTIGO/data/market.json     -> NOVO/data/market.json
+   ANTIGO/private/config.json -> NOVO/private/config.json
+   ANTIGO/private/token.json  -> NOVO/private/token.json
+4) Abra NO VS CODE a pasta 02-MARKET-BOT-1.3 (onde estão package.json e server.mjs).
+5) Execute no terminal:
+   npm.cmd run check
+   npm.cmd test
+   npm.cmd start
+6) Abra http://localhost:4317
+7) Na fila de aprovação, clique em "Editar dados" no gabinete já aprovado.
+   Confira no anúncio real se o nome é "Gabinete Micro ATX BPC-N114MATX-M255".
+   Preencha o título verdadeiro e, se tiver direito de usar a foto, cole o URL HTTPS da imagem.
+   Clique em "Salvar alterações". A oferta voltará para PENDENTE.
+   Depois de conferir PREÇO, LINK DE AFILIADO, ESTOQUE e MODELO, clique em "Aprovar".
+8) Clique em "Atualizar ofertas na pasta do PC Builder" e escolha a pasta local
+   01-PC-BUILDER-5.5, ou use o botão "Exportar offers.json" e copie manualmente.
+   O navegador solicitará autorização antes de substituir o arquivo.
+
+NOTA: se o bot 1.2 já estiver conectado com token ainda válido, o túnel Cloudflare
+não é necessário para o uso local normal. Ele será necessário quando houver nova
+autorização OAuth via URL HTTPS configurada no Mercado Livre.
+
+A pesquisa automática do Mercado Livre pode continuar retornando HTTP 403.
+O bot NÃO cria links de afiliados nem extrai fotos ocultas de anúncios.
+Para Shopee e quando a pesquisa do Mercado Livre não funcionar, use o botão
+"Abrir pesquisa na loja" e cadastre a oferta manualmente após conferir.
+
+===== 3. ATUALIZAR O SITE =====
+1) Primeiro teste os arquivos da pasta 01-PC-BUILDER-5.5 localmente (Live Server
+   do VS Code). Não abra index.html com file://; os módulos JS precisam de HTTP.
+2) No GitHub, abra o repositório ecadu285-afk/raven-pc-builder.
+3) Se decidir PUBLICAR esta versão, envie os ARQUIVOS de dentro da pasta
+   01-PC-BUILDER-5.5 para a RAIZ do repositório (não envie a pasta que os contém).
+4) Substitua os arquivos correspondentes, inclusive index.html, script.js,
+   style.css, admin.js, admin.html e offers.json.
+5) Aguarde o GitHub Pages atualizar, pressione Ctrl+Shift+R e selecione o
+   "Gabinete micro-ATX Simples". Desça até MARKETPLACE.
+6) Confirme que o cartão mostra R$ 160,00, o título real (depois de verificado)
+   e que "Ver oferta" leva ao anúncio esperado. Não confunda o preço ilustrativo
+   do configurador (R$ 80) com o preço anunciado (R$ 160).
+
+===== 4. LIMITAÇÕES QUE PERMANECEM =====
+- GitHub Pages é estático. O botão de sincronização só altera o offers.json
+  na pasta LOCAL, não publica automaticamente no GitHub.
+- Não há confirmação de preço em tempo real, estoque ou comissão.
+- A API /sites/MLB/search estava retornando HTTP 403 mesmo com OAuth válido.
+- O primeiro anúncio não tem imagem confirmada neste pacote; aparece um
+  espaço reservado "PC" até você registrar uma foto autorizada.
+- O título inicial do gabinete é uma identificação informada durante o projeto;
+  confirme-o na página da loja antes de tratá-lo como modelo exato.
+
+===== 5. SEGURANÇA =====
+- A porta 4317 é o PAINEL LOCAL. Nunca direcione o Cloudflare Tunnel para ela.
+- A porta 4318 recebe somente o retorno OAuth: cloudflared tunnel --url http://127.0.0.1:4318
+- private/config.json e private/token.json devem ficar SOMENTE NO COMPUTADOR.
+- A chave secreta da aplicação apareceu em um print anterior. Regenere-a no
+  Mercado Livre Developers se ainda não o fez e atualize o config.json.
+- Ao enviar o código para o GitHub, jamais inclua a pasta "private" ou "data"
+  do robô. Os arquivos do site estático não têm credenciais.
+
+===== 6. PRÓXIMAS ETAPAS SUGERIDAS =====
+- Validar pelo menos 10 ofertas e seus nomes reais.
+- Definir rotina de conferência diária/semanal e publicação no GitHub.
+- Implementar fluxo de publicação com aprovação explícita e autenticação segura.
+- Investigar API oficial liberada para busca, se o Mercado Livre conceder acesso.
