@@ -523,7 +523,7 @@ if(shoppingButton)shoppingButton.addEventListener('click',async()=>{
 });
 
 
-// 5.5 Marketplace: ofertas aprovadas, preços cadastrados e metadados de produtos reais.
+// 5.6 Marketplace: ofertas aprovadas, preços cadastrados e metadados de produtos reais.
 const RAVEN_STORES={kabum:{name:'KaBuM!',domain:'kabum.com.br',hosts:['kabum.com.br']},mercadolivre:{name:'Mercado Livre',domain:'mercadolivre.com.br',hosts:['mercadolivre.com.br','mercadolivre.com','meli.la']},terabyte:{name:'TerabyteShop',domain:'terabyteshop.com.br',hosts:['terabyteshop.com.br']},shopee:{name:'Shopee',domain:'shopee.com.br',hosts:['shopee.com.br','shopee.com','shope.ee']}};
 let ravenOffers=[];let ravenHistory=[];
 function ravenMoney(n){return Number(n).toLocaleString('pt-BR',{style:'currency',currency:'BRL'});}
@@ -598,7 +598,44 @@ function ravenRenderMarket(){
  }
  if(!list.children.length){const p=document.createElement('p');p.className='market-empty';p.textContent='Nenhuma peça selecionada possui oferta verificada. Desmarque o filtro para pesquisar nas lojas.';list.append(p);}
 }
-async function ravenLoadOffers(){try{const r=await fetch('./offers.json',{cache:'no-store'});if(!r.ok)throw Error('HTTP '+r.status);const data=await r.json();ravenOffers=Array.isArray(data.offers)?data.offers.filter(ravenVerifiedOffer):[];ravenHistory=Array.isArray(data.history)?data.history.filter(h=>ravenVerifiedOffer({...h,url:h.url||'https://'+(RAVEN_STORES[h.store]?.domain||'invalid')})):[];}catch(e){ravenOffers=[];console.warn('Ofertas indisponíveis:',e);}ravenRenderMarket();}
+// 5.6 - Vitrine independente da montagem, alimentada somente pelo offers.json aprovado.
+function ravenRenderGallery(){
+ const root=document.getElementById('offerGalleryList');if(!root)return;
+ root.replaceChildren();
+ const nameFilter=document.getElementById('offerGallerySearch')?.value.toLowerCase().trim()||'';
+ const catFilter=document.getElementById('offerGalleryCategory')?.value||'all';
+ const storeFilter=document.getElementById('offerGalleryStore')?.value||'all';
+ const recentOnly=document.getElementById('offerGalleryRecent')?.checked!==false;
+ const products=new Map(groups.flatMap(g=>g.options.filter(p=>!p.conceptual).map(p=>[p.id,{name:p.name,category:g.id,categoryName:g.name}])));
+ const options=document.getElementById('offerGalleryCategory');
+ if(options&&options.options.length===1){for(const group of groups){const item=document.createElement('option');item.value=group.id;item.textContent=group.name;options.append(item);}}
+ const selected=ravenOffers.filter(o=>{
+  const product=products.get(o.partId);if(!product)return false;
+  if(recentOnly&&!ravenFresh(o))return false;
+  if(catFilter!=='all'&&product.category!==catFilter)return false;
+  if(storeFilter!=='all'&&o.store!==storeFilter)return false;
+  return !nameFilter||(o.title||product.name).toLowerCase().includes(nameFilter)||product.name.toLowerCase().includes(nameFilter)||RAVEN_STORES[o.store].name.toLowerCase().includes(nameFilter);
+ }).sort((a,b)=>b.checkedAt.localeCompare(a.checkedAt)||a.price-b.price);
+ document.getElementById('offerGalleryCount').textContent=selected.length+' oferta(s)';
+ for(const o of selected.slice(0,48)){
+  const p=products.get(o.partId),card=document.createElement('article');card.className='raven-offer-tile';
+  const imgBox=document.createElement('div');imgBox.className='raven-tile-media';
+  const url=ravenSafeImageUrl(o.imageUrl);
+  if(url){const img=document.createElement('img');img.loading='lazy';img.alt='Imagem cadastrada para '+(o.title||p.name);img.referrerPolicy='no-referrer';img.src=url;img.addEventListener('error',()=>imgBox.replaceChildren(ravenPlaceholder()));imgBox.append(img);}else imgBox.append(ravenPlaceholder());
+  const details=document.createElement('div');details.className='raven-tile-details';
+  const tag=document.createElement('span');tag.className='raven-tile-tag';tag.textContent=p.categoryName+' · '+RAVEN_STORES[o.store].name;
+  const title=document.createElement('h4');title.textContent=o.title||p.name;
+  const price=document.createElement('strong');price.className='raven-tile-price';price.textContent=ravenMoney(o.price);
+  const meta=document.createElement('small');meta.textContent='Conferido em '+o.checkedAt.split('-').reverse().join('/')+' · '+(o.condition==='used'?'Usado':'Novo')+(ravenFresh(o)?'':' · RECONFIRMAR PREÇO');
+  const button=document.createElement('a');button.href=o.url;button.target='_blank';button.rel=o.affiliate?'noopener noreferrer sponsored':'noopener noreferrer';button.className='raven-tile-button';button.textContent='Ver oferta ↗';
+  details.append(tag,title,price,meta,button);card.append(imgBox,details);root.append(card);
+ }
+ if(!selected.length){const p=document.createElement('p');p.className='raven-no-gallery';p.textContent='Nenhuma oferta corresponde aos filtros. Tente remover o filtro de data ou selecionar outra categoria.';root.append(p);}
+ if(selected.length>48){const p=document.createElement('p');p.className='raven-no-gallery';p.textContent='Exibindo 48 ofertas. Refine os filtros para encontrar outros produtos.';root.append(p);}
+}
+for(const id of ['offerGallerySearch','offerGalleryCategory','offerGalleryStore','offerGalleryRecent'])document.getElementById(id)?.addEventListener(id==='offerGallerySearch'?'input':'change',ravenRenderGallery);
+
+async function ravenLoadOffers(){try{const r=await fetch('./offers.json',{cache:'no-store'});if(!r.ok)throw Error('HTTP '+r.status);const data=await r.json();ravenOffers=Array.isArray(data.offers)?data.offers.filter(ravenVerifiedOffer):[];ravenHistory=Array.isArray(data.history)?data.history.filter(h=>ravenVerifiedOffer({...h,url:h.url||'https://'+(RAVEN_STORES[h.store]?.domain||'invalid')})):[];}catch(e){ravenOffers=[];console.warn('Ofertas indisponíveis:',e);}ravenRenderMarket();ravenRenderGallery();}
 document.getElementById('onlyOffers')?.addEventListener('change',ravenRenderMarket);
 document.getElementById('marketRefresh')?.addEventListener('click',ravenLoadOffers);
 // A lista de ofertas acompanha a seleção sem alterar a lógica 3D existente.
