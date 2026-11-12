@@ -1,0 +1,95 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<meta name="description" content="Encontre computadores completos novos, usados ou recondicionados, com preços conferidos e links de afiliados oficiais.">
+<meta name="theme-color" content="#080c0b"><title>PCs Montados | RAVEN PC BUILDER</title>
+<style>
+:root{color-scheme:dark;font:16px/1.5 system-ui,-apple-system,Segoe UI,sans-serif;background:#080c0b;color:#f1faf3}
+*{box-sizing:border-box}body{margin:0}a{color:inherit}button,input,select{font:inherit}button{cursor:pointer}
+header{border-bottom:1px solid #273a32;background:#0d1311}header .wrap{display:flex;align-items:center;justify-content:space-between;gap:18px;padding:20px 0;flex-wrap:wrap}
+.wrap{max-width:1180px;margin:0 auto;padding:0 22px}
+.brand{text-decoration:none;font-size:18px;font-weight:850;letter-spacing:.035em}.brand strong{color:#baff65}
+nav{display:flex;gap:16px;flex-wrap:wrap;font-size:14px}nav a:hover{color:#baff65}
+main{padding:38px 0 70px}small,.eyebrow{color:#baff65;text-transform:uppercase;letter-spacing:.13em;font-weight:750;font-size:11px}
+h1{font-size:clamp(32px,5vw,56px);line-height:1.09;letter-spacing:-.035em;margin:12px 0}h1 em{font-style:normal;color:#baff65}
+.lead{max-width:770px;color:#a7bbb0;font-size:17px;margin-bottom:25px}
+.notice{border:1px solid #35503d;background:#111e16;border-radius:12px;padding:14px 16px;color:#cce3d3;font-size:13px;max-width:950px}
+.controls{margin:28px 0 20px;display:grid;grid-template-columns:2fr repeat(3,minmax(130px,1fr));gap:12px}
+label{display:block;color:#b5cbb9;font-size:12px;font-weight:650}input,select{display:block;background:#101917;color:#f3f9f1;border:1px solid #385044;border-radius:9px;padding:11px;width:100%;margin-top:6px;min-height:44px}
+#count{color:#a7bba9;font-size:13px;margin-bottom:15px}
+.cards{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:17px}
+.card{background:#111916;border:1px solid #385044;border-radius:15px;padding:18px;display:flex;flex-direction:column;gap:12px}
+.card-top{display:flex;justify-content:space-between;gap:10px;align-items:center}
+.kind{font-size:11px;font-weight:800;color:#baff65;text-transform:uppercase;letter-spacing:.08em}
+.pill{border:1px solid #697d65;border-radius:22px;padding:4px 10px;font-size:11px;color:#d6efcb}
+h2{font-size:19px;line-height:1.3;margin:0}.price{font-weight:850;color:#baff65;font-size:28px}
+.specs{list-style:none;padding:0;margin:0;display:grid;gap:7px;font-size:13px;color:#c4d5c8}
+.specs li{overflow-wrap:anywhere}.meta,.notes{font-size:12px;color:#94aa9b}.notes{line-height:1.4}
+.cta{margin-top:auto;display:inline-flex;justify-content:center;align-items:center;text-decoration:none;border-radius:9px;background:#baff65;color:#172312;font-weight:850;padding:12px 16px}
+.cta:hover{filter:brightness(.91)}
+.empty{grid-column:1/-1;border:1px dashed #50634f;border-radius:14px;padding:36px 20px;text-align:center;color:#acbfae}
+.empty strong{display:block;color:#f5faf0;font-size:20px;margin-bottom:8px}
+footer{border-top:1px solid #24382f;padding:25px 0 35px;color:#91a694;font-size:12px}
+@media(max-width:950px){.controls{grid-template-columns:repeat(2,1fr)}.cards{grid-template-columns:repeat(2,minmax(0,1fr))}}
+@media(max-width:600px){.controls{grid-template-columns:1fr}.cards{grid-template-columns:1fr}header .wrap{padding:15px 22px}.wrap{padding:0 16px}}
+</style>
+</head>
+<body>
+<header><div class="wrap"><a class="brand" href="index.html">RAVEN <strong>PC BUILDER</strong></a><nav><a href="index.html">Montar meu PC</a><a href="pcs-montados.html" aria-current="page">PCs Montados</a><a href="afiliados.html">Transparência comercial</a></nav></div></header>
+<main class="wrap">
+<div class="eyebrow">RAVEN MARKETPLACE / COMPUTADORES COMPLETOS</div>
+<h1>Seu próximo PC, <em>já montado.</em></h1>
+<p class="lead">Compare computadores completos econômicos, intermediários e avançados. Veja as peças informadas pelo vendedor e escolha uma oferta com preço conferido.</p>
+<div class="notice">Os preços não são cotações ao vivo. Verifique a configuração exata, vendedor, garantia, frete e disponibilidade antes de comprar. Links para lojas podem gerar comissão de afiliado para a Raven, sem cobrança adicional diretamente pela plataforma.</div>
+<div class="controls">
+<label>Buscar computador <input id="q" type="search" placeholder="Ryzen, i5, SSD, gamer..." autocomplete="off"></label>
+<label>Até quanto? <select id="max"><option value="">Qualquer preço</option><option value="1000">Até R$ 1.000</option><option value="1500">Até R$ 1.500</option><option value="2500">Até R$ 2.500</option><option value="4000">Até R$ 4.000</option><option value="7000">Até R$ 7.000</option></select></label>
+<label>Condição <select id="condition"><option value="">Novos e usados</option><option value="new">Novo</option><option value="used">Usado</option><option value="refurbished">Recondicionado</option></select></label>
+<label>Para quê? <select id="purpose"><option value="">Qualquer uso</option><option value="estudo">Estudo</option><option value="trabalho">Trabalho</option><option value="games">Jogos</option><option value="geral">Uso geral</option></select></label>
+</div>
+<div id="count" aria-live="polite">Carregando ofertas...</div>
+<div id="cards" class="cards" aria-live="polite"></div>
+</main>
+<footer><div class="wrap">© 2026 RAVEN CREATIVES STUDIOS · A Raven não vende diretamente nem garante especificações declaradas por terceiros. Consulte o anúncio da loja.</div></footer>
+<script>
+const $=id=>document.getElementById(id),cards=$('cards');
+const money=n=>Number(n).toLocaleString('pt-BR',{style:'currency',currency:'BRL'});
+const txt=(s)=>String(s??'');
+const label={new:'Novo',used:'Usado',refurbished:'Recondicionado'};
+const shops={mercadolivre:['mercadolivre.com.br','mercadolivre.com','meli.la'],shopee:['shopee.com.br','shopee.com','shope.ee']};
+let all=[];
+function safeLink(s,store){try{const u=new URL(s);return u.protocol==='https:'&&!u.username&&!u.password&&shops[store]?.some(h=>u.hostname===h||u.hostname.endsWith('.'+h));}catch{return false;}}
+function node(tag,content,cls){const n=document.createElement(tag);if(content!==undefined)n.textContent=content;if(cls)n.className=cls;return n;}
+function showEmpty(title,detail){cards.replaceChildren();const e=node('div',undefined,'empty');e.append(node('strong',title),node('div',detail));cards.append(e);}
+function render(){
+ const q=$('q').value.toLowerCase().trim(),max=Number($('max').value),cond=$('condition').value,purpose=$('purpose').value;
+ const found=all.filter(x=>(!max||x.price<=max)&&(!cond||x.condition===cond)&&(!purpose||x.purpose===purpose)&&(!q||[x.title,x.specs?.cpu,x.specs?.ram,x.specs?.storage,x.specs?.gpu].join(' ').toLowerCase().includes(q)));
+ $('count').textContent=found.length+' computador(es) encontrado(s)';
+ cards.replaceChildren();
+ if(!found.length){showEmpty('Nenhum PC disponível neste filtro','Novas ofertas serão adicionadas após conferência e aprovação. Tente ampliar o orçamento ou mudar os filtros.');return;}
+ for(const pc of found){
+  if(!safeLink(pc.url,pc.store))continue;
+  const card=node('article',undefined,'card'),top=node('div',undefined,'card-top');
+  top.append(node('span',pc.store==='mercadolivre'?'Mercado Livre':'Shopee','kind'),node('span',label[pc.condition]||'Condição não informada','pill'));
+  card.append(top,node('h2',txt(pc.title)),node('div',money(pc.price),'price'));
+  const ul=node('ul',undefined,'specs');
+  for(const [k,n] of [['cpu','Processador'],['ram','Memória'],['storage','Armazenamento'],['gpu','Gráficos'],['motherboard','Placa-mãe'],['psu','Fonte']]){
+   if(pc.specs?.[k])ul.append(node('li',n+': '+txt(pc.specs[k])));
+  }
+  card.append(ul);
+  const since=Date.parse(pc.checkedAt+'T00:00:00Z'),days=Math.floor((Date.now()-since)/86400000);
+  card.append(node('div','Preço conferido em '+new Date(pc.checkedAt+'T00:00:00Z').toLocaleDateString('pt-BR')+(days>14?' · conferência antiga, confirme o valor na loja':''),'meta'));
+  if(pc.notes)card.append(node('div','Observações: '+txt(pc.notes),'notes'));
+  const a=node('a','Ver oferta na loja','cta');a.href=pc.url;a.target='_blank';a.rel='noopener noreferrer sponsored';card.append(a);cards.append(card);
+ }
+}
+for(const id of ['q','max','condition','purpose'])$(id).addEventListener(id==='q'?'input':'change',render);
+(async()=>{
+ try{const r=await fetch('./pcs-montados.json',{cache:'no-store'});if(!r.ok)throw Error('Catálogo indisponível');const j=await r.json();if(!Array.isArray(j.computers))throw Error('Formato inválido');
+ all=j.computers.filter(x=>x&&x.affiliate===true&&x.price>0&&typeof x.checkedAt==='string'&&safeLink(x.url,x.store));
+ render();
+ }catch(e){$('count').textContent='Não foi possível carregar o catálogo';showEmpty('Catálogo temporariamente indisponível','Atualize a página mais tarde.');}
+})();
+</script>
+</body></html>
