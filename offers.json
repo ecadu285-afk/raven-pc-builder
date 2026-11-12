@@ -61,6 +61,26 @@
       "condition": "new",
       "affiliate": true,
       "title": "AMD Ryzen 5 5600G"
+    },
+    {
+      "partId": "5700x",
+      "store": "mercadolivre",
+      "price": 1299,
+      "checkedAt": "2026-11-12",
+      "url": "https://meli.la/2ggsA2p",
+      "condition": "new",
+      "affiliate": true,
+      "title": "AMD Ryzen 7 5700X"
+    },
+    {
+      "partId": "7600",
+      "store": "mercadolivre",
+      "price": 1169.93,
+      "checkedAt": "2026-11-12",
+      "url": "https://meli.la/2FiTXtV",
+      "condition": "new",
+      "affiliate": true,
+      "title": "AMD Ryzen 5 7600"
     }
   ],
   "history": [
