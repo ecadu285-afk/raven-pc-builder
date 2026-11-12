@@ -51,6 +51,16 @@
       "condition": "new",
       "affiliate": true,
       "title": "Amd ryzen 5 3400g"
+    },
+    {
+      "partId": "5600g",
+      "store": "mercadolivre",
+      "price": 1209.24,
+      "checkedAt": "2026-11-12",
+      "url": "https://meli.la/16R8UrX",
+      "condition": "new",
+      "affiliate": true,
+      "title": "AMD Ryzen 5 5600G"
     }
   ],
   "history": [
