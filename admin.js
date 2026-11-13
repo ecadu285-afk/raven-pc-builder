@@ -1,5 +1,5 @@
 import {catalog} from './catalog.js';
-const $=id=>document.getElementById(id), stores={kabum:['kabum.com.br'],mercadolivre:['mercadolivre.com.br','mercadolivre.com','meli.la'],terabyte:['terabyteshop.com.br'],shopee:['shopee.com.br','shopee.com','shope.ee']};
+const $=id=>document.getElementById(id), stores={amazon:['amazon.com.br','amzn.to','link.amazon'],mercadolivre:['mercadolivre.com.br','mercadolivre.com','meli.la'],shopee:['shopee.com.br','shopee.com','shope.ee']};
 const parts=Object.entries(catalog).flatMap(([category,items])=>items.map(p=>({...p,category})));
 const known=new Set(parts.map(p=>p.id));let offers=[];let history=[];
 const setStatus=message=>$('status').textContent=message;
