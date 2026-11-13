@@ -524,7 +524,7 @@ if(shoppingButton)shoppingButton.addEventListener('click',async()=>{
 
 
 // 5.6 Marketplace: ofertas aprovadas, preços cadastrados e metadados de produtos reais.
-const RAVEN_STORES={kabum:{name:'KaBuM!',domain:'kabum.com.br',hosts:['kabum.com.br']},mercadolivre:{name:'Mercado Livre',domain:'mercadolivre.com.br',hosts:['mercadolivre.com.br','mercadolivre.com','meli.la']},terabyte:{name:'TerabyteShop',domain:'terabyteshop.com.br',hosts:['terabyteshop.com.br']},shopee:{name:'Shopee',domain:'shopee.com.br',hosts:['shopee.com.br','shopee.com','shope.ee']}};
+const RAVEN_STORES={amazon:{name:'Amazon',domain:'amazon.com.br',hosts:['amazon.com.br','amzn.to','link.amazon']},mercadolivre:{name:'Mercado Livre',domain:'mercadolivre.com.br',hosts:['mercadolivre.com.br','mercadolivre.com','meli.la']},shopee:{name:'Shopee',domain:'shopee.com.br',hosts:['shopee.com.br','shopee.com','shope.ee']}};
 let ravenOffers=[];let ravenHistory=[];
 function ravenMoney(n){return Number(n).toLocaleString('pt-BR',{style:'currency',currency:'BRL'});}
 function ravenSearchUrl(part,store){return 'https://www.google.com/search?q='+encodeURIComponent('site:'+store.domain+' '+part.name);}
