@@ -125,3 +125,40 @@ h1 em{background:linear-gradient(90deg,var(--accent),#fff,var(--accent));backgro
 .raven-option-offer:hover{background:#23301f}
 .raven-3d-note{position:absolute;top:12px;left:12px;z-index:4;padding:7px 10px;border:1px solid #3e5346;border-radius:9px;background:rgba(9,17,15,.85);color:#c2dbc2;font-size:10px;pointer-events:none;max-width:calc(100% - 24px)}
 #scene{position:relative}#budget-note:not(:empty){margin-top:9px;color:#cbdfba;font-size:12px}
+
+/* RAVEN 5.8 — academia, navegacao, cards de oferta e suavidade */
+:root{--raven-glow:rgba(186,255,99,.18)}
+body{background:radial-gradient(ellipse at 85% 0%,rgba(46,83,49,.15),transparent 40%),var(--bg)}
+.sidebar{overflow-y:auto;scrollbar-width:thin;scrollbar-color:#3a503d transparent}
+.raven-quick-nav{display:grid;gap:6px}
+.raven-quick-nav a{font-size:12px;color:#b7cdb8;text-decoration:none;padding:11px 12px;border-radius:9px;border:1px solid #2b3e33;background:#111c16;transition:background .25s,color .25s,transform .25s}
+.raven-quick-nav a:hover{color:var(--accent);background:#1c3020;transform:translateX(3px)}
+.raven-steps-label{margin:25px 13px 12px}
+.raven-route-banner{border:1px solid #3f6549;border-radius:13px;background:linear-gradient(100deg,#1b3422,#101d18);padding:13px 18px;margin-bottom:24px;display:flex;align-items:center;gap:15px;flex-wrap:wrap}
+.raven-route-badge{color:#baff66;font-size:10px;letter-spacing:.14em;font-weight:850;white-space:nowrap}
+.raven-route-banner p{color:#c8dbc9;flex:1 1 260px;font-size:12px;line-height:1.5;margin:0}
+.raven-route-banner a{color:#14210e;text-decoration:none;background:var(--accent);font-size:12px;font-weight:800;padding:10px 13px;border-radius:9px;transition:transform .22s,box-shadow .22s}
+.raven-route-banner a:hover{transform:translateY(-2px);box-shadow:0 7px 24px var(--raven-glow)}
+.option{transition:border-color .25s,background .25s,transform .25s,box-shadow .25s}
+.option:hover{border-color:#86a566;box-shadow:0 8px 30px #0003,0 0 0 1px #59734a24}
+.option.selected{box-shadow:0 0 0 1px #a4ef5624,inset 0 0 18px #a4ef560a}
+.raven-option-main{display:flex;align-items:center;gap:13px;min-width:0}
+.raven-option-thumb{width:67px;height:67px;flex-shrink:0;background:linear-gradient(145deg,#f2f6f1,#c8d9ce);color:#527354;border-radius:9px;display:grid;place-items:center;font-size:27px;overflow:hidden;border:1px solid #66816e}
+.raven-option-thumb img{display:block;width:100%;height:100%;object-fit:contain}
+.raven-option-copy{flex:1;min-width:0}
+.raven-option-copy .option-top{flex-wrap:wrap}
+.raven-option-copy .option-name{overflow-wrap:anywhere}
+.raven-option-copy .option-price{color:var(--accent);font-weight:850}
+.raven-option-offer{transition:border-color .25s,background .25s}
+.raven-option-offer:hover{border-color:var(--accent)}
+.preset{transition:transform .32s cubic-bezier(.22,1,.36,1),border-color .25s,box-shadow .25s}
+.preset:hover{transform:translateY(-5px)}
+#scene{background:radial-gradient(ellipse at 45% 36%,#273d34 0%,#162321 42%,#0b1112 76%)}
+#scene canvas{transition:filter .4s}
+#scene:focus-within canvas{filter:brightness(1.07)}
+.view-bottom,.viewport-top{backdrop-filter:blur(8px)}
+.next-panel,.raven-offer-tile,.market-item{transition:transform .3s,border-color .3s,box-shadow .3s}
+.next-panel:hover,.raven-offer-tile:hover{transform:translateY(-2px);box-shadow:0 12px 25px #0003}
+@media(max-width:1050px){.raven-quick-nav{grid-template-columns:repeat(2,minmax(0,1fr))}.raven-quick-nav a{padding:9px 7px;font-size:10px}.raven-steps-label{margin-top:17px}}
+@media(max-width:670px){.raven-route-banner{align-items:flex-start}.raven-route-banner a{width:100%;text-align:center}.raven-option-thumb{width:59px;height:59px}.raven-option-copy .option-price{font-size:12px}}
+@media(prefers-reduced-motion:reduce){html{scroll-behavior:auto!important}*,*::before,*::after{animation-duration:.01ms!important;animation-iteration-count:1!important;transition-duration:.01ms!important;scroll-behavior:auto!important}}
