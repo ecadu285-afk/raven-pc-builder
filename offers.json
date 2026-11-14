@@ -1,6 +1,6 @@
 {
   "schemaVersion": 3,
-  "updatedAt": "2026-11-12",
+  "updatedAt": "2026-11-14",
   "offers": [
     {
       "partId": "5500",
@@ -91,6 +91,19 @@
       "condition": "new",
       "affiliate": true,
       "title": "AMD Ryzen 5 5600X"
+    },
+    {
+      "partId": "5500",
+      "store": "shopee",
+      "price": 578.68,
+      "checkedAt": "2026-11-14",
+      "url": "https://s.shopee.com.br/80ECB0l33I",
+      "condition": "new",
+      "affiliate": true,
+      "category": "cpu",
+      "modelName": "AMD Ryzen 5 5500",
+      "title": "Processador AMD Ryzen 5 5500, 3.6GHz, Cache 16MB, Hexa Core, 12 Threads, AM4 - 100-100000457BOX",
+      "imageUrl": "https://cf.shopee.com.br/file/br-11134207-7r98o-m7gz1moves0c3d"
     }
   ],
   "history": [
