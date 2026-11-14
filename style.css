@@ -115,3 +115,13 @@ h1 em{background:linear-gradient(90deg,var(--accent),#fff,var(--accent));backgro
 
 /* Vitrine: comparação apenas entre ofertas recentes do mesmo modelo. */
 .raven-price-compare{display:block;border:1px solid #456344;background:#203c25;color:#c9f9b6;border-radius:8px;padding:7px 9px;line-height:1.4;margin:7px 0 2px;font-size:12px}
+
+/* RAVEN 5.7 · somente subtotais de produtos com anúncios reais */
+.market-presets-empty{grid-column:1/-1;border:1px dashed #526143;background:#18221c;color:#d5e8d0;border-radius:12px;padding:21px;line-height:1.6}
+.market-preset{min-height:160px}.market-preset em{font-style:normal;font-size:10px;font-weight:600;color:#b2cf9b;display:block;margin-top:7px}
+.raven-no-published-parts{padding:18px;background:#1c2520;border:1px dashed #425a49;border-radius:12px;color:#cadacc;line-height:1.6}
+.raven-no-published-parts a{color:var(--accent);font-weight:700}
+.raven-option-offer{display:inline-flex;margin:6px 0 3px;padding:7px 10px;border:1px solid #52733e;border-radius:7px;color:var(--accent);text-decoration:none;font-size:12px;font-weight:700}
+.raven-option-offer:hover{background:#23301f}
+.raven-3d-note{position:absolute;top:12px;left:12px;z-index:4;padding:7px 10px;border:1px solid #3e5346;border-radius:9px;background:rgba(9,17,15,.85);color:#c2dbc2;font-size:10px;pointer-events:none;max-width:calc(100% - 24px)}
+#scene{position:relative}#budget-note:not(:empty){margin-top:9px;color:#cbdfba;font-size:12px}
