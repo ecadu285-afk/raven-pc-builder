@@ -586,7 +586,7 @@ function ravenRenderMarket(){
     const brand=document.createElement('span');brand.className='market-store';brand.textContent=RAVEN_STORES[o.store].name;
     const title=document.createElement('strong');title.className='market-product-title';title.textContent=o.title?.trim()||part.name;
     const price=document.createElement('span');price.className='market-live-price';price.textContent=ravenMoney(o.price);
-    const meta=document.createElement('small');meta.textContent='Preço consultado em '+o.checkedAt.split('-').reverse().join('/')+' · '+(o.condition==='used'?'Usado':'Novo')+' · '+(o.affiliate?'Link comissionado informado':'Link externo')+' · '+(ravenFresh(o)?'Cotação recente':'COTAÇÃO ANTIGA')+' · confirme estoque/frete';
+    const meta=document.createElement('small');meta.textContent=(o.priceCondition==='pix'?'Preço no Pix · ':o.priceCondition==='card'?'Preço no cartão · ':'Condição de pagamento a conferir · ')+'Preço consultado em '+o.checkedAt.split('-').reverse().join('/')+' · '+(o.condition==='used'?'Usado':'Novo')+' · '+(o.affiliate?'Link comissionado informado':'Link externo')+' · '+(ravenFresh(o)?'Cotação recente':'COTAÇÃO ANTIGA')+' · confirme estoque/frete';
     label.append(brand,title,price,meta);
     const a=document.createElement('a');a.className='market-link';a.href=o.url;a.target='_blank';a.rel=o.affiliate?'noopener noreferrer sponsored':'noopener noreferrer';a.textContent='Ver oferta ↗';
     line.append(media,label,a);card.append(line);
@@ -606,11 +606,16 @@ function ravenRenderGallery(){
  const catFilter=document.getElementById('offerGalleryCategory')?.value||'all';
  const storeFilter=document.getElementById('offerGalleryStore')?.value||'all';
  const recentOnly=document.getElementById('offerGalleryRecent')?.checked!==false;
- const products=new Map(groups.flatMap(g=>g.options.filter(p=>!p.conceptual).map(p=>[p.id,{name:p.name,category:g.id,categoryName:g.name}])));
+ const products=new Map([...Object.entries(catalog).flatMap(([cat,list])=>list.filter(p=>!p.conceptual).map(p=>[p.id,{name:p.name,category:cat,categoryName:({cpu:'Processador',board:'Placa-mãe',ram:'Memória RAM',gpu:'Placa de vídeo',ssd:'SSD / HD',psu:'Fonte',case:'Gabinete',cooler:'Cooler'})[cat]||cat}])),...groups.flatMap(g=>g.options.filter(p=>!p.conceptual).map(p=>[p.id,{name:p.name,category:g.id,categoryName:g.name}]))]);
+ const productFor=o=>products.get(o.partId)||{name:o.modelName||o.title||o.partId,category:o.category||'other',categoryName:({cpu:'Processador',board:'Placa-mãe',ram:'Memória RAM',gpu:'Placa de vídeo',ssd:'SSD',hdd:'HD',psu:'Fonte',case:'Gabinete',cooler:'Cooler'})[o.category]||'Componente'};
+ const comp=new Map();
+ for(const o of ravenOffers.filter(ravenFresh)){const p=productFor(o),key=[o.partId,p.category,o.condition||'new'].join('|');if(!comp.has(key))comp.set(key,[]);comp.get(key).push(o)}
+ const cheapest=new Set();
+ for(const offers of comp.values())if(new Set(offers.map(x=>x.store)).size>=2){const min=Math.min(...offers.map(x=>x.price));for(const o of offers)if(Math.abs(o.price-min)<0.001)cheapest.add(o);}
  const options=document.getElementById('offerGalleryCategory');
- if(options&&options.options.length===1){for(const group of groups){const item=document.createElement('option');item.value=group.id;item.textContent=group.name;options.append(item);}}
+ if(options&&options.options.length===1){for(const [key,name] of Object.entries({cpu:'Processadores',board:'Placas-mãe',ram:'Memória RAM',gpu:'Placas de vídeo',ssd:'SSDs',hdd:'HDs',psu:'Fontes',case:'Gabinetes',cooler:'Coolers',other:'Outros'})){const item=document.createElement('option');item.value=key;item.textContent=name;options.append(item);}}
  const selected=ravenOffers.filter(o=>{
-  const product=products.get(o.partId);if(!product)return false;
+  const product=productFor(o);
   if(recentOnly&&!ravenFresh(o))return false;
   if(catFilter!=='all'&&product.category!==catFilter)return false;
   if(storeFilter!=='all'&&o.store!==storeFilter)return false;
@@ -618,7 +623,7 @@ function ravenRenderGallery(){
  }).sort((a,b)=>b.checkedAt.localeCompare(a.checkedAt)||a.price-b.price);
  document.getElementById('offerGalleryCount').textContent=selected.length+' oferta(s)';
  for(const o of selected.slice(0,48)){
-  const p=products.get(o.partId),card=document.createElement('article');card.className='raven-offer-tile';
+  const p=productFor(o),card=document.createElement('article');card.className='raven-offer-tile';
   const imgBox=document.createElement('div');imgBox.className='raven-tile-media';
   const url=ravenSafeImageUrl(o.imageUrl);
   if(url){const img=document.createElement('img');img.loading='lazy';img.alt='Imagem cadastrada para '+(o.title||p.name);img.referrerPolicy='no-referrer';img.src=url;img.addEventListener('error',()=>imgBox.replaceChildren(ravenPlaceholder()));imgBox.append(img);}else imgBox.append(ravenPlaceholder());
@@ -626,9 +631,11 @@ function ravenRenderGallery(){
   const tag=document.createElement('span');tag.className='raven-tile-tag';tag.textContent=p.categoryName+' · '+RAVEN_STORES[o.store].name;
   const title=document.createElement('h4');title.textContent=o.title||p.name;
   const price=document.createElement('strong');price.className='raven-tile-price';price.textContent=ravenMoney(o.price);
-  const meta=document.createElement('small');meta.textContent='Conferido em '+o.checkedAt.split('-').reverse().join('/')+' · '+(o.condition==='used'?'Usado':'Novo')+(ravenFresh(o)?'':' · RECONFIRMAR PREÇO');
+  const meta=document.createElement('small');meta.textContent=(o.priceCondition==='pix'?'Preço informado no Pix · ':o.priceCondition==='card'?'Preço informado no cartão · ':'Condição de pagamento a conferir · ')+
+ 'Conferido em '+o.checkedAt.split('-').reverse().join('/')+' · '+(o.condition==='used'?'Usado':'Novo')+(ravenFresh(o)?'':' · RECONFIRMAR PREÇO');
+ let compareNote=null;if(cheapest.has(o)){compareNote=document.createElement('small');compareNote.className='raven-price-compare';compareNote.textContent='Menor valor cadastrado entre lojas para este modelo (confira frete e pagamento).';}
   const button=document.createElement('a');button.href=o.url;button.target='_blank';button.rel=o.affiliate?'noopener noreferrer sponsored':'noopener noreferrer';button.className='raven-tile-button';button.textContent='Ver oferta ↗';
-  details.append(tag,title,price,meta,button);card.append(imgBox,details);root.append(card);
+  details.append(tag,title,price,meta);if(compareNote)details.append(compareNote);details.append(button);card.append(imgBox,details);root.append(card);
  }
  if(!selected.length){const p=document.createElement('p');p.className='raven-no-gallery';p.textContent='Nenhuma oferta corresponde aos filtros. Tente remover o filtro de data ou selecionar outra categoria.';root.append(p);}
  if(selected.length>48){const p=document.createElement('p');p.className='raven-no-gallery';p.textContent='Exibindo 48 ofertas. Refine os filtros para encontrar outros produtos.';root.append(p);}
