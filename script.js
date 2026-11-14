@@ -633,9 +633,9 @@ function ravenRenderGallery(){
   const price=document.createElement('strong');price.className='raven-tile-price';price.textContent=ravenMoney(o.price);
   const meta=document.createElement('small');meta.textContent=(o.priceCondition==='pix'?'Preço informado no Pix · ':o.priceCondition==='card'?'Preço informado no cartão · ':'Condição de pagamento a conferir · ')+
  'Conferido em '+o.checkedAt.split('-').reverse().join('/')+' · '+(o.condition==='used'?'Usado':'Novo')+(ravenFresh(o)?'':' · RECONFIRMAR PREÇO');
- if(cheapest.has(o)){const note=document.createElement('small');note.className='raven-price-compare';note.textContent='Menor valor cadastrado entre lojas para este modelo (confira frete e pagamento).';details.append(note);}
+ let compareNote=null;if(cheapest.has(o)){compareNote=document.createElement('small');compareNote.className='raven-price-compare';compareNote.textContent='Menor valor cadastrado entre lojas para este modelo (confira frete e pagamento).';}
   const button=document.createElement('a');button.href=o.url;button.target='_blank';button.rel=o.affiliate?'noopener noreferrer sponsored':'noopener noreferrer';button.className='raven-tile-button';button.textContent='Ver oferta ↗';
-  details.append(tag,title,price,meta,button);card.append(imgBox,details);root.append(card);
+  details.append(tag,title,price,meta);if(compareNote)details.append(compareNote);details.append(button);card.append(imgBox,details);root.append(card);
  }
  if(!selected.length){const p=document.createElement('p');p.className='raven-no-gallery';p.textContent='Nenhuma oferta corresponde aos filtros. Tente remover o filtro de data ou selecionar outra categoria.';root.append(p);}
  if(selected.length>48){const p=document.createElement('p');p.className='raven-no-gallery';p.textContent='Exibindo 48 ofertas. Refine os filtros para encontrar outros produtos.';root.append(p);}
