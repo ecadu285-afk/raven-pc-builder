@@ -2,11 +2,24 @@
 <html lang="pt-BR"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><meta name="theme-color" content="#0b110f"><meta name="description" content="Explore ofertas de peças de PC em Amazon, Mercado Livre e Shopee com transparência de preços e links de afiliado."><title>Loja de componentes | RAVEN PC BUILDER</title>
 <style>
 :root{color-scheme:dark;font-family:Inter,system-ui,Arial,sans-serif;background:#0b110f;color:#eef8f1}*{box-sizing:border-box}body{margin:0;background:radial-gradient(ellipse at 85% 0%,#1b3222 0%,#0b110f 44%);min-height:100vh}a{color:inherit}header,main,footer{max-width:1220px;margin:auto;padding:24px}header{display:flex;align-items:center;justify-content:space-between;gap:18px;flex-wrap:wrap}header strong{font-size:20px;letter-spacing:.08em}header strong span{color:#b6ee6b}nav{display:flex;gap:18px;flex-wrap:wrap}nav a{font-size:14px;text-decoration:none;color:#d5e6dd}nav a:hover,nav a:focus{color:#b6ee6b}main{padding-top:12px}.eyebrow{font-size:12px;text-transform:uppercase;letter-spacing:.13em;color:#a7d88c}h1{font-size:clamp(32px,5vw,56px);line-height:1.05;max-width:820px;margin:10px 0 18px}p{line-height:1.55;color:#b4c8be}.intro{max-width:920px}.pill{font-size:12px;color:#c4ef9d;padding:6px 10px;background:#1c3625;border-radius:100px}.disclosure{border:1px solid #476143;border-left:4px solid #b6ee6b;border-radius:12px;padding:14px 18px;background:#14221a;font-size:13px;margin:24px 0;color:#dceadf}.controls{display:grid;grid-template-columns:2fr repeat(3,minmax(120px,1fr));gap:10px;margin:22px 0}.controls label{display:grid;gap:6px;color:#d0e3d4;font-size:12px}input,select{background:#142018;color:#f4fff7;border:1px solid #40584a;border-radius:10px;padding:12px;min-width:0;font:inherit}input:focus,select:focus{outline:2px solid #9edf70}#count{font-size:13px;color:#b5e996}.products{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:16px;margin:14px 0 34px}.card{background:#132019;border:1px solid #35483c;border-radius:15px;overflow:hidden;min-width:0;display:flex;flex-direction:column}.card .photo{height:150px;background:#1e2c24;display:grid;place-items:center;font-size:24px;color:#92bfa1}.photo img{max-height:150px;width:100%;object-fit:contain;background:#f5f5f2}.content{padding:18px;display:flex;flex-direction:column;flex:1;gap:8px}.tags{display:flex;gap:6px;flex-wrap:wrap}.tag{background:#273c2d;color:#b6ef9b;padding:4px 8px;border-radius:6px;font-size:11px}.card h2{font-size:17px;line-height:1.35;margin:2px 0;overflow-wrap:anywhere}.price{font-size:23px;font-weight:800;color:#d6f7bd}.meta{font-size:12px;color:#b9cbc1;line-height:1.5}.link{display:block;text-align:center;text-decoration:none;background:#b5ef71;color:#0d1c0a;font-weight:800;padding:12px;border-radius:9px;margin-top:auto}.link:hover{background:#d6ffa5}.empty{grid-column:1/-1;background:#132019;border:1px dashed #476143;border-radius:13px;padding:32px;text-align:center}.empty h2{font-size:21px}footer{border-top:1px solid #324339;font-size:13px;color:#b6c9bf;line-height:1.6}footer a{color:#c9f2a2}@media(max-width:850px){.products{grid-template-columns:repeat(2,minmax(0,1fr))}.controls{grid-template-columns:repeat(2,minmax(0,1fr))}}@media(max-width:540px){.products,.controls{grid-template-columns:1fr}header{align-items:flex-start}nav{gap:13px}.photo{height:135px}h1{font-size:35px}}
+
+/* Loja 2: fotos reais, comparação de anúncios equivalentes e filtros de orçamento. */
+.photo{height:205px;position:relative;background:linear-gradient(145deg,#eaf0e7,#fff);color:#58725e;overflow:hidden}
+.photo img{height:100%;max-height:205px;width:100%;object-fit:contain;padding:9px;background:transparent}
+.photo .no-photo{color:#708574;display:flex;align-items:center;justify-content:center;flex-direction:column;gap:7px;text-align:center;font-size:13px;padding:18px}
+.no-photo strong{font-size:39px;font-weight:500}
+.price-caption{font-size:12px;color:#c4d8bd;margin:-5px 0 4px}
+.price-note{padding:9px 11px;background:#1a3020;border-radius:9px;border:1px solid #426142;font-size:12px;color:#ccecb9;line-height:1.4}
+.price-note.subtle{background:transparent;border-color:#32483a;color:#a9bfb3}
+.verified{font-size:12px;color:#adcdad}.warning-age{color:#ffd49b}
+.controls{grid-template-columns:2fr repeat(4,minmax(115px,1fr))}
+@media(max-width:990px){.controls{grid-template-columns:repeat(2,minmax(0,1fr))}}
+@media(max-width:550px){.controls{grid-template-columns:1fr}.photo{height:190px}.photo img{max-height:190px}}
 </style></head><body>
 <header><strong>RAVEN <span>PC BUILDER</span></strong><nav aria-label="Menu"><a href="index.html">Montador 3D</a><a href="loja.html" aria-current="page">Loja de peças</a><a href="meu-pc.html">Upgrade do meu PC</a><a href="afiliados.html">Transparência</a></nav></header>
 <main><span class="eyebrow">RAVEN MARKETPLACE · LOJA DE COMPONENTES</span><h1>Encontre a peça certa para o seu computador.</h1><p class="intro">Explore anúncios publicados após revisão, compare opções e compre no site da Amazon, Mercado Livre ou Shopee. O RAVEN não processa pagamentos nem vende diretamente os produtos.</p>
-<div class="disclosure"><strong>Transparência:</strong> alguns links são de afiliado e podem gerar comissão para o RAVEN sem custo adicional de indicação. <strong>Como associado da Amazon, eu recebo por compras qualificadas.</strong> Valores são os preços cadastrados na data informada, não cotações em tempo real. Confirme preço, frete, estoque, condição e garantia na loja.</div>
-<section aria-label="Filtrar ofertas" class="controls"><label>Buscar peça<input id="q" type="search" placeholder="Ryzen, RTX, DDR4, gabinete…"></label><label>Categoria<select id="cat"><option value="all">Todas as categorias</option></select></label><label>Loja<select id="store"><option value="all">Todas as lojas</option><option value="amazon">Amazon</option><option value="mercadolivre">Mercado Livre</option><option value="shopee">Shopee</option></select></label><label>Ordenar<select id="order"><option value="recent">Recentemente conferidos</option><option value="low">Menor preço</option><option value="high">Maior preço</option></select></label></section>
+<div class="disclosure"><strong>Transparência:</strong> alguns links são de afiliado e podem gerar comissão para o RAVEN sem custo adicional de indicação. <strong>Como associado da Amazon, eu recebo por compras qualificadas.</strong> Preços informados pelo operador após conferência, sujeitos a mudanças na loja. Comparações usam apenas o mesmo modelo, condição e ofertas recentes; não consideram frete, cupons ou diferenças de pagamento. Confirme preço, frete, estoque, condição e garantia na loja.</div>
+<section aria-label="Filtrar ofertas" class="controls"><label>Buscar peça<input id="q" type="search" placeholder="Ryzen, RTX, DDR4, gabinete…"></label><label>Categoria<select id="cat"><option value="all">Todas as categorias</option></select></label><label>Loja<select id="store"><option value="all">Todas as lojas</option><option value="amazon">Amazon</option><option value="mercadolivre">Mercado Livre</option><option value="shopee">Shopee</option></select></label><label>Orçamento<select id="budget"><option value="all">Qualquer valor</option><option value="300">Até R$ 300</option><option value="500">Até R$ 500</option><option value="1000">Até R$ 1.000</option><option value="2000">Até R$ 2.000</option><option value="3000">Até R$ 3.000</option></select></label><label>Ordenar<select id="order"><option value="recent">Mais recentes</option><option value="low">Menor preço cadastrado</option><option value="high">Maior preço cadastrado</option></select></label></section>
 <p id="count" role="status">Carregando ofertas publicadas...</p><div id="products" class="products" aria-live="polite"></div>
 </main><footer>© 2026 RAVEN Creatives Studios · Compras realizadas nos sites das lojas. <a href="index.html">Montador</a> · <a href="meu-pc.html">Upgrade do meu PC</a> · <a href="termos.html">Termos</a> · <a href="privacidade.html">Privacidade</a></footer>
 <script type="module">
@@ -14,19 +27,88 @@ import {catalog} from './catalog.js';
 const refs=new Map(Object.entries(catalog).flatMap(([category,list])=>list.map(p=>[p.id,{name:p.name,category}])));
 const cats={cpu:'Processadores',board:'Placas-mãe',gpu:'Placas de vídeo',ram:'Memória RAM',ssd:'SSDs',hdd:'HDs',psu:'Fontes',case:'Gabinetes',cooler:'Coolers'};
 const stores={amazon:{name:'Amazon',hosts:['amazon.com.br','amzn.to','link.amazon']},mercadolivre:{name:'Mercado Livre',hosts:['mercadolivre.com.br','mercadolivre.com','meli.la']},shopee:{name:'Shopee',hosts:['shopee.com.br','shopee.com','shope.ee']}};
-const $=id=>document.getElementById(id);let rows=[];
-function safeUrl(value,hosts){try{const u=new URL(value);return u.protocol==='https:'&&!u.username&&!u.password&&hosts.some(h=>u.hostname===h||u.hostname.endsWith('.'+h))?u.href:null}catch{return null}}
-function money(n){return Number(n).toLocaleString('pt-BR',{style:'currency',currency:'BRL'})}
-function valid(o){return o&&stores[o.store]&&Number.isFinite(o.price)&&o.price>0&&/^\d{4}-\d{2}-\d{2}$/.test(o.checkedAt||'')&&safeUrl(o.url,stores[o.store].hosts);}
-function node(tag,cls,text){const e=document.createElement(tag);if(cls)e.className=cls;if(text!==undefined)e.textContent=text;return e}
-function render(){const q=$('q').value.trim().toLowerCase(),cat=$('cat').value,store=$('store').value,order=$('order').value;const list=rows.filter(o=>(cat==='all'||o.category===cat)&&(store==='all'||o.store===store)&&(!q||[o.title,o.modelName,o.partId,stores[o.store].name].join(' ').toLowerCase().includes(q))).sort((a,b)=>order==='low'?a.price-b.price:order==='high'?b.price-a.price:b.checkedAt.localeCompare(a.checkedAt));$('count').textContent=list.length+' oferta(s) cadastrada(s) no catálogo público';$('products').replaceChildren();if(!list.length){const empty=node('div','empty');empty.append(node('h2','',rows.length?'Nenhuma oferta corresponde aos filtros.':'Nenhuma oferta publicada ainda nesta vitrine.'),node('p','',rows.length?'Experimente outra categoria ou loja.':'Os produtos aparecerão aqui depois da revisão e da publicação pelo RAVEN MARKET BOT.'));$('products').append(empty);return;}
-for(const o of list.slice(0,120)){const card=node('article','card'),media=node('div','photo');let src=null;if(o.imageUrl){try{const imageHost=new URL(o.imageUrl).hostname;src=safeUrl(o.imageUrl,[imageHost]);}catch{src=null;}}if(src){const im=node('img');im.src=src;im.alt='Imagem do anúncio '+o.title;im.loading='lazy';im.referrerPolicy='no-referrer';im.onerror=()=>media.replaceChildren(node('span','','R.'));media.append(im);}else media.append(node('span','','R.'));
-const content=node('div','content'),tags=node('div','tags');tags.append(node('span','tag',stores[o.store].name),node('span','tag',cats[o.category]||'Componente'));content.append(tags,node('h2','',o.title||o.modelName||refs.get(o.partId)?.name||'Componente de computador'),node('div','price',money(o.price)));
-const age=Math.max(0,Math.floor((Date.now()-Date.parse(o.checkedAt+'T00:00:00Z'))/86400000));content.append(node('div','meta','Conferido em '+o.checkedAt.split('-').reverse().join('/')+' · '+(o.condition==='used'?'Usado':'Novo')+(age>14?' · PREÇO ANTIGO: reconfirme':'')+(o.affiliate?' · Link de afiliado':' · Link externo')));
-const a=node('a','link','Ver oferta na '+stores[o.store].name);a.href=o.url;a.target='_blank';a.rel=o.affiliate?'noopener noreferrer sponsored':'noopener noreferrer';content.append(a);card.append(media,content);$('products').append(card);
-}}
-async function load(){try{const r=await fetch('./offers.json',{cache:'no-store'});if(!r.ok)throw new Error('HTTP '+r.status);const d=await r.json();rows=(Array.isArray(d.offers)?d.offers:[]).filter(valid).map(o=>({...o,category:o.category||refs.get(o.partId)?.category||'outro',modelName:o.modelName||refs.get(o.partId)?.name||''}));}catch(e){$('count').textContent='Erro ao carregar ofertas publicadas: '+e.message;rows=[]}
-const filter=$('cat'),present=new Set(rows.map(o=>o.category));Object.entries(cats).forEach(([k,v])=>{if(present.has(k)){const opt=document.createElement('option');opt.value=k;opt.textContent=v;filter.append(opt)}});if(present.has('outro')){const opt=document.createElement('option');opt.value='outro';opt.textContent='Outros';filter.append(opt)}
-const params=new URLSearchParams(location.search);if(present.has(params.get('categoria')))filter.value=params.get('categoria');render();}
-['q','cat','store','order'].forEach(id=>$(id).addEventListener(id==='q'?'input':'change',render));load();
+const $=id=>document.getElementById(id);
+const money=n=>Number(n).toLocaleString('pt-BR',{style:'currency',currency:'BRL'});
+let rows=[];
+function safeUrl(value,hosts){try{const u=new URL(value);return u.protocol==='https:'&&!u.username&&!u.password&&!u.port&&hosts.some(h=>u.hostname===h||u.hostname.endsWith('.'+h))?u.href:null}catch{return null}}
+function safeImage(value,store){
+ if(!value||typeof value!=='string')return null;
+ const allowed={shopee:['shopee.com.br','shopee.com','shopeecdn.com','shopeeusercontent.com'],
+ mercadolivre:['mlstatic.com','mercadolivre.com.br','mercadolibre.com','meli.com'],
+ amazon:['media-amazon.com','ssl-images-amazon.com','amazon.com.br','amazon.com']};
+ return safeUrl(value,allowed[store]||[]);
+}
+function valid(o){return o&&stores[o.store]&&typeof o.price==='number'&&Number.isFinite(o.price)&&o.price>0&&/^\d{4}-\d{2}-\d{2}$/.test(o.checkedAt||'')&&Number.isFinite(Date.parse(o.checkedAt+'T00:00:00Z'))&&safeUrl(o.url,stores[o.store].hosts);}
+function el(tag,cls,text){const e=document.createElement(tag);if(cls)e.className=cls;if(text!==undefined)e.textContent=text;return e;}
+function ageDays(o){return Math.floor((Date.now()-Date.parse(o.checkedAt+'T00:00:00Z'))/86400000);}
+function paymentName(o){return o.priceCondition==='pix'?'Valor informado no Pix':o.priceCondition==='card'?'Valor informado no cartão':o.priceCondition==='other'?'Condição de pagamento informada':'Condição de pagamento a conferir';}
+function comparisons(){
+ const byModel=new Map();
+ for(const o of rows){
+  if(ageDays(o)<0||ageDays(o)>14)continue;
+  const key=[o.partId||o.modelName,o.category,o.condition].join('|').toLowerCase();
+  if(!byModel.has(key))byModel.set(key,[]);
+  byModel.get(key).push(o);
+ }
+ const result=new Map();
+ for(const list of byModel.values()){
+  const storesSeen=new Set(list.map(o=>o.store));
+  if(storesSeen.size<2)continue;
+  const cheapest=Math.min(...list.map(o=>o.price));
+  const highest=Math.max(...list.map(o=>o.price));
+  for(const o of list)result.set(o,{cheapest,highest,storeCount:storesSeen.size,isCheapest:Math.abs(o.price-cheapest)<0.001});
+ }
+ return result;
+}
+function createPhoto(o){
+ const root=el('div','photo'),url=safeImage(o.imageUrl,o.store);
+ const fallback=()=>{const d=el('div','no-photo');d.append(el('strong','','▣'),el('span','','Imagem não cadastrada'),el('span','','Confira a foto na loja'));root.replaceChildren(d);};
+ if(!url){fallback();return root;}
+ const img=el('img');img.src=url;img.alt='Foto do anúncio: '+(o.title||o.modelName);img.loading='lazy';img.decoding='async';img.referrerPolicy='no-referrer';img.onerror=fallback;
+ root.append(img);return root;
+}
+function render(){
+ const q=$('q').value.trim().toLowerCase(),cat=$('cat').value,store=$('store').value,order=$('order').value,budget=$('budget').value;
+ const compare=comparisons();
+ const list=rows.filter(o=>(cat==='all'||o.category===cat)&&(store==='all'||o.store===store)&&(budget==='all'||o.price<=Number(budget))&&(!q||[o.title,o.modelName,o.partId,stores[o.store].name].join(' ').toLowerCase().includes(q))).sort((a,b)=>order==='low'?a.price-b.price:order==='high'?b.price-a.price:b.checkedAt.localeCompare(a.checkedAt));
+ $('count').textContent=list.length+' oferta(s) publicada(s) neste filtro · preços conferidos na data indicada';
+ const root=$('products');root.replaceChildren();
+ if(!list.length){const empty=el('div','empty');empty.append(el('h2','',rows.length?'Nenhuma oferta corresponde aos filtros.':'Nenhuma oferta publicada ainda nesta vitrine.'),el('p','',rows.length?'Altere o orçamento, categoria ou loja.':'Os produtos aparecerão aqui depois da revisão e da publicação pelo RAVEN MARKET BOT.'));root.append(empty);return;}
+ for(const o of list.slice(0,250)){
+  const card=el('article','card'),content=el('div','content'),tags=el('div','tags'),name=o.title||o.modelName||refs.get(o.partId)?.name||'Componente de computador';
+  tags.append(el('span','tag',stores[o.store].name),el('span','tag',cats[o.category]||'Componente'));
+  if(o.condition==='used')tags.append(el('span','tag','Usado'));
+  const cp=compare.get(o);
+  if(cp?.isCheapest)tags.append(el('span','tag','Menor valor listado'));
+  content.append(tags,el('h2','',name),el('div','price',money(o.price)),el('div','price-caption',paymentName(o)));
+  const stale=ageDays(o)>14;
+  const meta=el('div','verified'+(stale?' warning-age':''),'Conferido em '+o.checkedAt.split('-').reverse().join('/')+(stale?' · Preço desatualizado: verifique':'')+(o.affiliate?' · Link de afiliado':' · Link externo'));
+  content.append(meta);
+  if(cp){
+   const message=cp.isCheapest?'Menor valor entre '+cp.storeCount+' lojas cadastradas para este modelo e condição.':'Outra loja tem valor cadastrado '+money(o.price-cp.cheapest)+' menor para este modelo e condição.';
+   content.append(el('div','price-note',message));
+  }else{
+   content.append(el('div','price-note subtle','Sem comparação recente com outra loja para este mesmo modelo.'));
+  }
+  const a=el('a','link','Conferir oferta na '+stores[o.store].name);
+  a.href=o.url;a.target='_blank';a.rel=o.affiliate?'noopener noreferrer sponsored':'noopener noreferrer';
+  content.append(a);card.append(createPhoto(o),content);root.append(card);
+ }
+}
+async function load(){
+ let error=null;
+ try{
+  const response=await fetch('./offers.json',{cache:'no-store'});if(!response.ok)throw Error('HTTP '+response.status);
+  const doc=await response.json();
+  rows=(Array.isArray(doc.offers)?doc.offers:[]).filter(valid).map(o=>({...o,category:o.category||refs.get(o.partId)?.category||'other',modelName:o.modelName||refs.get(o.partId)?.name||''}));
+ }catch(e){rows=[];error=e.message;}
+ const filter=$('cat'),present=new Set(rows.map(o=>o.category));
+ Object.entries(cats).forEach(([key,label])=>{if(present.has(key)){const option=el('option','',label);option.value=key;filter.append(option);}});
+ if(present.has('other')){const option=el('option','','Outros componentes');option.value='other';filter.append(option);}
+ const params=new URLSearchParams(location.search);if(present.has(params.get('categoria')))filter.value=params.get('categoria');
+ render();
+ if(error)$('count').textContent='Erro ao carregar ofertas: '+error;
+}
+['q','cat','store','budget','order'].forEach(id=>$(id).addEventListener(id==='q'?'input':'change',render));
+load();
 </script></body></html>
