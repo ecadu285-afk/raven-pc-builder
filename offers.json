@@ -309,6 +309,18 @@
       "category": "hdd",
       "modelName": "HD SATA 3.5 2TB",
       "title": "HD SATA 3.5 2TB"
+    },
+    {
+      "partId": "r39-hdd-hd-sata-3-5-1tb",
+      "store": "mercadolivre",
+      "price": 413.08,
+      "checkedAt": "2026-11-15",
+      "url": "https://meli.la/1Z3gw1Q",
+      "condition": "new",
+      "affiliate": true,
+      "category": "hdd",
+      "modelName": "HD SATA 3.5 1TB",
+      "title": "HD SATA 3.5 1TB"
     }
   ],
   "history": [
