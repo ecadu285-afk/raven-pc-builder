@@ -219,8 +219,12 @@ export async function ravenInitAccount({ onChange } = {}) {
   configured = ravenAccountConfigured();
   paint();
   const accountLinkMode = new URLSearchParams(location.search).get('conta');
-  if (accountLinkMode === 'cadastro') { setMode('signup'); show(); }
-  else if (accountLinkMode === '1') show();
+  // A tela premium de primeira visita recebe os links ?conta=...
+  // Não abra um segundo modal de login por cima dela.
+  if (!document.getElementById('raven-entry')) {
+    if (accountLinkMode === 'cadastro') { setMode('signup'); show(); }
+    else if (accountLinkMode === '1') show();
+  }
   if (!configured) {
     setMessage('Cadastro em preparação: falta conectar o serviço de contas e aplicar as regras do banco de dados.', true);
     onAccountChange();
@@ -240,6 +244,7 @@ export async function ravenInitAccount({ onChange } = {}) {
       // INITIAL_SESSION pode conter usuário nulo ao abrir a página.
       // Não substitua a tela "Criar conta" escolhida pelo visitante.
       paint();
+      window.dispatchEvent(new Event('raven-auth-ready'));
       // Consultas à API só depois que o callback de Auth retornar.
       queueMicrotask(() => onAccountChange());
     });
@@ -247,6 +252,7 @@ export async function ravenInitAccount({ onChange } = {}) {
     if (error && !/auth session missing/i.test(error.message || '')) throw error;
     accountUser = data?.user || null;
     paint();
+    window.dispatchEvent(new Event('raven-auth-ready'));
     await onAccountChange();
   } catch (error) {
     setMessage('Não foi possível conectar ao serviço de contas. Verifique a configuração.', true);

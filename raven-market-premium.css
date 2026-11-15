@@ -1,0 +1,63 @@
+/* Raven Market premium: uma loja de comparação, não um checkout. */
+.catalog-v8{background:#f2f3f9}
+.catalog-v8 .market-header{background:#15142d;box-shadow:0 12px 27px #130d302b;position:sticky;top:0;z-index:85}
+.catalog-v8 .market-header .market-header-main{max-width:1340px;padding-block:13px;gap:20px}
+.catalog-v8 .market-search{min-height:49px;border:0;border-radius:10px;box-shadow:0 1px 10px #0a061b3b}
+.catalog-v8 .market-search button{background:#ff8b44;font-weight:950}
+.catalog-v8 .market-nav-strip{background:#211b3a;border-color:#51446c}
+.catalog-v8 .market-header .market-nav-strip .shell{max-width:1340px;justify-content:space-between;padding-block:10px}
+.catalog-v8 .market-top-tools a,.catalog-v8 .market-top-tools button{font-size:12px;font-weight:850}
+.catalog-v8 .market-top-tools #accountOpen::before{content:"◉";color:#ffac66;font-size:18px;line-height:1;display:block}
+.catalog-v8 .market-top-tools a[href*="salvos"]::before{content:"♡";color:#ffac66;font-size:19px;line-height:1;display:block}
+.catalog-v8 .market-top-tools a[href*="carrinho"]::before{content:"▤";color:#ffac66;font-size:18px;line-height:1;display:block}
+.catalog-v8 .catalog-intro{margin-top:22px;padding:clamp(20px,3vw,35px);border-radius:17px;background:linear-gradient(105deg,#171530,#312151 60%,#181f3d);min-height:169px;box-shadow:0 15px 32px #25133820;color:#fff}
+.catalog-v8 .catalog-intro .eyebrow{color:#ffb27a;font-weight:900;letter-spacing:.14em}
+.catalog-v8 .catalog-intro h1{font-size:clamp(30px,4vw,44px);color:#fff;font-weight:950;letter-spacing:-.06em;margin:7px 0}
+.catalog-v8 .catalog-intro p{color:#e0d4f1;max-width:650px;margin-top:5px;line-height:1.7}
+.catalog-v8 .raven-catalog-location{display:flex;align-items:center;justify-content:space-between;gap:13px;background:#fff;border:1px solid #e6e0f0;border-radius:12px;padding:13px 17px;margin:17px 0 6px;flex-wrap:wrap}
+.raven-catalog-location strong{color:#32274b;font-size:13px}
+.raven-catalog-location p{margin:2px 0 0;font-size:12px;color:#7c718a}
+.raven-catalog-location .raven-catalog-locate-actions{display:flex;gap:10px;align-items:center;flex-wrap:wrap}
+.raven-catalog-location button,.raven-catalog-location a{border:0;border-radius:8px;padding:10px 13px;font-size:12px;font-weight:900;text-decoration:none;cursor:pointer;white-space:nowrap}
+.raven-catalog-location button{background:#291a45;color:#fff}
+.raven-catalog-location button:disabled{opacity:.6;cursor:wait}
+.raven-catalog-location a{background:#efeafa;color:#62449b}
+.raven-catalog-location #ravenLocateStatus{width:100%;font-size:12px;color:#6b4291;margin:0;min-height:0}
+.catalog-v8 .catalog-toolbar{margin-top:18px;border:1px solid #e4def0;background:#fff;border-radius:13px;padding:18px;box-shadow:0 4px 15px #1f193b0a}
+.catalog-v8 .catalog-toolbar input:focus,.catalog-v8 .catalog-toolbar select:focus{outline-color:#855bc4}
+.catalog-v8 .catalog-quick h2{font-size:21px;letter-spacing:-.04em}
+.catalog-v8 .cat-card{border-radius:11px;background:#fff;border:1px solid #e5e1ee;box-shadow:0 4px 12px #211b350a;transition:border-color .18s,transform .18s}
+.catalog-v8 .cat-card:hover{transform:translateY(-2px);border-color:#bca4e9}
+.catalog-v8 .cat-symbol{background:#f0eaff;color:#6140ad;box-shadow:inset 0 -4px 0 #ded2ff}
+.catalog-v8 .catalog-results{padding-top:31px}
+.catalog-v8 .catalog-results h2{font-size:27px;font-weight:950}
+.catalog-v8 .offer-card{border-color:#e3deea;box-shadow:0 5px 16px #20192f0c;border-radius:12px}
+.catalog-v8 .offer-card:hover{box-shadow:0 14px 25px #251b401a}
+.catalog-v8 .offer-price{color:#24213f;font-weight:950}
+.catalog-v8 .offer-link{background:#ff843e;color:#20172b;border-radius:8px}
+.catalog-v8 .offer-link:hover{background:#f1702b}
+.catalog-v8 .market-card-actions{grid-template-columns:1fr 1fr;gap:6px}
+.catalog-v8 .market-action{border-color:#e0d4ef;color:#65418f}
+.catalog-v8 .disclaimer{background:#f8f5ff;color:#655d75;border:1px solid #e5dbef;border-radius:10px}
+.catalog-v8 .countline{color:#6c6380}
+.catalog-v8 .simple-footer{background:#15142e}
+.market-account-shell .raven-geo-tools{background:#f7f2fc;border:1px solid #e5dcef;border-radius:10px;padding:13px;margin-top:12px}
+.market-account-shell .raven-geo-tools button{border:0;border-radius:9px;background:#2e1d50;color:#fff;font-size:12px;font-weight:850;padding:11px 13px;cursor:pointer}
+.market-account-shell .raven-geo-tools button:disabled{opacity:.55}
+.market-account-shell .raven-geo-tools p{font-size:11px;color:#766781;line-height:1.5;margin:8px 0 0}
+@media(max-width:760px){
+ .catalog-v8 .market-header .market-header-main{gap:8px}
+ .catalog-v8 .catalog-intro{margin-top:15px}
+ .catalog-v8 .market-header .market-nav-strip .shell{flex-wrap:nowrap;overflow-x:auto;scrollbar-width:thin;justify-content:flex-start}
+ .catalog-v8 .market-header .market-nav-strip a{white-space:nowrap}
+ .raven-catalog-location{align-items:stretch}
+ .raven-catalog-location .raven-catalog-locate-actions{width:100%}
+ .raven-catalog-location .raven-catalog-locate-actions>*{flex:1;text-align:center}
+}
+@media(max-width:460px){
+ .catalog-v8 .market-top-tools a,.catalog-v8 .market-top-tools button{font-size:10px;padding:5px}
+ .catalog-v8 .market-search button{padding:8px 11px}
+ .catalog-v8 .catalog-intro h1{font-size:31px}
+ .catalog-v8 .offer-visual{height:150px}
+ .catalog-v8 .offer-info{padding:11px}
+}

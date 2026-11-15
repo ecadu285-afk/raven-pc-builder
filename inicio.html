@@ -6,9 +6,9 @@
 <meta name="description" content="Monte seu PC em 3D, aprenda o básico, encontre peças e descubra upgrades. Tudo em um só lugar, sem complicação.">
 <title>Raven PC Builder | Monte, aprenda e encontre suas peças</title>
 <link rel="stylesheet" href="storefront.css?v=71">
-<link rel="stylesheet" href="home-simple.css?v=9"><link rel="stylesheet" href="raven-market.css?v=1"><link rel="stylesheet" href="raven-account.css?v=1">
+<link rel="stylesheet" href="home-simple.css?v=9"><link rel="stylesheet" href="raven-market.css?v=1"><link rel="stylesheet" href="raven-account.css?v=1"><link rel="stylesheet" href="raven-home-pro.css?v=1"><link rel="stylesheet" href="raven-entry.css?v=1">
 </head>
-<body class="home-v8">
+<body class="home-v8 raven-home-pro">
 <a href="#conteudo" class="skip-link" style="position:absolute;left:-9999px;top:0" onfocus="this.style.left='12px';this.style.zIndex='1000';this.style.background='white'" onblur="this.style.left='-9999px'">Pular para o conteúdo</a>
 <header class="site-header market-header">
 <div class="shell market-header-main">
@@ -32,21 +32,39 @@
 <section class="shell start-area" aria-labelledby="start-title">
 <div class="start-card">
 <div class="start-content">
-<div class="start-tag">BEM-VINDO AO RAVEN PC BUILDER</div>
-<h1 id="start-title">Seu PC começa <span>por aqui.</span></h1>
-<p>Quer montar, comprar peças ou melhorar seu computador? Escolha o que precisa. A gente te mostra por onde começar.</p>
+<div class="start-tag">RAVEN PC BUILDER · HARDWARE & TECNOLOGIA</div>
+<h1 id="start-title">O próximo nível do seu setup <span>começa aqui.</span></h1>
+<p>Encontre componentes, compare ofertas de lojas parceiras e salve até cinco projetos de PC na sua conta. Tudo em um só lugar.</p>
 <form class="main-search" action="produtos.html" method="get" role="search">
 <input type="search" name="q" aria-label="Buscar produtos e peças de computador" placeholder="Buscar processador, placa de vídeo, SSD..." autocomplete="off" required>
 <button type="submit">Buscar peças</button>
 </form>
-<p class="search-hint">Ou escolha uma opção abaixo para começar.</p>
-<a class="raven-register-home" href="index.html?conta=cadastro">Criar conta grátis e guardar até 5 montagens →</a>
+<div class="raven-hero-chips" aria-label="Destaques da Raven"><span>✓ Montador 3D</span><span>✓ Contas e montagens salvas</span><span>✓ Ofertas de lojas parceiras</span></div>
+<p class="search-hint">Escolha uma categoria para começar ou crie sua conta:</p>
+<div class="raven-hero-actions"><a class="raven-register-home" href="index.html?conta=cadastro">Criar conta e salvar meus PCs →</a><a class="raven-hero-outline" href="produtos.html">Explorar ofertas</a></div>
 </div>
 <div class="start-visual" data-raven-hero3d role="img" aria-label="Maquete 3D ilustrativa de placa-mãe, CPU, RAM, GPU e SSD flutuando">
 <div class="hardware-fallback"><div class="fallback-board" aria-hidden="true"></div></div>
 <canvas hidden aria-hidden="true"></canvas>
 </div>
 </div>
+</section>
+<section class="shell raven-shop-categories" aria-labelledby="shop-categories-title">
+<div class="raven-section-head"><div><p class="raven-overline">ENCONTRE SUA PRÓXIMA PEÇA</p><h2 id="shop-categories-title">Compre por categoria</h2></div><a href="produtos.html">Catálogo completo ›</a></div>
+<div class="raven-category-grid">
+<a href="produtos.html?categoria=cpu#catalogo"><span class="raven-category-icon">CPU</span><strong>Processadores</strong><small>Intel e AMD</small></a>
+<a href="produtos.html?categoria=gpu#catalogo"><span class="raven-category-icon">GPU</span><strong>Placas de vídeo</strong><small>Para jogos e criação</small></a>
+<a href="produtos.html?categoria=board#catalogo"><span class="raven-category-icon">MB</span><strong>Placas-mãe</strong><small>AM4, AM5 e mais</small></a>
+<a href="produtos.html?categoria=ram#catalogo"><span class="raven-category-icon">RAM</span><strong>Memórias</strong><small>DDR4 e DDR5</small></a>
+<a href="produtos.html?categoria=ssd#catalogo"><span class="raven-category-icon">SSD</span><strong>Armazenamento</strong><small>SSD e HD</small></a>
+<a href="produtos.html?categoria=psu#catalogo"><span class="raven-category-icon">PSU</span><strong>Fontes</strong><small>Energia para seu PC</small></a>
+</div></section>
+<section class="shell raven-delivery-card" aria-label="Região para consultas">
+<div class="raven-delivery-icon">⌖</div><div><strong>Ofertas para o seu setup, onde você estiver</strong>
+<p>Detecte sua região, com permissão, ou informe seu CEP em Minha conta. Valores de frete e entrega são conferidos na loja parceira.</p>
+<small>A detecção envia sua localização atual ao serviço BigDataCloud apenas após sua autorização. Não armazenamos coordenadas GPS.</small>
+<p id="ravenLocateStatus" class="raven-locate-status" role="status" aria-live="polite"></p></div>
+<div class="raven-delivery-actions"><button type="button" data-raven-detect data-status-id="ravenLocateStatus">Detectar minha região</button><a href="minha-conta.html#endereco">Informar CEP</a></div>
 </section>
 <section class="shell steps" aria-labelledby="actions-title">
 <div class="section-top"><div><h2 id="actions-title">O que você quer fazer?</h2><p>Quatro caminhos. Escolha o seu.</p></div></div>
@@ -70,6 +88,43 @@
 <nav aria-label="Informações do projeto"><a href="servicos.html">Sobre o projeto</a><a href="afiliados.html">Afiliados</a><a href="privacidade.html">Privacidade</a><a href="creditos-imagens.html">Créditos</a></nav>
 </div></footer>
 <script type="module">if(window.matchMedia('(min-width: 751px)').matches){import('./hero-3d.js?v=8').catch(()=>{});}</script>
-<script type="module" src="storefront-shop.js?v=82"></script>
+<script type="module" src="storefront-shop.js?v=84"></script>
+<script type="module" src="raven-entry.js?v=1"></script>
+<script type="module" src="raven-location.js?v=1"></script>
+<div id="raven-entry" class="raven-entry-overlay" role="dialog" aria-modal="true" aria-labelledby="entryTitle" hidden>
+<div class="raven-entry-shell">
+<section class="entry-showcase" aria-label="Boas-vindas da Raven">
+<div class="entry-brand"><span class="entry-brand-mark">R.</span><span>RAVEN PC BUILDER</span></div>
+<div><h1>Seu universo gamer começa <span>pela escolha certa.</span></h1>
+<p>Uma conta para salvar seus computadores, comparar hardware, criar uma lista de compras e continuar depois.</p>
+<div class="entry-benefits">
+<div><strong>5 projetos</strong><small>PCs salvos em sua conta</small></div>
+<div><strong>♡ Salvos</strong><small>Favoritos e carrinho</small></div>
+<div><strong>Privacidade</strong><small>Seus dados, seu acesso</small></div>
+</div></div>
+<div class="entry-foot">Raven Creatives Studios · O melhor hardware começa com informação.</div>
+</section>
+<section class="entry-login-side" aria-label="Acesso e cadastro">
+<div class="entry-login-card">
+<span class="entry-overline">SUA CONTA RAVEN</span>
+<h2 id="entryTitle">Bem-vindo de volta</h2>
+<p id="entrySubtitle">Entre e continue exatamente de onde parou.</p>
+<div class="entry-tabs" id="entryTabs" role="tablist" aria-label="Tipo de acesso">
+<button id="entryLoginTab" type="button" aria-selected="true" role="tab">Entrar</button>
+<button id="entrySignupTab" type="button" aria-selected="false" role="tab">Criar conta</button>
+</div>
+<form id="entryForm" autocomplete="on">
+<label id="entryNameRow" hidden>Nome de exibição<input id="entryName" name="name" autocomplete="name" maxlength="70" placeholder="Como você quer ser chamado?"></label>
+<label id="entryEmailRow">E-mail<input id="entryEmail" type="email" name="email" required maxlength="200" autocomplete="email" placeholder="seuemail@exemplo.com"></label>
+<label id="entryPasswordRow">Senha<input id="entryPassword" type="password" name="password" required minlength="8" autocomplete="current-password" placeholder="Mínimo de 8 caracteres"></label>
+<button id="entryForgot" type="button" class="entry-forgot">Esqueci minha senha</button>
+<button id="entryReturn" type="button" class="entry-return" hidden>← Voltar ao login</button>
+<p id="entryStatus" class="entry-status" role="status" aria-live="polite"></p>
+<button class="entry-primary" id="entrySubmit" type="submit">Entrar na minha conta</button></form>
+<button id="entryGuest" class="entry-guest" type="button">Continuar como visitante</button>
+<p class="entry-note">A sessão permanece salva neste navegador. Sua senha é protegida pelo Supabase Auth. Ao criar conta, você concorda com a nossa <a href="privacidade.html">Política de privacidade</a>.</p>
+</div>
+</section>
+</div></div>
 </body>
 </html>
