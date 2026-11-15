@@ -188,6 +188,18 @@
       "category": "ssd",
       "modelName": "SSD SATA 2.5 480GB",
       "title": "SSD SATA 2.5 480GB"
+    },
+    {
+      "partId": "r39-ssd-ssd-sata-2-5-240gb",
+      "store": "mercadolivre",
+      "price": 289.59,
+      "checkedAt": "2026-11-15",
+      "url": "https://meli.la/1GtgX7f",
+      "condition": "new",
+      "affiliate": true,
+      "category": "ssd",
+      "modelName": "SSD SATA 2.5 240GB",
+      "title": "SSD SATA 2.5 240GB"
     }
   ],
   "history": [
