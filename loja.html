@@ -17,6 +17,12 @@
 @media(max-width:550px){.controls{grid-template-columns:1fr}.photo{height:190px}.photo img{max-height:190px}}
 
 .photo-caption{position:absolute;right:8px;bottom:7px;background:#241a34d9;color:#eadef5;border-radius:5px;padding:3px 7px;font-size:10px;z-index:2}
+.photo .no-photo{width:100%;height:100%;background:radial-gradient(circle at 50% 50%,#eae5ff,#dfe2f2);display:flex;justify-content:center;align-items:center;gap:18px;flex-direction:column;color:#6048a0}
+.photo .no-photo span:last-child{font-size:11px;color:#665981;font-weight:700}
+.photo .hardware-object{display:grid;place-items:center;height:85px;width:94px;font-weight:950;font-size:17px;color:#fff;background:linear-gradient(145deg,#b49cff,#6a48cf);border:8px solid #5434a6;border-right-color:#332182;border-bottom-color:#332182;border-radius:12px;transform:perspective(350px) rotateY(-24deg) rotateX(19deg);box-shadow:12px 13px 0 #332573,17px 18px 26px #22183e44;letter-spacing:-.03em}
+.photo .mock-gpu,.photo .mock-ssd,.photo .mock-ram,.photo .mock-hdd{width:123px;height:63px}
+.photo .mock-board{width:100px;height:110px}
+.photo .mock-case{width:78px;height:110px}
 </style><link rel="stylesheet" href="raven-theme.css?v=71"><link rel="stylesheet" href="raven-accent-v7.css?v=7"></head><body>
 <header><strong>RAVEN <span>PC BUILDER</span></strong><nav aria-label="Menu"><a href="inicio.html">Início</a><a href="index.html">Montador 3D</a><a href="produtos.html">Peças</a><a href="pcs-montados.html">PCs montados</a><a href="orcamento.html">Orçamento</a><a href="loja.html" aria-current="page">Todos os anúncios</a><a href="servicos.html">Serviços</a><a href="meu-pc.html">Upgrade do meu PC</a><a href="aprender.html">Hardware 3D</a><a href="aprender.html">Guia básico de PC</a><a href="afiliados.html">Transparência</a></nav></header>
 <main><p style="font-size:13px"><a href="produtos.html" style="color:#c2a6ff;font-weight:800">← Voltar à página de produtos e categorias</a></p><span class="eyebrow">RAVEN MARKETPLACE · LOJA DE COMPONENTES</span><h1>Todos os anúncios em uma só vitrine.</h1><p class="intro">Explore anúncios publicados e compare ofertas para o mesmo modelo nas lojas. Para escolher por categoria, use a página de produtos. A compra é realizada diretamente na Amazon, Mercado Livre ou Shopee. O RAVEN não processa pagamentos nem vende diretamente os produtos.</p>
@@ -26,7 +32,6 @@
 </main><footer>© 2026 RAVEN Creatives Studios · Compras realizadas nos sites das lojas. <a href="produtos.html">Produtos</a> · <a href="servicos.html">Serviços</a> · <a href="index.html">Montador</a> · <a href="meu-pc.html">Upgrade do meu PC</a> · <a href="termos.html">Termos</a> · <a href="privacidade.html">Privacidade</a><p><a href="creditos-imagens.html">Créditos das fotos ilustrativas</a></p></footer>
 <script type="module">
 import {catalog} from './catalog.js';
-import {categoryPhotos} from './product-photos.js';
 const refs=new Map(Object.entries(catalog).flatMap(([category,list])=>list.map(p=>[p.id,{name:p.name,category}])));
 const cats={cpu:'Processadores',board:'Placas-mãe',gpu:'Placas de vídeo',ram:'Memória RAM',ssd:'SSDs',hdd:'HDs',psu:'Fontes',case:'Gabinetes',cooler:'Coolers'};
 const stores={amazon:{name:'Amazon',hosts:['amazon.com.br','amzn.to','link.amazon']},mercadolivre:{name:'Mercado Livre',hosts:['mercadolivre.com.br','mercadolivre.com','meli.la']},shopee:{name:'Shopee',hosts:['shopee.com.br','shopee.com','shope.ee']}};
@@ -65,21 +70,23 @@ function comparisons(){
 }
 function createPhoto(offers,cat){
  const root=el('div','photo');
- const real=offers.find(o=>safeImage(o.imageUrl,o.store)&&!(cat==='cpu'&&/\bPC\s+GAMER\b/i.test(o.title||'')));
- const category=categoryPhotos[cat]||categoryPhotos.other;
- const source=real?safeImage(real.imageUrl,real.store):category.url;
- const caption=el('span','photo-caption',real?'Foto do anúncio':'Foto ilustrativa');
- const fallback=()=>{root.replaceChildren(el('div','no-photo','Imagem indisponível. Confira a foto na loja.'));};
- const img=el('img');img.src=source;img.alt=real?'Foto do anúncio do produto':'Foto ilustrativa da categoria';
- img.loading='lazy';img.decoding='async';
- let fallbackUsed=!real;
- img.onerror=()=>{
-  if(!fallbackUsed){fallbackUsed=true;img.src=category.url;img.alt='Foto ilustrativa da categoria';caption.textContent='Foto ilustrativa';}
-  else fallback();
+ const real=offers.find(o=>safeImage(o.imageUrl,o.store)&&!(cat==='cpu'&&/\b(?:PC\s*GAMER|COMPUTADOR\s*COMPLETO)\b/i.test(o.title||'')));
+ const frame=el('div','no-photo');
+ const fallback=()=>{
+   frame.replaceChildren();
+   const art=el('span','hardware-object',({cpu:'CPU',board:'MB',gpu:'GPU',ram:'RAM',ssd:'SSD',hdd:'HD',psu:'PSU',case:'PC',cooler:'FAN'})[cat]||'PC');
+   art.className+=' mock-'+cat;
+   frame.append(art,el('span','','Sem foto deste modelo'));
+   root.replaceChildren(frame);
  };
- root.append(img,caption);return root;
+ if(!real){fallback();return root;}
+ const img=el('img');img.src=safeImage(real.imageUrl,real.store);
+ img.alt='Foto cadastrada para '+(real.modelName||real.title||'o produto');
+ img.loading='lazy';img.decoding='async';
+ img.onerror=fallback;
+ root.append(img,el('span','photo-caption','Foto do anúncio'));
+ return root;
 }
-
 /* RAVEN 6.1: agrupamento visual. Não altera offers.json e não perde anúncios. */
 function normalizeModel(value){
  return String(value||'').normalize('NFD').replace(/[\u0300-\u036f]/g,'')
