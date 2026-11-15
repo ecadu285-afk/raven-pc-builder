@@ -249,6 +249,18 @@
       "category": "cpu",
       "modelName": "Intel Core i5-3470",
       "title": "Intel Core i5-3470"
+    },
+    {
+      "partId": "h81m-b",
+      "store": "shopee",
+      "price": 197.6,
+      "checkedAt": "2026-11-14",
+      "url": "https://s.shopee.com.br/1BxRS8Nhv",
+      "condition": "new",
+      "affiliate": true,
+      "category": "board",
+      "modelName": "H81M econômica",
+      "title": "H81M econômica"
     }
   ],
   "history": [
