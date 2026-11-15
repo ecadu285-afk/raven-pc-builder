@@ -140,6 +140,18 @@
       "category": "ssd",
       "modelName": "SSD NVMe M.2 2280 500GB",
       "title": "SSD NVMe M.2 2280 500GB"
+    },
+    {
+      "partId": "r39-ssd-ssd-sata-2-5-2tb",
+      "store": "mercadolivre",
+      "price": 1358.95,
+      "checkedAt": "2026-11-15",
+      "url": "https://meli.la/321odLW",
+      "condition": "new",
+      "affiliate": true,
+      "category": "ssd",
+      "modelName": "SSD SATA 2.5 2TB",
+      "title": "SSD SATA 2.5 2TB"
     }
   ],
   "history": [
