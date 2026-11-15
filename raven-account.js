@@ -129,6 +129,7 @@ export async function ravenInitAccount({ onChange } = {}) {
     const signup = mode === 'signup', forgot = mode === 'forgot', reset = mode === 'recovery';
     el('raNameRow').hidden = !signup;
     el('raEmailRow').hidden = reset;
+    el('raEmail').required = !reset;
     el('raPasswordRow').hidden = forgot;
     el('raPassword').required = !forgot;
     el('raPassword').setAttribute('autocomplete', reset ? 'new-password' : signup ? 'new-password' : 'current-password');
