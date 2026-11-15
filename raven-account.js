@@ -240,6 +240,7 @@ export async function ravenInitAccount({ onChange } = {}) {
       // INITIAL_SESSION pode conter usuário nulo ao abrir a página.
       // Não substitua a tela "Criar conta" escolhida pelo visitante.
       paint();
+      window.dispatchEvent(new Event('raven-auth-ready'));
       // Consultas à API só depois que o callback de Auth retornar.
       queueMicrotask(() => onAccountChange());
     });
@@ -247,6 +248,7 @@ export async function ravenInitAccount({ onChange } = {}) {
     if (error && !/auth session missing/i.test(error.message || '')) throw error;
     accountUser = data?.user || null;
     paint();
+    window.dispatchEvent(new Event('raven-auth-ready'));
     await onAccountChange();
   } catch (error) {
     setMessage('Não foi possível conectar ao serviço de contas. Verifique a configuração.', true);
