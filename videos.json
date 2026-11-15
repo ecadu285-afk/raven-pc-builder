@@ -1,23 +1,23 @@
 {
   "schemaVersion": 1,
-  "notes": "Preencha url com um link publico HTTPS do YouTube quando publicar o video. Deixe vazio para manter o cartao Em breve. Nao apague os IDs.",
+  "notes": "Links HTTPS de videos autorais do YouTube: preencher apenas depois de publicar. Enquanto estiverem vazios, os cartoes mostram Em breve.",
   "videos": [
     {
       "id": "montagem",
-      "title": "Montagem de PC do zero",
-      "description": "Gabinete, placa-mãe, CPU, RAM, fonte, SSD e cabos, etapa por etapa.",
+      "title": "Montagem completa do PC",
+      "description": "Etapas de montagem, CPU, RAM, armazenamento, cooler, placa-mãe, fonte e GPU.",
       "url": ""
     },
     {
-      "id": "windows",
-      "title": "Windows e arquivos",
-      "description": "Pastas, programas, segurança e organização no computador.",
+      "id": "limpeza",
+      "title": "Limpeza preventiva segura",
+      "description": "Filtros, poeira, ventoinhas, ferramentas adequadas e cuidados importantes.",
       "url": ""
     },
     {
       "id": "pecas",
-      "title": "Escolher e testar peças",
-      "description": "Compatibilidade, orçamento, componentes usados e testes seguros.",
+      "title": "Conhecendo as peças e compatibilidade",
+      "description": "Função das peças, soquetes, DDR, conexões, SSDs e fontes.",
       "url": ""
     }
   ]
