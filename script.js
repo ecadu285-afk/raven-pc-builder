@@ -148,12 +148,8 @@ function over(g,o){return ui.on&&groups.filter(x=>x.id!==g.id).reduce((n,x)=>n+(
 function listFor(g){let a=g.options.filter(o=>!o.conceptual&&ravenBestOffer(o.id)&&(!ui.q||(o.name+' '+o.desc).toLowerCase().includes(ui.q)));if(ui.hide)a=a.filter(o=>!bad(g,o));const k=o=>o.tier??o.gb??o.watts??o.price;if(ui.sort==='asc')a=[...a].sort((x,y)=>ravenBestOffer(x.id).price-ravenBestOffer(y.id).price);if(ui.sort==='desc')a=[...a].sort((x,y)=>ravenBestOffer(y.id).price-ravenBestOffer(x.id).price);if(ui.sort==='perf')a=[...a].sort((x,y)=>k(y)-k(x)||ravenBestOffer(x.id).price-ravenBestOffer(y.id).price);if(ui.sort==='def')a=[...a].sort((x,y)=>ravenBestOffer(x.id).price-ravenBestOffer(y.id).price);return a}
 function budgetNote(){const n=$('budget-note'),bx=$('options');if(bx)bx.scrollTop=lastY;if(!n)return;const x=ravenSelectedPrices();n.textContent=!ui.on?'':x.total>ui.budget?'Subtotal das ofertas '+fmt(x.total)+' está '+fmt(x.total-ui.budget)+' acima do limite; faltam '+(8-x.quoted)+' preços.':'Subtotal de anúncios '+fmt(x.total)+' · '+x.quoted+'/8 peças com preço · faltam '+(8-x.quoted)+' ofertas para cotar o PC completo.'}
 $('q').oninput=e=>{ui.q=e.target.value.trim().toLowerCase();render()};$('sort').onchange=e=>{ui.sort=e.target.value;render()};$('hide').onchange=e=>{ui.hide=e.target.checked;render()};
-$('budget').oninput=e=>{ui.budget=+e.target.value;ui.on=true;$('bval').textContent=fmt(ui.budget);render()};$('auto').onclick=()=>{
- ui.on=true;
- const eligible=ravenMarketBundles().filter(p=>p.price<=ui.budget).sort((a,b)=>b.count-a.count||b.price-a.price);
- if(!eligible.length){const note=$('budget-note');note.textContent='Ainda não há um kit de peças publicadas dentro de '+fmt(ui.budget)+'. Nenhum PC completo será anunciado com valores inventados.';return;}
- applyPreset(groups.map(g=>eligible[0].ids[g.id]||null));
-};
+$('budget').oninput=e=>{ui.budget=+e.target.value;ui.on=false;$('bval').textContent=fmt(ui.budget);$('budget-note').textContent='O planejador abre em outra página e verifica Intel, AMD, RAM, SSD/HD, fonte, gabinete, vídeo e cooler com anúncios publicados.';};
+$('auto').onclick=()=>{const value=Math.max(100,Math.min(100000,ui.budget));window.location.href='orcamento.html?valor='+encodeURIComponent(String(value));};
 render();
 // Controles de câmera fora da inicialização do Three.js.
 function bindMobileZoom(){
