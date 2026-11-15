@@ -80,7 +80,7 @@ export async function ravenMarketSetCep(raw){
  const {data,error}=await client.from(tables.profile).select('user_id').eq('user_id',id).maybeSingle();
  if(error)throw Error(informativeError(error));
  const result=data
- ? await client.from(tables.profile).update({cep:digits,updated_at:new Date().toISOString()}).eq('user_id',id)
+ ? await client.from(tables.profile).update({cep:digits}).eq('user_id',id)
  : await client.from(tables.profile).insert({user_id:id,cep:digits});
  if(result.error)throw Error(informativeError(result.error));
  return digits;
