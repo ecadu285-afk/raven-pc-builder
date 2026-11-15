@@ -55,7 +55,7 @@ export function ravenInstallLocation(){
     if(place.cep){
       const input=document.getElementById('marketCep');
       if(input)input.value=place.cep.slice(0,5)+'-'+place.cep.slice(5);
-      if(status)status.textContent=(placeText?placeText+' — ':'')+'CEP sugerido: '+place.cep.slice(0,5)+'-'+place.cep.slice(5)+'. Confira e clique em Salvar CEP na sua conta.';
+      if(status)status.textContent=(placeText?placeText+' — ':'')+'CEP aproximado: '+place.cep.slice(0,5)+'-'+place.cep.slice(5)+'. '+(input?'Confira e clique em Salvar CEP.':'Confira e informe o CEP na área Minha conta.');
     }else if(status){
       status.textContent=(placeText||'Região aproximada detectada')+'. Não encontramos um CEP confiável. Informe manualmente.';
     }
