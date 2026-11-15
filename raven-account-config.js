@@ -1,5 +1,5 @@
-// Configuração pública do projeto Supabase.
-// A URL e a chave publishable (ou anon legada) são públicas, pois a segurança
-// vem das políticas RLS. NUNCA coloque secret key, service_role ou senhas aqui.
-export const RAVEN_SUPABASE_URL = '';
-export const RAVEN_SUPABASE_PUBLISHABLE_KEY = '';
+// Raven PC Builder: dados públicos do projeto Supabase.
+// Esta chave publishable é segura no navegador; a proteção dos usuários vem de Auth + RLS.
+// NUNCA coloque chaves secret, service_role ou senhas neste arquivo.
+export const RAVEN_SUPABASE_URL = 'https://lzgkerswxlpdvmbxykns.supabase.co';
+export const RAVEN_SUPABASE_PUBLISHABLE_KEY = 'sb_publishable_FyL0hSiZynyrSxzMKyZsUQ_6mUN3kOD';
