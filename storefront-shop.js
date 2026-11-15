@@ -95,7 +95,7 @@ function catalogPage(){
  const root=$('catalog-grid');if(!root)return;
  const search=$('catalog-search'),type=$('catalog-category'),shop=$('catalog-store'),order=$('catalog-order');
  const q=normalize(search?.value||''),c=type?.value||'all',s=shop?.value||'all',ord=order?.value||'lowest';
- const filtered=all.filter(o=>(c==='all'||category(o)===c)&&(s==='all'||o.store===s)&&(!q||normalize([o.title,o.modelName,o.partId,known.get(o.partId)?.name].join(' ')).includes(q)));
+ const filtered=all.filter(o=>!['pc','kit'].includes(category(o))&&(c==='all'||category(o)===c)&&(s==='all'||o.store===s)&&(!q||normalize([o.title,o.modelName,o.partId,known.get(o.partId)?.name].join(' ')).includes(q)));
  const array=grouped(filtered);
  array.sort((a,b)=>ord==='highest'?b.best.price-a.best.price:ord==='recent'?b.best.checkedAt.localeCompare(a.best.checkedAt):a.best.price-b.best.price);
  const count=$('catalog-count');if(count)count.textContent=array.length+' modelos · '+filtered.length+' anúncios cadastrados';
