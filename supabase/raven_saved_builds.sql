@@ -16,6 +16,7 @@ create index if not exists raven_saved_builds_user_created_idx
 
 alter table public.raven_saved_builds enable row level security;
 revoke all on table public.raven_saved_builds from public, anon, authenticated;
+grant usage on schema public to authenticated;
 grant select, insert, delete on public.raven_saved_builds to authenticated;
 
 drop policy if exists raven_builds_select_own on public.raven_saved_builds;
