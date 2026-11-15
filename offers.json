@@ -1,6 +1,6 @@
 {
   "schemaVersion": 3,
-  "updatedAt": "2026-11-14",
+  "updatedAt": "2026-11-15",
   "offers": [
     {
       "partId": "5500",
@@ -104,6 +104,18 @@
       "modelName": "AMD Ryzen 5 5500",
       "title": "Processador AMD Ryzen 5 5500, 3.6GHz, Cache 16MB, Hexa Core, 12 Threads, AM4 - 100-100000457BOX",
       "imageUrl": "https://cf.shopee.com.br/file/br-11134207-7r98o-m7gz1moves0c3d"
+    },
+    {
+      "partId": "r39-ssd-ssd-nvme-m-2-2280-2tb",
+      "store": "mercadolivre",
+      "price": 1999.9,
+      "checkedAt": "2026-11-15",
+      "url": "https://meli.la/1GrAexv",
+      "condition": "new",
+      "affiliate": true,
+      "category": "ssd",
+      "modelName": "SSD NVMe M.2 2280 2TB",
+      "title": "SSD NVMe M.2 2280 2TB"
     }
   ],
   "history": [
