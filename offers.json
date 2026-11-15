@@ -213,6 +213,18 @@
       "modelName": "Intel Core i7-9700",
       "title": "Processador Intel Core i7 9700 3.0GHz 4.7GHz Turbo Cache 12MB Octa Core 8 Threads LGA 1151",
       "imageUrl": "https://cf.shopee.com.br/file/sg-11134201-821eh-mh2bk07zhlvt2d"
+    },
+    {
+      "partId": "r30-cpu-amd-ryzen-5-4500",
+      "store": "shopee",
+      "price": 540.01,
+      "checkedAt": "2026-11-14",
+      "url": "https://s.shopee.com.br/8Kr433uN8b",
+      "condition": "new",
+      "affiliate": true,
+      "category": "cpu",
+      "modelName": "AMD Ryzen 5 4500",
+      "title": "AMD Ryzen 5 4500"
     }
   ],
   "history": [
