@@ -46,3 +46,9 @@ body .products .offer-freshness{color:#e6cca3;font-size:11px}
 body .products .offer-total{font-size:11px;color:#a9d991;margin-bottom:2px}
 @media(max-width:640px){.raven-course-highlight{padding:15px}.raven-course-highlight .raven-course-actions>*{width:100%}}
 @media(prefers-reduced-motion:reduce){html{scroll-behavior:auto}:is(a,button,.card,.panel){transition:none!important}}
+
+/* RAVEN 6.2 — separação entre montador, aprendizado, produtos e serviços */
+.raven-shop-cta{border:1px solid #695087;border-radius:19px;background:linear-gradient(120deg,#2a1d39,#172b25);padding:22px 26px;margin:23px 0;display:flex;gap:22px;justify-content:space-between;align-items:center;flex-wrap:wrap}
+.raven-shop-cta>div{max-width:680px}.raven-shop-cta h2{margin:7px 0 10px;font-size:clamp(21px,2.5vw,29px);color:#f4ebff;letter-spacing:-.03em}
+.raven-shop-cta p{color:#d5c6df;font-size:13px;line-height:1.7;margin:0}.raven-shop-cta .eyebrow{color:#b9f88a}
+@media(max-width:700px){.raven-shop-cta{padding:16px}.raven-shop-cta .raven-academy-link{width:100%;text-align:center}}
