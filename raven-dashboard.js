@@ -1,5 +1,5 @@
 import {
-  ravenMarketUser, ravenMarketGetCep, ravenMarketSetCep,
+  ravenMarketUser, ravenMarketGetCep, ravenMarketSetCep, ravenMarketClearCep,
   ravenMarketOpenAccount
 } from './raven-market.js';
 
@@ -34,6 +34,16 @@ $('marketCepForm').addEventListener('submit',async event=>{
   const cep=await ravenMarketSetCep($('marketCep').value);
   $('marketCep').value=cep.slice(0,5)+'-'+cep.slice(5);
   $('marketCepStatus').textContent='CEP salvo com sucesso. Consulte o frete na loja escolhida.';
+ }catch(err){$('marketCepStatus').textContent=err.message;}
+ finally{btn.disabled=false;}
+});
+$('marketCepClear').addEventListener('click',async ()=>{
+ if(!ravenMarketUser()){ravenMarketOpenAccount();return;}
+ const btn=$('marketCepClear');btn.disabled=true;
+ try{
+  await ravenMarketClearCep();
+  $('marketCep').value='';
+  $('marketCepStatus').textContent='CEP excluído da sua conta.';
  }catch(err){$('marketCepStatus').textContent=err.message;}
  finally{btn.disabled=false;}
 });
