@@ -200,6 +200,19 @@
       "category": "ssd",
       "modelName": "SSD SATA 2.5 240GB",
       "title": "SSD SATA 2.5 240GB"
+    },
+    {
+      "partId": "r32-cpu-intel-core-i7-9700",
+      "store": "shopee",
+      "price": 916.6,
+      "checkedAt": "2026-11-14",
+      "url": "https://s.shopee.com.br/6VPRJQ7GAJ",
+      "condition": "new",
+      "affiliate": true,
+      "category": "cpu",
+      "modelName": "Intel Core i7-9700",
+      "title": "Processador Intel Core i7 9700 3.0GHz 4.7GHz Turbo Cache 12MB Octa Core 8 Threads LGA 1151",
+      "imageUrl": "https://cf.shopee.com.br/file/sg-11134201-821eh-mh2bk07zhlvt2d"
     }
   ],
   "history": [
