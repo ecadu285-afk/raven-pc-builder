@@ -1,23 +1,47 @@
-<!doctype html><html lang="pt-BR"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><meta name="theme-color" content="#18132f"><meta name="description" content="Catálogo Raven PC Builder: processadores, placas de vídeo, placas-mãe, RAM, SSDs, fontes e gabinetes organizados por categoria e loja."><title>Catálogo de Peças | Raven PC Builder</title><link rel="stylesheet" href="storefront.css?v=71"></head><body>
-<div class="utility-bar"><div class="shell"><span>RAVEN PC BUILDER <strong>•</strong> Peças de PC organizadas por categoria</span><span>Preços cadastrados, confirme na loja</span></div></div>
-<header class="site-header"><div class="shell header-main"><a class="site-logo" href="inicio.html" aria-label="Ir para a página inicial"><span class="logo-mark">R.</span><span class="logo-type">RAVEN PC<small>BUILDER • HARDWARE</small></span></a><form class="site-search" action="produtos.html" method="get" role="search"><input type="search" name="q" aria-label="Pesquisar produtos" placeholder="Pesquise GPU, processador, SSD, placa-mãe..." required><button type="submit">Buscar</button></form><div class="header-actions"><a href="index.html">Montador 3D</a><a href="servicos.html">Serviços</a></div></div><nav class="site-nav" aria-label="Categorias"><div class="shell nav-scroll"><a href="produtos.html" aria-current="page">Todas as peças</a><a href="produtos.html?categoria=gpu">Placas de vídeo</a><a href="produtos.html?categoria=cpu">Processadores</a><a href="produtos.html?categoria=board">Placas-mãe</a><a href="produtos.html?categoria=ram">Memória RAM</a><a href="produtos.html?categoria=ssd">SSDs</a><a href="pcs-montados.html">PCs montados</a><a href="orcamento.html">Por orçamento</a></div></nav></header>
-<main class="shell">
-<div class="catalog-intro"><span class="eyebrow">HARDWARE / PEÇAS E COMPONENTES</span><h1>Encontre a peça que você procura.</h1><p>Explore o catálogo por categoria, pesquise modelos de Intel, AMD e NVIDIA e compare anúncios cadastrados da Shopee, Mercado Livre e Amazon. As compras são concluídas nas lojas anunciantes.</p></div>
-<section class="section" aria-labelledby="cats-title" style="padding-top:20px"><div class="section-head"><div><span class="eyebrow">NAVEGUE PELO CATÁLOGO</span><h2 id="cats-title">Categorias de hardware</h2></div><a class="all-link" href="pcs-montados.html">Quer um PC montado? ›</a></div><div class="categories"><a class="cat-card" href="produtos.html?categoria=gpu"><span class="cat-symbol" aria-hidden="true">GPU</span><strong>Placas de vídeo</strong></a><a class="cat-card" href="produtos.html?categoria=cpu"><span class="cat-symbol" aria-hidden="true">CPU</span><strong>Processadores</strong></a><a class="cat-card" href="produtos.html?categoria=board"><span class="cat-symbol" aria-hidden="true">MB</span><strong>Placas-mãe</strong></a><a class="cat-card" href="produtos.html?categoria=ram"><span class="cat-symbol" aria-hidden="true">RAM</span><strong>Memória RAM</strong></a><a class="cat-card" href="produtos.html?categoria=ssd"><span class="cat-symbol" aria-hidden="true">SSD</span><strong>SSDs</strong></a><a class="cat-card" href="produtos.html?categoria=psu"><span class="cat-symbol" aria-hidden="true">PSU</span><strong>Fontes</strong></a><a class="cat-card" href="produtos.html?categoria=case"><span class="cat-symbol" aria-hidden="true">PC</span><strong>Gabinetes</strong></a><a class="cat-card" href="produtos.html?categoria=hdd"><span class="cat-symbol" aria-hidden="true">HD</span><strong>HDs</strong></a></div></section>
-<section class="section" id="catalogo" aria-labelledby="catalog-title">
-<div class="section-head"><div><span class="eyebrow">ANÚNCIOS CADASTRADOS</span><h2 id="catalog-title">Produtos e preços</h2></div><a class="all-link" href="orcamento.html">Montar por orçamento ›</a></div>
+<!doctype html><html lang="pt-BR"><head>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<meta name="theme-color" content="#18132f">
+<meta name="description" content="Encontre componentes para seu PC: placas de vídeo, processadores, placas-mãe, RAM, SSD, HD, fontes e gabinetes. Compare ofertas de lojas parceiras.">
+<title>Peças e componentes | RAVEN PC BUILDER</title>
+<link rel="stylesheet" href="storefront.css?v=71"><link rel="stylesheet" href="catalog-simple.css?v=81">
+</head><body class="catalog-v8">
+<header class="site-header"><div class="shell header-main">
+<a class="site-logo" href="inicio.html" aria-label="Raven PC Builder, início"><span class="logo-mark">R.</span><span class="logo-type">RAVEN PC<small>BUILDER • HARDWARE</small></span></a>
+<nav class="simple-header-links" aria-label="Navegação"><a href="inicio.html">Início</a><a href="index.html">Montar em 3D</a><a href="pcs-montados.html">PCs prontos</a></nav>
+</div></header>
+<main class="shell" id="conteudo">
+<div class="catalog-intro"><span class="eyebrow">PEÇAS PARA COMPUTADOR</span>
+<h1>Encontre a peça do seu PC.</h1>
+<p>Pesquise o modelo, escolha a categoria e compare as ofertas. Os preços são conferidos diretamente na loja antes de comprar.</p></div>
+<section aria-label="Buscar e filtrar produtos">
 <div class="catalog-toolbar">
-<label>Pesquisar modelo<input id="catalog-search" type="search" placeholder="Ex.: GTX 1650, i5, B450, SSD..." autocomplete="off"></label>
-<label>Categoria<select id="catalog-category"><option value="all">Todas as peças</option><option value="gpu">Placas de vídeo</option><option value="cpu">Processadores</option><option value="board">Placas-mãe</option><option value="ram">Memória RAM</option><option value="ssd">SSDs</option><option value="psu">Fontes</option><option value="case">Gabinetes</option><option value="hdd">HDs</option></select></label>
+<label>Pesquisar peça<input id="catalog-search" type="search" placeholder="Ex.: Ryzen 5, GTX 1650, SSD..." autocomplete="off"></label>
+<label>Categoria<select id="catalog-category"><option value="all">Todas as peças</option><option value="gpu">Placas de vídeo</option>
+<option value="cpu">Processadores</option>
+<option value="board">Placas-mãe</option>
+<option value="ram">Memória RAM</option>
+<option value="ssd">SSDs</option>
+<option value="psu">Fontes</option>
+<option value="case">Gabinetes</option>
+<option value="hdd">HDs</option></select></label>
 <label>Loja<select id="catalog-store"><option value="all">Todas as lojas</option><option value="shopee">Shopee</option><option value="mercadolivre">Mercado Livre</option><option value="amazon">Amazon</option></select></label>
-<label>Ordenar<select id="catalog-order"><option value="lowest">Menor preço</option><option value="highest">Maior preço</option><option value="recent">Conferidos recentemente</option></select></label>
-</div>
-<p id="catalog-count" role="status" class="countline">Carregando catálogo...</p>
-<div class="cards" id="catalog-grid"><div class="no-offers">Carregando ofertas cadastradas...</div></div>
-<button type="button" id="catalog-more" class="load-more" hidden>Mostrar mais modelos</button>
-<div class="disclaimer"><strong>Aviso:</strong> os valores são os registrados no arquivo de anúncios e podem estar desatualizados. Antes da compra, confira preço, compatibilidade, condições, estoque e frete. O Raven PC Builder não vende diretamente os produtos. Alguns links podem gerar comissão de afiliado.</div>
-</section>
-</main>
-<footer class="footer"><div class="shell"><div class="footer-inner"><div><a class="site-logo" href="inicio.html"><span class="logo-mark">R.</span><span class="logo-type">RAVEN PC<small>BUILDER • HARDWARE</small></span></a><p>Peças, simulador 3D e planejamento de computadores em um único lugar.</p></div><div><h4>Produtos</h4><div class="footer-links"><a href="pcs-montados.html">PCs montados</a><a href="orcamento.html">Monte pelo orçamento</a><a href="index.html">Montador 3D</a></div></div><div><h4>Institucional</h4><div class="footer-links"><a href="servicos.html">Serviços</a><a href="aprender.html">Guia básico</a><a href="afiliados.html">Transparência</a><a href="privacidade.html">Privacidade</a></div></div></div><div class="footer-bottom">© 2026 Raven Creatives Studios · Compras realizadas nos sites das lojas parceiras</div></div><div class="shell" style="padding-top:14px;font-size:11px"><a href="creditos-imagens.html" style="text-decoration:underline;color:#cfc5ed">Créditos das fotos de componentes</a></div></footer>
-<script type="module" src="storefront-shop.js?v=71"></script>
+<label>Ordenar<select id="catalog-order"><option value="lowest">Menor preço</option><option value="highest">Maior preço</option><option value="recent">Mais recentes</option></select></label>
+</div></section>
+<section class="catalog-quick" aria-labelledby="quick-title"><h2 id="quick-title">Categorias</h2><div class="categories"><a class="cat-card" href="produtos.html?categoria=gpu#catalogo"><span class="cat-symbol" aria-hidden="true">GPU</span><strong>Placas de vídeo</strong></a>
+<a class="cat-card" href="produtos.html?categoria=cpu#catalogo"><span class="cat-symbol" aria-hidden="true">CPU</span><strong>Processadores</strong></a>
+<a class="cat-card" href="produtos.html?categoria=board#catalogo"><span class="cat-symbol" aria-hidden="true">MB</span><strong>Placas-mãe</strong></a>
+<a class="cat-card" href="produtos.html?categoria=ram#catalogo"><span class="cat-symbol" aria-hidden="true">RAM</span><strong>Memória RAM</strong></a>
+<a class="cat-card" href="produtos.html?categoria=ssd#catalogo"><span class="cat-symbol" aria-hidden="true">SSD</span><strong>SSDs</strong></a>
+<a class="cat-card" href="produtos.html?categoria=psu#catalogo"><span class="cat-symbol" aria-hidden="true">PSU</span><strong>Fontes</strong></a>
+<a class="cat-card" href="produtos.html?categoria=case#catalogo"><span class="cat-symbol" aria-hidden="true">PC</span><strong>Gabinetes</strong></a>
+<a class="cat-card" href="produtos.html?categoria=hdd#catalogo"><span class="cat-symbol" aria-hidden="true">HD</span><strong>HDs</strong></a></div></section>
+<section class="catalog-results" id="catalogo" aria-labelledby="products-title">
+<div class="section-head"><div><h2 id="products-title">Peças disponíveis</h2></div><a href="orcamento.html" class="all-link">Montar pelo orçamento ›</a></div>
+<p id="catalog-count" role="status" class="countline">Carregando ofertas...</p>
+<div class="cards" id="catalog-grid"><div class="no-offers">Carregando os produtos publicados...</div></div>
+<button id="catalog-more" type="button" class="load-more" hidden>Ver mais produtos</button>
+<div class="disclaimer"><strong>Antes de comprar:</strong> confirme modelo, preço, frete, garantia e compatibilidade na loja. A Raven não realiza a venda diretamente; alguns anúncios possuem links de afiliado. Miniaturas 3D não representam o modelo exato.</div>
+</section></main>
+<footer class="simple-footer"><div class="shell"><p>© 2026 Raven Creatives Studios · Catálogo de anúncios publicados</p><nav aria-label="Informações"><a href="afiliados.html">Transparência</a><a href="servicos.html">Sobre a Raven</a><a href="inicio.html">Início</a></nav></div></footer>
+<script type="module" src="storefront-shop.js?v=81"></script>
 </body></html>
