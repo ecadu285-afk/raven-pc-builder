@@ -39,7 +39,7 @@ function makeId(category,name,details){
 function categoryOf(o){return o.category||catalogMap.get(o.partId)?.category||'other'}
 function clearForm(){
  $('offerForm').reset();editing=-1;$('formTitle').textContent='Cadastrar nova oferta';$('save').textContent='Cadastrar oferta';$('cancel').hidden=true;
- $('mode').value='manual';$('catalogLabel').hidden=true;$('checkedAt').value=new Date().toISOString().slice(0,10);
+ $('mode').value='manual';$('catalogLabel').hidden=true;$('checkedAt').value=new Date().toISOString().slice(0,10);updateImagePreview();
  const c=new URLSearchParams(location.search).get('categoria');if(labels[c])$('category').value=c;
 }
 function copyToForm(index){
@@ -52,7 +52,7 @@ function copyToForm(index){
  $('store').value=o.store;$('modelName').value=o.modelName||catalogMap.get(o.partId)?.name||o.title||'';
  $('title').value=o.title||'';$('price').value=o.price.toLocaleString('pt-BR',{minimumFractionDigits:2,maximumFractionDigits:2});
  $('checkedAt').value=o.checkedAt;$('condition').value=o.condition==='used'?'used':'new';
- $('url').value=o.url;$('imageUrl').value=o.imageUrl||'';$('specs').value=o.specs||'';
+ $('url').value=o.url;$('imageUrl').value=o.imageUrl||'';$('specs').value=o.specs||'';updateImagePreview();
  $('affiliate').checked=o.affiliate===true;
  $('offerForm').scrollIntoView({behavior:'smooth',block:'start'});
 }
@@ -92,6 +92,20 @@ function updatePart(){
 for(const p of items){
  const o=document.createElement('option');o.value=p.id;o.textContent=(labels[p.category]||p.category)+' · '+p.name;$('part').append(o);
 }
+function updateImagePreview(){
+ const root=$('imagePreview');if(!root)return;
+ root.replaceChildren();
+ const url=$('imageUrl').value.trim();
+ if(!url){const message=document.createElement('span');message.textContent='Sem imagem cadastrada';message.style.cssText='color:#626b7c;font-size:12px;text-align:center;padding:8px';root.append(message);return;}
+ if(!imageValid(url)){const message=document.createElement('span');message.textContent='Endereço HTTPS inválido';message.style.color='#b65c67';root.append(message);return;}
+ const img=document.createElement('img');img.src=url;img.alt='Prévia da imagem do produto';
+ img.loading='lazy';img.referrerPolicy='no-referrer';
+ img.style.cssText='max-width:100%;height:100%;object-fit:contain';
+ img.onerror=()=>{root.textContent='Imagem indisponível — verifique a URL';root.style.color='#a1505a'};
+ root.append(img);
+}
+$('imageUrl').addEventListener('change',updateImagePreview);
+$('imageUrl').addEventListener('blur',updateImagePreview);
 $('mode').addEventListener('change',updateCatalogMode);$('part').addEventListener('change',updatePart);
 $('search').addEventListener('input',render);$('filter').addEventListener('change',render);
 $('cancel').onclick=clearForm;
