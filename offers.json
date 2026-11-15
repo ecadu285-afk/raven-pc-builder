@@ -439,6 +439,48 @@
       "category": "cpu",
       "modelName": "Intel Core i3-3220",
       "title": "Intel Core i3-3220"
+    },
+    {
+      "partId": "r3-3200g",
+      "store": "shopee",
+      "price": 464.55,
+      "checkedAt": "2026-11-14",
+      "url": "https://s.shopee.com.br/5q9kTz80l1",
+      "condition": "new",
+      "affiliate": true,
+      "title": "AMD Ryzen 3 3200G",
+      "imageUrl": "",
+      "priceCondition": "",
+      "category": "cpu",
+      "modelName": "AMD Ryzen 3 3200G"
+    },
+    {
+      "partId": "h61m-b",
+      "store": "shopee",
+      "price": 151.91,
+      "checkedAt": "2026-11-14",
+      "url": "https://s.shopee.com.br/9fMSwKpKWU",
+      "condition": "new",
+      "affiliate": true,
+      "title": "H61M econômica",
+      "imageUrl": "",
+      "priceCondition": "",
+      "category": "board",
+      "modelName": "H61M econômica"
+    },
+    {
+      "partId": "rx580",
+      "store": "mercadolivre",
+      "price": 883,
+      "checkedAt": "2026-11-14",
+      "url": "https://meli.la/1DowbzM",
+      "condition": "new",
+      "affiliate": true,
+      "title": "AMD Radeon RX 580",
+      "imageUrl": "",
+      "priceCondition": "",
+      "category": "gpu",
+      "modelName": "AMD Radeon RX 580"
     }
   ],
   "history": [
