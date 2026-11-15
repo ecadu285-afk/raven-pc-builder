@@ -273,6 +273,18 @@
       "category": "hdd",
       "modelName": "HD SATA 2.5 1TB",
       "title": "HD SATA 2.5 1TB"
+    },
+    {
+      "partId": "r39-hdd-hd-sata-2-5-500gb",
+      "store": "mercadolivre",
+      "price": 152,
+      "checkedAt": "2026-11-15",
+      "url": "https://meli.la/14Ftm9i",
+      "condition": "new",
+      "affiliate": true,
+      "category": "hdd",
+      "modelName": "HD SATA 2.5 500GB",
+      "title": "HD SATA 2.5 500GB"
     }
   ],
   "history": [
