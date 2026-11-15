@@ -1,4 +1,10 @@
 import {catalog} from './catalog.js';
+import {
+  ravenMarketInit, ravenMarketToggle, ravenMarketSaved, ravenMarketKeys,
+  ravenMarketUser, ravenMarketReviews, ravenMarketReviewCreate,
+  ravenMarketReviewDelete, ravenMarketOpenAccount
+} from './raven-market.js';
+
 const known=new Map(Object.entries(catalog).flatMap(([category,items])=>items.map(item=>[item.id,{...item,category}])));
 const labels={cpu:'Processadores',board:'Placas-mãe',gpu:'Placas de vídeo',ram:'Memórias RAM',ssd:'SSDs',hdd:'HDs',psu:'Fontes',case:'Gabinetes',cooler:'Coolers',other:'Outras peças'};
 const glyphs={cpu:'CPU',board:'MB',gpu:'GPU',ram:'RAM',ssd:'SSD',hdd:'HD',psu:'PSU',case:'PC',cooler:'FAN',other:'PC'};
@@ -100,8 +106,30 @@ function productCard(item){
  const store=element('div','offer-store',(item.primary.length>1?item.primary.length+' lojas · ':'')+'Menor oferta: '+shops[o.store].name+(o.condition==='used'?' · Usado':''));
  const price=element('div','offer-price',BRL(o.price));
  price.append(element('small','','Preço registrado em '+o.checkedAt.split('-').reverse().join('/')));
+ const key=item.id.slice(0,180);
+ const save=element('button','market-action','♡ Salvar');
+ const cart=element('button','market-action','+ Carrinho');
+ const review=element('button','market-action market-review-button','★ Avaliações');
+ const marketActions=element('div','market-card-actions');
+ function mark(){
+  save.textContent=ravenMarketSaved('saved',key)?'♥ Salvo':'♡ Salvar';
+  cart.textContent=ravenMarketSaved('cart',key)?'✓ No carrinho':'+ Carrinho';
+  save.setAttribute('aria-pressed',String(ravenMarketSaved('saved',key)));
+  cart.setAttribute('aria-pressed',String(ravenMarketSaved('cart',key)));
+ }
+ mark();
+ async function change(kind,button){
+  button.disabled=true;
+  try{await ravenMarketToggle(kind,key);mark();}
+  catch(error){marketToast(error.message);}
+  finally{button.disabled=false;}
+ }
+ save.addEventListener('click',()=>change('saved',save));
+ cart.addEventListener('click',()=>change('cart',cart));
+ review.addEventListener('click',()=>openMarketReviews(item));
+ marketActions.append(save,cart,review);
  const a=element('a','offer-link','Ver oferta');a.href=safeUrl(o.url,o.store);a.target='_blank';a.rel=o.affiliate?'noopener noreferrer sponsored':'noopener noreferrer';
- content.append(title,store,price,a);
+ content.append(title,store,price,marketActions,a);
  if(item.primary.length>1||item.others.length){
    const detail=element('details','offer-alternatives');
    detail.append(element('summary','',(item.primary.length+item.others.length-1)+' outra(s) oferta(s) para comparar'));
@@ -114,6 +142,106 @@ function productCard(item){
  article.append(visual,content);return article;
 }
 let all=[],groups=[],visibleLimit=24;
+
+function marketToast(message){
+ let el=document.getElementById('marketToast');
+ if(!el){el=element('p','market-toast');el.id='marketToast';el.setAttribute('role','status');document.body.append(el);}
+ el.textContent=message;
+ el.hidden=false;
+ clearTimeout(marketToast.timer);
+ marketToast.timer=setTimeout(()=>{el.hidden=true;},4200);
+}
+let ravenReviewDialog;
+function getReviewDialog(){
+ if(ravenReviewDialog)return ravenReviewDialog;
+ const d=document.createElement('dialog');d.className='raven-review-dialog';
+ d.innerHTML='<div class="market-dialog-head"><h2 id="marketReviewTitle">Avaliações</h2><button type="button" id="marketReviewClose" aria-label="Fechar">×</button></div>'+
+   '<p class="market-dialog-help">Avaliações de clientes do Raven. Comentários novos passam por moderação antes de aparecer para todos.</p>'+
+   '<p class="market-dialog-status" id="marketReviewStatus" role="status"></p>'+
+   '<div id="marketReviewsList"></div>'+
+   '<form id="marketReviewForm"><h3>Deixe sua avaliação</h3>'+
+   '<label>Nota<select id="marketReviewRating" required><option value="5">5 estrelas</option><option value="4">4 estrelas</option><option value="3">3 estrelas</option><option value="2">2 estrelas</option><option value="1">1 estrela</option></select></label>'+
+   '<label>Seu comentário<textarea id="marketReviewBody" minlength="15" maxlength="500" rows="4" placeholder="O que você achou do produto? Evite dados pessoais." required></textarea></label>'+
+   '<button class="market-review-submit" type="submit">Enviar avaliação</button></form>'+
+   '<button type="button" class="market-login-review" id="marketReviewLogin">Entrar para avaliar</button>';
+ document.body.append(d);
+ d.querySelector('#marketReviewClose').onclick=()=>d.close();
+ d.querySelector('#marketReviewLogin').onclick=()=>{d.close();ravenMarketOpenAccount();};
+ d.addEventListener('click',ev=>{if(ev.target===d)d.close();});
+ ravenReviewDialog=d;return d;
+}
+async function openMarketReviews(item){
+ const d=getReviewDialog(),key=item.id.slice(0,180);
+ d.querySelector('#marketReviewTitle').textContent='Avaliações · '+item.model;
+ const list=d.querySelector('#marketReviewsList'),status=d.querySelector('#marketReviewStatus');
+ list.replaceChildren();status.textContent='Carregando avaliações...';
+ const user=ravenMarketUser();
+ const form=d.querySelector('#marketReviewForm');
+ form.hidden=!user;d.querySelector('#marketReviewLogin').hidden=Boolean(user);
+ if(typeof d.showModal==='function')d.showModal();else d.setAttribute('open','');
+ async function reload(){
+  try{
+   const reviews=await ravenMarketReviews(key);
+   if(!d.open)return;
+   list.replaceChildren();
+   const approved=reviews.filter(x=>x.moderation_status==='approved');
+   status.textContent=approved.length+' avaliação(ões) pública(s)';
+   if(!reviews.length)list.append(element('p','market-empty','Ainda não há avaliações aprovadas para este modelo.'));
+   for(const r of reviews){
+    const entry=element('article','market-review-item');
+    const head=element('strong','', '★'.repeat(r.rating)+'☆'.repeat(5-r.rating));
+    const date=element('small','',new Date(r.created_at).toLocaleDateString('pt-BR'));
+    const content=element('p','',r.body);
+    entry.append(head,date,content);
+    if(r.moderation_status!=='approved')entry.append(element('small','market-review-pending',r.moderation_status==='pending'?'Sua avaliação está aguardando aprovação.':'Sua avaliação não foi aprovada.'));
+    if(user&&r.user_id===user.id){
+     const del=element('button','market-action','Excluir minha avaliação');
+     del.type='button';
+     del.onclick=async()=>{
+      if(!confirm('Excluir sua avaliação?'))return;
+      try{await ravenMarketReviewDelete(r.id);await reload();}
+      catch(err){status.textContent=err.message;}
+     };
+     entry.append(del);
+    }
+    list.append(entry);
+   }
+  }catch(err){status.textContent=err.message;}
+ }
+ d.querySelector('#marketReviewForm').onsubmit=async e=>{
+  e.preventDefault();
+  const btn=d.querySelector('.market-review-submit');btn.disabled=true;
+  try{
+   await ravenMarketReviewCreate(key,Number(d.querySelector('#marketReviewRating').value),d.querySelector('#marketReviewBody').value);
+   d.querySelector('#marketReviewBody').value='';
+   await reload();
+   status.textContent='Avaliação recebida. Ela ficará visível após aprovação da Raven.';
+  }catch(err){status.textContent=err.message;}
+  finally{btn.disabled=false;}
+ };
+ await reload();
+}
+function renderUserCollections(){
+ for(const kind of ['saved','cart']){
+  const root=document.getElementById('market-'+kind+'-products');
+  if(!root)continue;
+  root.replaceChildren();
+  if(!ravenMarketUser()){
+    root.append(element('p','market-empty','Entre na sua conta para consultar seus produtos.'));
+    continue;
+  }
+  const keys=ravenMarketKeys(kind),matches=groups.filter(g=>keys.has(g.id.slice(0,180)));
+  if(!matches.length)root.append(element('p','market-empty',keys.size?'Essas ofertas não estão mais no catálogo atual.':'Sua lista está vazia. Abra o catálogo para adicionar produtos.'));
+  else root.append(...matches.map(productCard));
+  if(keys.size>matches.length)root.append(element('p','market-empty',(keys.size-matches.length)+' item(ns) indisponível(is) no catálogo atual.'));
+ }
+}
+ravenMarketInit(()=>{
+ const count=$('live-offer-count');if(count)count.textContent=String(all.length);
+ if(all.length){home();catalogPage();}
+ renderUserCollections();
+});
+
 function home(){
  const root=$('home-deals');if(!root)return;
  const priority=['gpu','cpu','board','ram','ssd','psu','case','hdd'];
@@ -141,7 +269,7 @@ function catalogPage(){
  const more=$('catalog-more');if(more){more.hidden=array.length<=visibleLimit;more.textContent='Mostrar mais modelos ('+Math.max(0,array.length-visibleLimit)+')';}
 }
 async function start(){
- const root=$('home-deals')||$('catalog-grid');if(!root)return;
+ const root=$('home-deals')||$('catalog-grid')||$('market-saved-products');if(!root)return;
  try{
    const response=await fetch('./offers.json',{cache:'no-store'});
    if(!response.ok)throw Error('Falha HTTP '+response.status);
@@ -158,6 +286,7 @@ async function start(){
    if(order)order.addEventListener('change',catalogPage);
    if(more)more.addEventListener('click',()=>{visibleLimit+=24;catalogPage();});
    catalogPage();
+   renderUserCollections();
  }catch(err){root.replaceChildren(element('div','no-offers','Não foi possível carregar ofertas. Tente atualizar a página.'));const line=$('catalog-count');if(line)line.textContent='Falha ao carregar arquivo de ofertas.';}
 }
 start();

@@ -1,0 +1,102 @@
+/* Raven Market — organização própria inspirada em lojas de tecnologia.
+   Compras em lojas externas: carrinho é uma lista, não um checkout. */
+.market-header{background:#18132f;color:#fff;box-shadow:0 10px 22px #15102018}
+.market-header .market-header-main{max-width:1290px;display:grid;grid-template-columns:auto minmax(230px,1fr) auto;align-items:center;gap:16px;padding-top:14px;padding-bottom:14px}
+.market-header .market-search{display:flex;min-width:0;align-items:stretch;border:1px solid #8976ad;border-radius:12px;overflow:hidden;background:#fff;min-height:45px}
+.market-header .market-search input{flex:1;min-width:0;padding:10px 14px;color:#1a1730;border:0;outline:none;font-size:14px}
+.market-header .market-search button{padding:10px 16px;border:0;background:#ff8744;color:#24132c;font-weight:900}
+.market-top-tools{display:flex;align-items:center;gap:5px}
+.market-top-tools a,.market-top-tools button{display:grid;gap:0;align-content:center;min-height:44px;border-radius:9px;color:#fff;text-decoration:none;font-size:12px;font-weight:850;padding:7px 9px;border:1px solid transparent;background:transparent;white-space:nowrap;cursor:pointer;text-align:center}
+.market-top-tools a:hover,.market-top-tools button:hover,.market-top-tools a:focus-visible{border-color:#8070a4;background:#33264d}
+.market-top-tools .market-header-count{color:#ffa166}
+.market-nav-strip{border-top:1px solid #55416c;background:#241834}
+.market-header .market-nav-strip .shell{display:flex;align-items:center;gap:18px;padding-top:9px;padding-bottom:9px;flex-wrap:wrap}
+.market-header .market-nav-strip a{color:#e4dbf6;font-size:12px;font-weight:800;text-decoration:none;padding:5px 0}
+.market-header .market-nav-strip a:hover{text-decoration:underline}
+.market-cep-chip{color:#d4c5ed!important;border-left:1px solid #6f5b7f;padding-left:16px!important}
+.market-hero-quick{font-size:12px;color:#a18abf}
+.market-offers-section{margin-top:13px;margin-bottom:25px}
+.market-offers-section .section-top{display:flex;align-items:center;justify-content:space-between;gap:14px;margin:0 0 14px}
+.market-offers-section h2{font-size:clamp(22px,2.3vw,28px);margin:0}
+.market-offers-section .section-top a{color:#6740c4;font-weight:800;font-size:12px}
+.market-card-actions{display:grid;grid-template-columns:1fr 1fr;gap:5px;margin-top:5px}
+.market-action{padding:8px 6px;border:1px solid #d7c9ec;border-radius:8px;background:#f7f2ff;color:#513179;font-size:11px;font-weight:850;cursor:pointer}
+.market-action[aria-pressed=true]{background:#e7f1dd;color:#365b2b;border-color:#97bb76}
+.market-action:disabled{opacity:.55;cursor:wait}
+.market-review-button{grid-column:span 2;background:#fff;border-color:#dfdceb;color:#5c5170}
+.market-empty{padding:16px;background:#fff;border:1px dashed #d5cbdf;border-radius:10px;color:#625c6d;font-size:13px}
+.market-toast{position:fixed;bottom:24px;right:24px;z-index:210;background:#261736;color:#fff;border:1px solid #936cb2;border-radius:10px;max-width:min(400px,calc(100% - 28px));padding:13px 16px;box-shadow:0 16px 40px #1510166b}
+.market-toast[hidden]{display:none}
+.raven-review-dialog{position:fixed;max-width:560px;width:calc(100% - 28px);max-height:85vh;overflow:auto;border:1px solid #7855a5;border-radius:17px;padding:23px;background:#fff;color:#271e33;box-shadow:0 25px 80px #0f092b99}
+.raven-review-dialog::backdrop{background:#100b1ab8}
+.raven-review-dialog .market-dialog-head{display:flex;align-items:center;justify-content:space-between;gap:15px}
+.raven-review-dialog h2{font-size:20px;line-height:1.3;margin:0}
+.raven-review-dialog .market-dialog-head button{background:#ede9f7;border:0;border-radius:8px;padding:6px 11px;font-size:23px;cursor:pointer}
+.raven-review-dialog .market-dialog-help,.raven-review-dialog .market-dialog-status{color:#666074;font-size:12px}
+.raven-review-dialog form{display:grid;gap:11px;border-top:1px solid #e9e5f0;margin-top:16px;padding-top:14px}
+.raven-review-dialog form[hidden],.raven-review-dialog button[hidden]{display:none}
+.raven-review-dialog form h3{margin:0;font-size:16px}
+.raven-review-dialog label{display:grid;gap:6px;font-weight:700;font-size:12px}
+.raven-review-dialog select,.raven-review-dialog textarea{border:1px solid #cab7df;border-radius:8px;padding:11px;background:#fff;color:#211a29;width:100%;font:inherit;resize:vertical}
+.raven-review-dialog .market-review-submit,.raven-review-dialog .market-login-review{border:0;background:#ff8744;color:#271333;font-weight:900;border-radius:9px;padding:12px 15px;cursor:pointer}
+.raven-review-dialog .market-review-item{display:grid;gap:5px;padding:12px 0;border-bottom:1px solid #eae2f0;font-size:13px}
+.raven-review-dialog .market-review-item strong{color:#ea8b24}
+.raven-review-dialog .market-review-item small{color:#736782}
+.raven-review-dialog .market-review-item p{color:#322a3a;white-space:pre-wrap;overflow-wrap:anywhere;margin:0}
+.raven-review-dialog .market-review-item .market-review-pending{color:#9e6100}
+.market-account-shell{background:#f7f7fb;min-height:100vh}
+.market-account-shell .market-dashboard{padding-top:27px;padding-bottom:35px}
+.market-account-shell .market-dashboard h1{font-size:clamp(25px,3vw,37px);margin:2px 0}
+.market-account-shell .market-dashboard-lead{color:#625e71;font-size:14px;margin-bottom:20px}
+.market-account-shell .market-profile-panel{display:flex;flex-wrap:wrap;gap:20px;align-items:center;justify-content:space-between;background:#271735;color:#fff;border-radius:15px;padding:23px;margin-bottom:18px}
+.market-profile-panel h2{font-size:20px;margin:0 0 4px}
+.market-profile-panel p{color:#decfeb;margin:0;font-size:13px}
+.market-profile-panel button{border:1px solid #ad86d1;background:#392351;color:#fff;font-weight:800;border-radius:10px;padding:11px 16px}
+.market-dashboard-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:18px}
+.market-dashboard-section{background:#fff;border:1px solid #e6e1ef;border-radius:15px;padding:21px;scroll-margin-top:115px}
+.market-dashboard-section h2{font-size:21px;margin:0 0 8px}
+.market-dashboard-section p{font-size:13px;color:#6a6674}
+.market-dashboard-section .cards{grid-template-columns:repeat(2,minmax(0,1fr))}
+.market-dashboard-section .offer-visual{height:145px}
+.market-dashboard-section .offer-info{padding:10px}
+.market-dashboard-section .offer-info h3{min-height:0}
+.market-dashboard-section .offer-price{font-size:20px}
+.market-dashboard-section label{font-size:12px;display:grid;gap:6px;font-weight:800}
+.market-cep-form{display:flex;gap:9px;align-items:center}
+.market-cep-form input{border:1px solid #bdadd2;border-radius:8px;padding:10px;min-height:42px;min-width:0;width:155px;font-size:14px}
+.market-cep-form button{background:#ff8744;border:0;border-radius:8px;padding:11px;color:#261432;font-weight:900}
+.market-dashboard-section .market-status{font-size:12px;min-height:19px;margin:10px 0 0}
+.market-account-shell .site-header{background:#18132f}
+@media(max-width:1100px){
+ .market-header .market-header-main{grid-template-columns:1fr auto}
+ .market-header .market-search{grid-column:1/-1;grid-row:2}
+ .market-top-tools{justify-content:flex-end;flex-wrap:wrap}
+}
+@media(max-width:760px){
+ .market-header .market-header-main{display:flex;flex-wrap:wrap;gap:8px;padding:10px 14px}
+ .market-header .site-logo{min-width:0}
+ .market-header .market-search{order:3;width:100%;flex-basis:100%}
+ .market-top-tools{order:2;margin-left:auto}
+ .market-top-tools a,.market-top-tools button{font-size:10px;min-height:37px;padding:5px}
+ .market-top-tools .market-tool-optional{display:none}
+ .market-header .market-nav-strip .shell{padding:7px 14px;gap:12px}
+ .market-header .market-nav-strip a{font-size:11px}
+ .market-dashboard-grid{grid-template-columns:1fr}
+}
+@media(max-width:450px){
+ .market-top-tools a,.market-top-tools button{font-size:10px;padding:4px}
+ .market-header .site-logo .logo-type{font-size:12px}
+ .market-header .site-logo .logo-type small{font-size:8px}
+ .market-header .site-logo .logo-mark{width:31px;height:31px;font-size:17px}
+ .market-header .market-nav-strip a{font-size:10px}
+ .market-dashboard-section .cards{grid-template-columns:1fr}
+}
+
+/* Atalhos do Market na área do montador 3D, sem alterar o layout do visualizador. */
+.builder-v8 .builder-account-menu{position:relative;z-index:80}
+.builder-v8 .builder-account-menu>summary{cursor:pointer;list-style:none;background:#2a1e42;border:1px solid #634b83;border-radius:8px;color:#e7d8fb;font-size:12px;font-weight:800;padding:10px 12px}
+.builder-v8 .builder-account-menu>summary::-webkit-details-marker{display:none}
+.builder-v8 .builder-account-menu[open] .builder-account-menu-links{position:absolute;right:0;top:calc(100% + 6px);width:190px;padding:8px;background:#211633;border:1px solid #705589;border-radius:10px;box-shadow:0 12px 30px #09061188;display:grid;gap:3px}
+.builder-v8 .builder-account-menu-links a{color:#f4eaff;text-decoration:none;border-radius:7px;padding:10px;font-size:12px;font-weight:750}
+.builder-v8 .builder-account-menu-links a:hover{background:#433051}
+@media(max-width:440px){.builder-v8 .builder-account-menu>summary{font-size:11px;padding:8px}}

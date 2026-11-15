@@ -1,0 +1,63 @@
+<!doctype html>
+<html lang="pt-BR"><head>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<meta name="theme-color" content="#18132f">
+<meta name="description" content="Acesse sua conta Raven PC Builder, favoritos, carrinho de links e CEP cadastrado.">
+<title>Minha conta | Raven PC Builder</title>
+<link rel="stylesheet" href="storefront.css?v=71">
+<link rel="stylesheet" href="raven-market.css?v=1">
+<link rel="stylesheet" href="raven-account.css?v=1">
+</head><body class="market-account-shell">
+<header class="site-header market-header">
+<div class="shell market-header-main">
+<a class="site-logo" href="inicio.html"><span class="logo-mark">R.</span><span class="logo-type">RAVEN PC<small>BUILDER • HARDWARE</small></span></a>
+<form class="market-search" action="produtos.html" method="get" role="search"><input type="search" name="q" placeholder="Buscar processadores, SSDs, placas de vídeo..." aria-label="Buscar produtos" required><button>Buscar</button></form>
+<nav class="market-top-tools" aria-label="Sua conta e suas listas">
+<button type="button" id="accountOpen">Minha conta</button>
+<a href="#salvos">♡ Salvos <span class="market-header-count" data-market-count="saved">0</span></a>
+<a href="#carrinho">Carrinho <span class="market-header-count" data-market-count="cart">0</span></a>
+<a class="market-tool-optional" href="#compras">Compras</a>
+</nav></div>
+<div class="market-nav-strip"><nav class="shell" aria-label="Navegação principal"><a href="inicio.html">Início</a><a href="index.html">Montador 3D</a><a href="produtos.html">Peças</a><a href="pcs-montados.html">PCs montados</a><a href="aprender.html">Raven Academy</a><a href="#compras">Compras</a><a class="market-cep-chip" href="#endereco" data-market-cep>Informe seu CEP</a></nav></div>
+</header>
+<main class="shell market-dashboard" id="conteudo">
+<p class="eyebrow">SUA ÁREA RAVEN</p><h1>Minha conta</h1>
+<p class="market-dashboard-lead">Organize suas peças favoritas, monte uma lista de compras e salve seu CEP. Seu PC montado em 3D continua na área Minhas montagens.</p>
+<section class="market-profile-panel" aria-label="Dados da conta">
+<div><h2 id="marketWelcome">Entre ou crie sua conta</h2><p>Seus favoritos, carrinho e CEP são particulares da sua conta.</p></div>
+<div><button id="marketDashboardLogin" type="button">Entrar / Criar conta</button> <a href="index.html" style="color:#fff;text-decoration:underline;margin-left:10px">Minhas montagens 3D</a></div>
+</section>
+<div class="market-dashboard-grid">
+<section class="market-dashboard-section" id="salvos" aria-labelledby="saved-title">
+<h2 id="saved-title">♡ Meus salvos (<span data-market-count="saved">0</span>)</h2>
+<p>Produtos que você quer acompanhar. Os preços podem mudar nas lojas parceiras.</p>
+<div id="market-saved-products" class="cards"><p class="market-empty">Carregando seus salvos...</p></div>
+<a class="all-link" href="produtos.html">Encontrar mais peças</a>
+</section>
+<section class="market-dashboard-section" id="carrinho" aria-labelledby="cart-title">
+<h2 id="cart-title">Carrinho (<span data-market-count="cart">0</span>)</h2>
+<p>Lista de produtos para consultar nas lojas. Não é um pedido, e a Raven não processa pagamentos.</p>
+<div id="market-cart-products" class="cards"><p class="market-empty">Carregando o carrinho...</p></div>
+<a class="all-link" href="produtos.html">Adicionar outras peças</a>
+</section>
+<section class="market-dashboard-section" id="endereco" aria-labelledby="cep-title">
+<h2 id="cep-title">Meu CEP</h2>
+<p>Guarde seu CEP na conta para consultas futuras. O valor do frete deve ser verificado diretamente em cada loja.</p>
+<form id="marketCepForm" class="market-cep-form"><label for="marketCep">CEP (8 números)
+<input id="marketCep" type="text" inputmode="numeric" autocomplete="postal-code" maxlength="9" placeholder="00000-000" required></label>
+<button type="submit">Salvar CEP</button></form>
+<button id="marketCepClear" type="button" class="market-action">Excluir meu CEP</button>
+<p class="market-status" id="marketCepStatus" role="status">Entre para salvar seu CEP.</p>
+</section>
+<section class="market-dashboard-section" id="compras" aria-labelledby="purchases-title">
+<h2 id="purchases-title">Minhas compras</h2>
+<p>O Raven PC Builder apresenta ofertas e links para lojas externas. Por enquanto, as compras são concluídas na Shopee, Mercado Livre ou Amazon.</p>
+<p><strong>Não temos acesso ao histórico de pedidos dessas lojas.</strong> Para conferir entrega, pagamento, cancelamento ou nota fiscal, entre na conta da loja em que comprou.</p>
+<a class="all-link" href="produtos.html">Ver ofertas disponíveis</a>
+</section>
+</div>
+</main>
+<footer class="simple-footer"><div class="shell"><p>© 2026 Raven Creatives Studios · Compras e pagamentos realizados em lojas externas.</p><nav aria-label="Informações"><a href="privacidade.html">Privacidade</a><a href="afiliados.html">Transparência</a><a href="inicio.html">Início</a></nav></div></footer>
+<script type="module" src="storefront-shop.js?v=82"></script>
+<script type="module" src="raven-dashboard.js?v=1"></script>
+</body></html>

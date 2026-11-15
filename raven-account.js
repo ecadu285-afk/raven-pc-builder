@@ -14,6 +14,7 @@ export const ravenAccountConfigured = () =>
   /^https:\/\/[a-z0-9-]+\.supabase\.co\/?$/i.test(RAVEN_SUPABASE_URL.trim()) &&
   Boolean(RAVEN_SUPABASE_PUBLISHABLE_KEY.trim());
 export const ravenGetAccount = () => accountUser;
+export const ravenGetSupabaseClient = () => supabaseClient;
 export const ravenOpenAccount = () => openDialog();
 
 function ravenAccountError(error) {
