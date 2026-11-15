@@ -116,6 +116,18 @@
       "category": "ssd",
       "modelName": "SSD NVMe M.2 2280 2TB",
       "title": "SSD NVMe M.2 2280 2TB"
+    },
+    {
+      "partId": "r39-ssd-ssd-nvme-m-2-2280-1tb",
+      "store": "mercadolivre",
+      "price": 1134.98,
+      "checkedAt": "2026-11-15",
+      "url": "https://meli.la/1h32TDh",
+      "condition": "new",
+      "affiliate": true,
+      "category": "ssd",
+      "modelName": "SSD NVMe M.2 2280 1TB",
+      "title": "SSD NVMe M.2 2280 1TB"
     }
   ],
   "history": [
