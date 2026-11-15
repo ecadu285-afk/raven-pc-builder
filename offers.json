@@ -152,6 +152,18 @@
       "category": "ssd",
       "modelName": "SSD SATA 2.5 2TB",
       "title": "SSD SATA 2.5 2TB"
+    },
+    {
+      "partId": "r39-ssd-ssd-sata-2-5-1tb",
+      "store": "mercadolivre",
+      "price": 3799.9,
+      "checkedAt": "2026-11-15",
+      "url": "https://meli.la/1DGQBfq",
+      "condition": "new",
+      "affiliate": true,
+      "category": "ssd",
+      "modelName": "SSD SATA 2.5 1TB",
+      "title": "SSD SATA 2.5 1TB"
     }
   ],
   "history": [
