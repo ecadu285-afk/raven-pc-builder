@@ -95,7 +95,7 @@ for(const p of items){
 $('mode').addEventListener('change',updateCatalogMode);$('part').addEventListener('change',updatePart);
 $('search').addEventListener('input',render);$('filter').addEventListener('change',render);
 $('cancel').onclick=clearForm;
-$('offerForm').addEventListener('reset',()=>setTimeout(clearForm,0));
+$('offerForm').addEventListener('reset',()=>{editing=-1;$('formTitle').textContent='Cadastrar nova oferta';$('save').textContent='Cadastrar oferta';$('cancel').hidden=true;$('catalogLabel').hidden=true;});
 $('offerForm').onsubmit=e=>{
  e.preventDefault();
  if(!loaded){notify('Carregue ou importe o arquivo offers.json antes de editar, para não sobrescrever anúncios publicados.');return}
