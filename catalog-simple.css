@@ -1,0 +1,60 @@
+/* Catálogo Raven 8.1 — o essencial primeiro. Mantém estilos e cartões da vitrine. */
+.catalog-v8 .utility-bar,.catalog-v8 .site-nav{display:none}
+.catalog-v8 .site-header{position:sticky;top:0;z-index:50}
+.catalog-v8 .header-main{justify-content:space-between;padding:13px 0}
+.catalog-v8 .header-main .site-logo{min-width:0}
+.catalog-v8 .simple-header-links{display:flex;align-items:center;gap:8px;margin-left:auto}
+.catalog-v8 .simple-header-links a{padding:10px 13px;border-radius:9px;color:#eae4fb;font-size:12px;font-weight:800}
+.catalog-v8 .simple-header-links a:hover{background:#392b65}
+.catalog-v8 .catalog-intro{padding:30px 0 8px}
+.catalog-v8 .catalog-intro h1{font-size:clamp(28px,3.5vw,39px);line-height:1.12;margin:5px 0 8px}
+.catalog-v8 .catalog-intro p{font-size:14px;max-width:820px;color:#657082}
+.catalog-v8 .catalog-toolbar{margin:16px 0 0;padding:13px;background:#fff;border:1px solid #e2e5f0;grid-template-columns:minmax(0,2.4fr) repeat(3,minmax(110px,1fr));align-items:end}
+.catalog-v8 .catalog-toolbar label{font-weight:800}
+.catalog-v8 .catalog-toolbar input,.catalog-v8 .catalog-toolbar select{font-size:13px}
+.catalog-v8 .catalog-quick{padding:22px 0 0}
+.catalog-v8 .catalog-quick h2{font-size:18px;font-weight:900;letter-spacing:-.03em;margin:0 0 12px}
+.catalog-v8 .catalog-quick .categories{gap:9px}
+.catalog-v8 .cat-card{min-height:92px;gap:6px;padding:11px 7px;justify-content:center;align-content:center}
+.catalog-v8 .cat-symbol{width:50px;height:43px;font-size:14px;border-radius:11px;background:linear-gradient(140deg,#eee8ff,#fff);color:#683fcb;box-shadow:0 4px 11px #2415370d;overflow:visible}
+.catalog-v8 .cat-symbol::after{background:#ff7d30;width:18px;height:2px;bottom:7px}
+.catalog-v8 .cat-card strong{font-size:11px}
+.catalog-v8 .catalog-results{padding-top:27px}
+.catalog-v8 .catalog-results .section-head{margin-bottom:7px}
+.catalog-v8 .catalog-results h2{font-size:23px;letter-spacing:-.04em;margin:0}
+.catalog-v8 .catalog-results .countline{margin:0 0 15px;font-size:12px}
+.catalog-v8 .offer-visual{height:190px}
+.catalog-v8 .offer-visual img{background:white;object-fit:contain;padding:15px}
+.catalog-v8 .offer-photo-label{background:#e9e8ef;color:#686477;bottom:9px;right:9px}
+.catalog-v8 .disclaimer{font-size:11px;line-height:1.55;margin:20px 0 32px;padding:12px 16px}
+.catalog-v8 .simple-footer{background:#18132f;color:#d9cee9;padding:20px 0;font-size:12px}
+.catalog-v8 .simple-footer .shell{display:flex;gap:15px;justify-content:space-between;align-items:center;flex-wrap:wrap}
+.catalog-v8 .simple-footer p{font-size:11px;margin:0;color:#bdb4d0}
+.catalog-v8 .simple-footer nav{display:flex;gap:12px;flex-wrap:wrap}
+.catalog-v8 .simple-footer a{color:#ddd0f8;text-decoration:underline;text-underline-offset:3px}
+.hardware-placeholder{position:absolute;inset:0;display:grid;place-items:center;overflow:hidden;background:radial-gradient(ellipse at 55% 38%,#f4efff 2%,#eeeaf7 48%,#e6e7f3 100%)}
+.hardware-placeholder::before{content:"";width:145px;height:145px;position:absolute;border-radius:50%;border:1px solid #947be631;box-shadow:0 0 0 30px #a98bf20e,0 0 0 65px #a98bf208}
+.hardware-object{position:relative;display:grid;place-items:center;width:85px;height:83px;border:7px solid #5434b8;border-right-color:#311f82;border-bottom-color:#392b91;background:linear-gradient(145deg,#bea8fc,#7b58df);border-radius:13px;transform:perspective(330px) rotateY(-23deg) rotateX(19deg) rotateZ(5deg);box-shadow:12px 13px 0 #35266c,16px 19px 19px #33266f58,inset 0 0 0 3px #d1bfff7b;color:#fff;font-size:17px;font-weight:950;letter-spacing:-.045em}
+.hardware-object::before{content:"";position:absolute;inset:9px;border:2px solid #e8dfff94;border-radius:5px}
+.hardware-object::after{content:"";position:absolute;height:4px;width:52%;background:#ff8538;bottom:-6px;left:24%;border-radius:5px}
+.placeholder-gpu .hardware-object,.placeholder-ram .hardware-object,.placeholder-ssd .hardware-object,.placeholder-hdd .hardware-object{width:124px;height:66px}
+.placeholder-ram .hardware-object{width:145px;height:40px;border-radius:6px}
+.placeholder-psu .hardware-object,.placeholder-case .hardware-object{width:85px;height:100px}
+.placeholder-board .hardware-object{height:120px;width:105px}
+.placeholder-cooler .hardware-object{border-radius:50%;width:98px;height:98px}
+.catalog-v8 .offer-visual:has(.hardware-placeholder) .offer-photo-label{background:#f7f5faea}
+@media(max-width:860px){.catalog-v8 .catalog-toolbar{grid-template-columns:repeat(2,minmax(0,1fr))}.catalog-v8 .cat-card{min-height:90px}}
+@media(max-width:650px){
+ .catalog-v8 .header-main{padding:11px 0}.catalog-v8 .simple-header-links{gap:2px}.catalog-v8 .simple-header-links a{font-size:11px;padding:7px 8px}
+ .catalog-v8 .catalog-intro{padding-top:19px}.catalog-v8 .catalog-intro h1{font-size:30px}
+ .catalog-v8 .catalog-intro p{font-size:12px}
+ .catalog-v8 .catalog-toolbar{grid-template-columns:repeat(2,minmax(0,1fr));gap:9px;padding:11px}
+ .catalog-v8 .catalog-toolbar label:first-child{grid-column:1/-1}
+ .catalog-v8 .catalog-quick .categories{grid-template-columns:repeat(4,minmax(0,1fr));gap:6px}
+ .catalog-v8 .cat-card{padding:9px 5px;min-height:83px}
+ .catalog-v8 .cat-symbol{width:39px;height:35px;font-size:12px}
+ .catalog-v8 .cat-card strong{font-size:10px}
+ .catalog-v8 .catalog-results{padding-top:21px}
+}
+@media(max-width:400px){.catalog-v8 .catalog-quick .categories{grid-template-columns:repeat(4,minmax(0,1fr))}.catalog-v8 .simple-header-links a:nth-child(2){display:none}.catalog-v8 .catalog-toolbar label:last-child{grid-column:1/-1}.catalog-v8 .catalog-results .cards{gap:9px}}
+@media(prefers-reduced-motion:reduce){.hardware-object,.offer-visual img{transition:none!important}}
