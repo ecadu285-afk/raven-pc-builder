@@ -39,7 +39,21 @@ function withSpecs(o,now,maxAge){
  let p=CATALOG[type]?.get(o.partId)||fitName(type,productName);
  if(p)p={...p};
  else if(type==='board'&&BOARD_MANUAL[o.partId])p={id:o.partId,name:productName,...BOARD_MANUAL[o.partId]};
- else if(type==='ram'){
+ else if(type==='gpu'){
+   const sku=(productName.match(/\b(?:RX|GTX|RTX)\s*\d{3,4}(?:\s*(?:SUPER|XT))?\b/i)||[])[0];
+   if(!sku)return null;
+   const family=sku.toUpperCase().replace(/\s+/g,'');
+   // Indicadores ilustrativos por família, NÃO ficha técnica exata do anúncio.
+   const specs={
+     RX550:[1.0,65],RX560:[1.7,105],RX570:[2.4,185],RX580:[2.6,220],
+     RX6500XT:[3.1,150],RX7600:[4.6,210],
+     GTX750:[1.1,75],GTX960:[1.9,155],GTX1060:[2.6,170],
+     GTX1650:[2.7,120],GTX1660SUPER:[3.5,160],
+     RTX2060SUPER:[4.0,220],RTX2060:[3.7,210]
+   };
+   const approx=specs[family]||[1.5,240];
+   p={id:o.partId,name:productName,desc:'Modelo inserido manualmente. Confirme dimensões, consumo e conectores no fabricante.',tier:approx[0],power:approx[1],estimatedPower:true};
+ }else if(type==='ram'){
    const memory=(productName.match(/\bDDR[345]\b/i)||[])[0]?.toUpperCase();
    const gb=Number((productName.match(/\b(4|8|16|32|64)\s*GB\b/i)||[])[1]);
    if(!memory||!gb||/\bRDIMM|REGISTERED|SERVER\b/i.test(productName))return null;
@@ -89,6 +103,7 @@ function profileScore(parts,purpose){
 const partsPrices=selection=>Object.values(selection).reduce((sum,x)=>sum+(x?.offer?.price||0),0);
 function validBudgetParts(parts){
  const result=evaluateCompatibility(parts);
+ if(parts.gpu?.estimatedPower)result.unknown.push('GPU adicionada manualmente: potência usada é uma aproximação conservadora; confirme consumo, conectores e dimensões no anúncio e no fabricante.');
  return {valid:result.errors.length===0,errors:result.errors,unknown:result.unknown,warnings:result.warnings,details:result};
 }
 function selectedVersion(pool,{budget=1000,brand='all',purpose='general',storage='any'}={}){
