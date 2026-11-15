@@ -67,32 +67,76 @@ function createPhoto(o){
  const img=el('img');img.src=url;img.alt='Foto do anúncio: '+(o.title||o.modelName);img.loading='lazy';img.decoding='async';img.referrerPolicy='no-referrer';img.onerror=fallback;
  root.append(img);return root;
 }
+
+/* RAVEN 6.1: agrupamento visual. Não altera offers.json e não perde anúncios. */
+function normalizeModel(value){
+ return String(value||'').normalize('NFD').replace(/[\u0300-\u036f]/g,'')
+ .toLowerCase().replace(/\b(processador|placa de video|placa de vídeo|memoria ram|memória ram|produto)\b/g,' ')
+ .replace(/[^a-z0-9]+/g,' ').trim().replace(/\s+/g,' ');
+}
+function groupId(o){
+ const exact=refs.get(o.partId);
+ const category=o.category||exact?.category||'other';
+ const model=exact?.name||o.modelName||o.title||o.partId||'';
+ // Identidade: categoria, modelo de referência e condição. A loja nunca faz parte da chave.
+ // Para modelos sem referência, manter especificações no nome; não fundir 3 GB com 6 GB.
+ const parts=[category,o.condition==='used'?'used':'new',normalizeModel(model)];
+ if(category==='gpu'){
+  const cap=(model.match(/\b(\d{1,2})\s*(?:GB|G)\b/i)||o.title?.match(/\b(\d{1,2})\s*(?:GB|G)\b/i)||[])[1];
+  if(cap&&!/\b\d{1,2}\s*gb\b/.test(normalizeModel(model)))parts.push(cap+'gb');
+ }
+ return parts.join('|');
+}
+function nameOf(o){return refs.get(o.partId)?.name||o.modelName||o.title||'Componente de computador';}
+function groupOffers(data){
+ const buckets=new Map();
+ for(const o of data){const k=groupId(o);if(!buckets.has(k))buckets.set(k,[]);buckets.get(k).push(o)}
+ return [...buckets.values()].map(offers=>{
+  offers.sort((a,b)=>a.price-b.price||b.checkedAt.localeCompare(a.checkedAt));
+  const byStore=new Map(),extra=[];
+  for(const o of offers){if(byStore.has(o.store))extra.push(o);else byStore.set(o.store,o)}
+  const choices=[...byStore.values()].sort((a,b)=>a.price-b.price);
+  return {offers,choices,extra,best:choices[0],latest:offers.reduce((d,o)=>o.checkedAt>d?o.checkedAt:d,'')};
+ });
+}
+function offerEntry(o){
+ const line=el('div','offer-choice'),description=el('div');
+ const vendor=el('strong','',stores[o.store]?.name||o.store);
+ const value=el('span','',money(o.price)+(o.condition==='used'?' · Usado':' · Novo'));
+ const details=el('span','offer-freshness','Conferido em '+o.checkedAt.split('-').reverse().join('/')+(ageDays(o)>14?' · Preço antigo':''));
+ description.append(vendor,document.createTextNode('  '),value,document.createElement('br'),details);
+ const a=el('a','','Ver oferta');a.href=o.url;a.target='_blank';a.rel=o.affiliate?'noopener noreferrer sponsored':'noopener noreferrer';
+ a.setAttribute('aria-label','Abrir anúncio de '+nameOf(o)+' na '+(stores[o.store]?.name||o.store));
+ line.append(description,a);return line;
+}
 function render(){
- const q=$('q').value.trim().toLowerCase(),cat=$('cat').value,store=$('store').value,order=$('order').value,budget=$('budget').value;
- const compare=comparisons();
- const list=rows.filter(o=>(cat==='all'||o.category===cat)&&(store==='all'||o.store===store)&&(budget==='all'||o.price<=Number(budget))&&(!q||[o.title,o.modelName,o.partId,stores[o.store].name].join(' ').toLowerCase().includes(q))).sort((a,b)=>order==='low'?a.price-b.price:order==='high'?b.price-a.price:b.checkedAt.localeCompare(a.checkedAt));
- $('count').textContent=list.length+' oferta(s) publicada(s) neste filtro · preços conferidos na data indicada';
+ const q=$('q').value.trim().toLocaleLowerCase('pt-BR');
+ const cat=$('cat').value,store=$('store').value,order=$('order').value,budget=$('budget').value;
+ const selected=rows.filter(o=>(cat==='all'||o.category===cat)&&(store==='all'||o.store===store)&&(budget==='all'||o.price<=Number(budget))&&(!q||[o.title,o.modelName,o.partId,stores[o.store].name].join(' ').toLocaleLowerCase('pt-BR').includes(q)));
+ const groups=groupOffers(selected).sort((a,b)=>order==='low'?a.best.price-b.best.price:order==='high'?b.best.price-a.best.price:b.latest.localeCompare(a.latest));
  const root=$('products');root.replaceChildren();
- if(!list.length){const empty=el('div','empty');empty.append(el('h2','',rows.length?'Nenhuma oferta corresponde aos filtros.':'Nenhuma oferta publicada ainda nesta vitrine.'),el('p','',rows.length?'Altere o orçamento, categoria ou loja.':'Os produtos aparecerão aqui depois da revisão e da publicação pelo RAVEN MARKET BOT.'));root.append(empty);return;}
- for(const o of list.slice(0,250)){
-  const card=el('article','card'),content=el('div','content'),tags=el('div','tags'),name=o.title||o.modelName||refs.get(o.partId)?.name||'Componente de computador';
-  tags.append(el('span','tag',stores[o.store].name),el('span','tag',cats[o.category]||'Componente'));
-  if(o.condition==='used')tags.append(el('span','tag','Usado'));
-  const cp=compare.get(o);
-  if(cp?.isCheapest)tags.append(el('span','tag','Menor valor listado'));
-  content.append(tags,el('h2','',name),el('div','price',money(o.price)),el('div','price-caption',paymentName(o)));
-  const stale=ageDays(o)>14;
-  const meta=el('div','verified'+(stale?' warning-age':''),'Conferido em '+o.checkedAt.split('-').reverse().join('/')+(stale?' · Preço desatualizado: verifique':'')+(o.affiliate?' · Link de afiliado':' · Link externo'));
-  content.append(meta);
-  if(cp){
-   const message=cp.isCheapest?'Menor valor entre '+cp.storeCount+' lojas cadastradas para este modelo e condição.':'Outra loja tem valor cadastrado '+money(o.price-cp.cheapest)+' menor para este modelo e condição.';
-   content.append(el('div','price-note',message));
-  }else{
-   content.append(el('div','price-note subtle','Sem comparação recente com outra loja para este mesmo modelo.'));
+ $('count').textContent=groups.length+' modelo(s) em '+selected.length+' oferta(s) · anúncios da mesma referência agrupados · confira marca, frete, condição e estoque na loja';
+ if(!groups.length){const empty=el('div','empty');empty.append(el('h2','',rows.length?'Nenhuma oferta corresponde aos filtros.':'Nenhuma oferta publicada ainda nesta vitrine.'),el('p','',rows.length?'Altere orçamento, categoria ou loja.':'Os produtos aparecem após revisão e publicação pelo RAVEN MARKET BOT.'));root.append(empty);return}
+ for(const g of groups.slice(0,250)){
+  const best=g.best,model=nameOf(best),card=el('article','card'),content=el('div','content'),tags=el('div','tags');
+  tags.append(el('span','tag',cats[best.category]||'Componente'),el('span','tag',best.condition==='used'?'Usado':'Novo'));
+  const nStores=new Set(g.offers.map(x=>x.store)).size;
+  if(nStores>1)tags.append(el('span','tag',nStores+' lojas'));
+  content.append(tags,el('h2','',model));
+  const label=g.offers.length===1?'1 anúncio nesta referência':g.offers.length+' anúncios semelhantes desta referência';
+  content.append(el('div','offer-total',label),el('div','price',money(best.price)),el('div','price-caption','Menor preço cadastrado nos resultados deste filtro'));
+  if(g.offers.length>1){
+   content.append(el('p','group-subtitle','Ofertas agrupadas pela referência do produto, não necessariamente pelo mesmo fabricante ou SKU. Compare a capacidade, a condição, a garantia e a versão no anúncio.'));
+  } else {
+   content.append(el('p','group-subtitle','Preço confirmado na data informada. Confira as condições antes de comprar.'));
   }
-  const a=el('a','link','Conferir oferta na '+stores[o.store].name);
-  a.href=o.url;a.target='_blank';a.rel=o.affiliate?'noopener noreferrer sponsored':'noopener noreferrer';
-  content.append(a);card.append(createPhoto(o),content);root.append(card);
+  const options=el('div','offer-options');for(const o of g.choices)options.append(offerEntry(o));content.append(options);
+  if(g.extra.length){
+   const details=el('details','similar-offers'),summary=el('summary','',g.extra.length+' outro(s) anúncio(s) semelhante(s) — comparar');
+   details.append(summary);for(const o of g.extra)details.append(offerEntry(o));content.append(details);
+  }
+  if(g.offers.some(o=>ageDays(o)>14))content.append(el('div','price-note subtle','Há oferta(s) com preço consultado há mais de 14 dias. Confira o valor atualizado na loja.'));
+  card.append(createPhoto(best),content);root.append(card);
  }
 }
 async function load(){
