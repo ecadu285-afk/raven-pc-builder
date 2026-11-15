@@ -46,6 +46,7 @@
 <form id="marketCepForm" class="market-cep-form"><label for="marketCep">CEP (8 números)
 <input id="marketCep" type="text" inputmode="numeric" autocomplete="postal-code" maxlength="9" placeholder="00000-000" required></label>
 <button type="submit">Salvar CEP</button></form>
+<div class="raven-geo-tools"><button type="button" data-raven-detect data-status-id="marketCepStatus">⌖ Usar minha localização para sugerir CEP</button><p>A localização só é consultada com sua permissão. As coordenadas são enviadas ao serviço BigDataCloud para identificar sua região, mas não são gravadas pela Raven.</p></div>
 <button id="marketCepClear" type="button" class="market-action">Excluir meu CEP</button>
 <p class="market-status" id="marketCepStatus" role="status">Entre para salvar seu CEP.</p>
 </section>
@@ -60,4 +61,5 @@
 <footer class="simple-footer"><div class="shell"><p>© 2026 Raven Creatives Studios · Compras e pagamentos realizados em lojas externas.</p><nav aria-label="Informações"><a href="privacidade.html">Privacidade</a><a href="afiliados.html">Transparência</a><a href="inicio.html">Início</a></nav></div></footer>
 <script type="module" src="storefront-shop.js?v=82"></script>
 <script type="module" src="raven-dashboard.js?v=1"></script>
+<script type="module" src="raven-location.js?v=1"></script>
 </body></html>
