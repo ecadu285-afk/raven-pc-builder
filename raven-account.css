@@ -23,3 +23,17 @@
 .builder-v8 .garage-entry .next-inline{justify-content:flex-end}
 .builder-v8 .ra-garage-login{margin-top:9px}
 @media(max-width:680px){.raven-account-dialog{padding:20px}.builder-v8 #accountOpen,.builder-v8 #garageOpen{font-size:11px;padding:8px 10px}}
+
+/* Barra superior: evitar estouro no celular com conta + montagens */
+@media(max-width:700px){
+ .builder-v8 .topbar{height:auto;min-height:50px;display:flex;gap:8px;flex-wrap:wrap;padding:8px 0}
+ .builder-v8 .topbar .top-right{margin-left:auto;display:flex;flex-wrap:wrap;gap:6px;justify-content:flex-end}
+ .builder-v8 .topbar .status{display:none}
+ .builder-v8 #accountOpen,.builder-v8 #garageOpen{white-space:normal;min-height:38px;padding:7px 9px;line-height:1.2}
+}
+@media(max-width:440px){
+ .builder-v8 .topbar .backlink{display:none}
+ .builder-v8 .topbar .top-right{width:100%;justify-content:space-between}
+ .builder-v8 #garageOpen,.builder-v8 #accountOpen{flex:1 1 auto}
+ .builder-v8 .topbar #reset{padding:7px 8px;font-size:11px}
+}
