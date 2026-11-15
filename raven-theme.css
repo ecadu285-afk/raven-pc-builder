@@ -1,0 +1,48 @@
+/* RAVEN VISUAL 6.1 — violeta, grafite e verde funcional. Mantém visualização 3D, menus e formulários. */
+:root {
+  color-scheme:dark;
+  --bg:#0b0a13; --panel:#17131f; --panel2:#201b2a;
+  --line:#493b5f; --text:#f6f2fc; --muted:#bcb3ca;
+  --lime:#c2a6ff; --accent:#c2a6ff; --border:#55436e;
+  --surface:#17131f;
+}
+html{scroll-behavior:smooth}
+body{background-color:#0b0a13;color:var(--text);font-family:Inter,"Segoe UI",ui-sans-serif,system-ui,-apple-system,Arial,sans-serif}
+h1,h2,h3{letter-spacing:-.032em}
+:is(a,button,input,select,textarea):focus-visible{outline:2px solid #c2a6ff;outline-offset:3px}
+::selection{background:#7e54b7;color:#fff}
+:is(.panel,.card,.step,.lesson-head,.exercises,.faq details,.sidebar,.stat,.metric,.feature-card,.project-card){
+ border-color:#514069;
+}
+:is(.card,.panel,.lesson-head,.exercises,.faq details){box-shadow:0 10px 40px #0002}
+:is(.module.active,.step.active){border-color:#8e70bd;background:#2a2140;color:#f5efff}
+:is(.brand b,.brand span,.eyebrow,.kicker,.step-number){color:#c6aaff}
+:is(a,button,.card,.panel){transition:border-color .18s ease,background-color .18s ease,color .18s ease,transform .18s ease}
+.raven-academy-link{display:inline-flex;align-items:center;justify-content:center;gap:8px;text-decoration:none;background:#c2a6ff!important;border:1px solid #d1bbff!important;color:#1d102b!important;border-radius:12px;padding:12px 18px;font-weight:850;font-size:13px}
+.raven-academy-link:hover{background:#d8c7ff!important;transform:translateY(-2px)}
+.raven-course-highlight{border:1px solid #665182;border-radius:17px;padding:20px 23px;background:linear-gradient(125deg,#312047,#17271f);box-shadow:0 18px 40px #06050d33;margin:18px 0 24px}
+.raven-course-highlight h2,.raven-course-highlight strong{color:#efe6ff}
+.raven-course-highlight p{color:#ded3e8;line-height:1.65}
+.raven-course-highlight .raven-course-actions{display:flex;gap:10px;flex-wrap:wrap;margin-top:15px}
+body .products .card{background:#1b1626;border-color:#4e4061;border-radius:17px;overflow:hidden}
+body .products .content{padding:17px}
+body .products .tag{background:#342642;color:#e3d3ff}
+body .products .link{background:#bfa0ff;color:#180f22;border-radius:10px}
+body .products .link:hover{background:#d2baff}
+body .products .price{color:#d5baff}
+body .products .photo{background:#e8ebe8}
+body .products .price-note{background:#291f39;border-color:#514065;color:#d9c8ed}
+body .products .price-note.subtle{background:#191422;color:#c1b4ce}
+body .products .offer-options{display:grid;gap:8px;margin-top:4px}
+body .products .offer-choice{display:flex;gap:10px;justify-content:space-between;align-items:center;flex-wrap:wrap;background:#261e32;border:1px solid #514165;border-radius:10px;padding:11px}
+body .products .offer-choice strong{font-size:14px;color:#e3d1ff}
+body .products .offer-choice span{font-size:12px;color:#cabcd5}
+body .products .offer-choice a{font-size:12px;font-weight:850;color:#d1b6ff;text-decoration:underline;text-underline-offset:3px}
+body .products .similar-offers{border:1px dashed #59496c;border-radius:11px;padding:10px;margin-top:4px}
+body .products .similar-offers summary{cursor:pointer;font-weight:750;color:#e0d0f0;font-size:12px}
+body .products .similar-offers .offer-choice{margin-top:8px}
+body .products .group-subtitle{font-size:12px;color:#d0bedc;line-height:1.5}
+body .products .offer-freshness{color:#e6cca3;font-size:11px}
+body .products .offer-total{font-size:11px;color:#a9d991;margin-bottom:2px}
+@media(max-width:640px){.raven-course-highlight{padding:15px}.raven-course-highlight .raven-course-actions>*{width:100%}}
+@media(prefers-reduced-motion:reduce){html{scroll-behavior:auto}:is(a,button,.card,.panel){transition:none!important}}
