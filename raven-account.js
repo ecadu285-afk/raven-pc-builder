@@ -217,7 +217,9 @@ export async function ravenInitAccount({ onChange } = {}) {
 
   configured = ravenAccountConfigured();
   paint();
-  if (new URLSearchParams(location.search).get('conta') === '1') show();
+  const accountLinkMode = new URLSearchParams(location.search).get('conta');
+  if (accountLinkMode === 'cadastro') { setMode('signup'); show(); }
+  else if (accountLinkMode === '1') show();
   if (!configured) {
     setMessage('Cadastro em preparação: falta conectar o serviço de contas e aplicar as regras do banco de dados.', true);
     onAccountChange();
