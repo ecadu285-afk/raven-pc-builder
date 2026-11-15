@@ -91,3 +91,12 @@
  .market-header .market-nav-strip a{font-size:10px}
  .market-dashboard-section .cards{grid-template-columns:1fr}
 }
+
+/* Atalhos do Market na área do montador 3D, sem alterar o layout do visualizador. */
+.builder-v8 .builder-account-menu{position:relative;z-index:80}
+.builder-v8 .builder-account-menu>summary{cursor:pointer;list-style:none;background:#2a1e42;border:1px solid #634b83;border-radius:8px;color:#e7d8fb;font-size:12px;font-weight:800;padding:10px 12px}
+.builder-v8 .builder-account-menu>summary::-webkit-details-marker{display:none}
+.builder-v8 .builder-account-menu[open] .builder-account-menu-links{position:absolute;right:0;top:calc(100% + 6px);width:190px;padding:8px;background:#211633;border:1px solid #705589;border-radius:10px;box-shadow:0 12px 30px #09061188;display:grid;gap:3px}
+.builder-v8 .builder-account-menu-links a{color:#f4eaff;text-decoration:none;border-radius:7px;padding:10px;font-size:12px;font-weight:750}
+.builder-v8 .builder-account-menu-links a:hover{background:#433051}
+@media(max-width:440px){.builder-v8 .builder-account-menu>summary{font-size:11px;padding:8px}}
