@@ -261,6 +261,18 @@
       "category": "board",
       "modelName": "H81M econômica",
       "title": "H81M econômica"
+    },
+    {
+      "partId": "r39-hdd-hd-sata-2-5-1tb",
+      "store": "mercadolivre",
+      "price": 399.99,
+      "checkedAt": "2026-11-15",
+      "url": "https://meli.la/1rKy8Rb",
+      "condition": "new",
+      "affiliate": true,
+      "category": "hdd",
+      "modelName": "HD SATA 2.5 1TB",
+      "title": "HD SATA 2.5 1TB"
     }
   ],
   "history": [
