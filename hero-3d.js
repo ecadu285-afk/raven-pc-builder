@@ -8,7 +8,7 @@ if(host){
   async function start(){
     if(!canvas||!window.WebGLRenderingContext){return;}
     let T;
-    try{T=await import('https://cdn.jsdelivr.net/npm/three@0.164.1/build/three.module.js');}
+    try{T=await import('https://cdn.jsdelivr.net/npm/three@0.160.1/build/three.module.js');}
     catch{return;}
     let renderer;
     try{renderer=new T.WebGLRenderer({canvas,antialias:true,alpha:true,powerPreference:'low-power'});}catch{return;}
