@@ -1,0 +1,98 @@
+/* RAVEN PC BUILDER — inicio simples v8.
+   A página inicial orienta a escolha. Os catálogos e o montador permanecem separados. */
+.home-v8{background:#f6f7fc;color:#1c2030}
+.home-v8 .utility-bar{display:none}
+.home-v8 .site-header{background:#18132f}
+.home-v8 .header-main{padding-top:12px;padding-bottom:12px}
+.home-v8 .home-links{display:flex;align-items:center;gap:7px;margin-left:auto}
+.home-v8 .home-links>a,.home-v8 .more-menu>summary{display:inline-flex;align-items:center;justify-content:center;min-height:40px;color:#ece8fa;text-decoration:none;font-size:12px;font-weight:850;padding:10px 13px;border-radius:9px}
+.home-v8 .home-links>a:hover,.home-v8 .more-menu>summary:hover{background:#3b2c65}
+.home-v8 .more-menu{position:relative}
+.home-v8 .more-menu>summary{cursor:pointer;list-style:none;border:1px solid #7967a8}
+.home-v8 .more-menu>summary::-webkit-details-marker{display:none}
+.home-v8 .more-menu[open]>summary{background:#382a61}
+.home-v8 .more-links{position:absolute;right:0;top:calc(100% + 8px);min-width:220px;z-index:60;background:#fff;color:#252038;border:1px solid #e1dbe9;box-shadow:0 18px 35px #1b13302d;border-radius:12px;padding:7px}
+.home-v8 .more-links a{display:block;border-radius:8px;padding:10px 12px;font-size:13px;font-weight:740}
+.home-v8 .more-links a:hover{background:#f2ecff;color:#6230d0}
+.home-v8 .start-area{padding-top:24px}
+.home-v8 .start-card{background:#fff;border:1px solid #e6e4ee;border-radius:22px;box-shadow:0 8px 28px #2217430d;display:grid;grid-template-columns:minmax(0,1fr) 315px;align-items:stretch;overflow:hidden}
+.home-v8 .start-content{padding:clamp(24px,4.3vw,51px)}
+.home-v8 .start-tag{color:#7144f4;font-size:11px;letter-spacing:.1em;text-transform:uppercase;font-weight:950}
+.home-v8 .start-content h1{font-size:clamp(28px,3.9vw,47px);letter-spacing:-.05em;line-height:1.12;margin:13px 0 11px;max-width:670px}
+.home-v8 .start-content h1 span{color:#6736e1}
+.home-v8 .start-content>p{color:#61677b;font-size:15px;line-height:1.65;max-width:545px;margin:0 0 22px}
+.home-v8 .main-search{display:flex;min-height:54px;align-items:stretch;background:#fff;border:2px solid #6840ec;border-radius:12px;overflow:hidden;max-width:610px;box-shadow:0 4px 18px #7041f517}
+.home-v8 .main-search input{border:0;outline:none;flex:1;min-width:0;padding:12px 15px;font-size:14px;color:#232332;background:transparent}
+.home-v8 .main-search input::placeholder{color:#8790a0}
+.home-v8 .main-search button{border:0;background:#7041f5;color:#fff;padding:0 24px;font-weight:900;font-size:13px}
+.home-v8 .main-search button:hover{background:#5429d2}
+.home-v8 .search-hint{color:#707789;font-size:12px;margin:10px 0 0}
+.home-v8 .start-visual{min-height:315px;background:radial-gradient(circle at 55% 35%,#6b3ece 0,#271749 66%,#1a1430 100%);position:relative;overflow:hidden}
+.home-v8 .start-visual canvas{position:absolute;inset:0;width:100%;height:100%;display:block}
+.home-v8 .start-visual .hardware-fallback{position:absolute;inset:0;display:grid;place-items:center;transform:scale(.72)}
+.home-v8 .start-visual .fallback-board{width:190px;height:235px}
+.home-v8 .start-visual::after{content:"EXPLORE O HARDWARE EM 3D";position:absolute;bottom:14px;left:16px;color:#eae2ff;font-size:10px;font-weight:900;letter-spacing:.11em;pointer-events:none;background:#1c1237dd;padding:7px 11px;border-radius:7px;z-index:4}
+.home-v8 .steps{padding-top:33px}
+.home-v8 .section-top{display:flex;justify-content:space-between;align-items:end;gap:14px;margin-bottom:16px;flex-wrap:wrap}
+.home-v8 .section-top h2{font-size:clamp(24px,3vw,31px);letter-spacing:-.04em;line-height:1.13;margin:0}
+.home-v8 .section-top p{font-size:13px;color:#6d7483;margin:5px 0 0}
+.home-v8 .step-grid{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:13px}
+.home-v8 .step-link{display:flex;flex-direction:column;align-items:flex-start;text-decoration:none;min-height:206px;gap:11px;padding:23px 19px;background:#fff;border:1px solid #e3e4ee;border-radius:17px;box-shadow:0 5px 16px #22183109;transition:transform .17s ease,border-color .17s}
+.home-v8 .step-link:hover{border-color:#7041f5;transform:translateY(-3px)}
+.home-v8 .step-icon{display:grid;place-items:center;height:43px;width:43px;border-radius:11px;font-weight:950;font-size:14px;background:#eee6ff;color:#6840df}
+.home-v8 .step-link:nth-child(2) .step-icon{background:#fff0e5;color:#e66719}
+.home-v8 .step-link:nth-child(3) .step-icon{background:#e5f5ed;color:#187d4e}
+.home-v8 .step-link:nth-child(4) .step-icon{background:#e7efff;color:#3867c7}
+.home-v8 .step-link strong{font-size:16px;line-height:1.2;letter-spacing:-.015em}
+.home-v8 .step-link p{font-size:12px;line-height:1.5;color:#6d7483;margin:0}
+.home-v8 .step-link .go{font-size:12px;color:#6c3adc;font-weight:900;margin-top:auto}
+.home-v8 .alternatives{padding-top:23px;padding-bottom:36px}
+.home-v8 .alternative-box{background:#eeeaf9;border-radius:16px;border:1px solid #e1d9f8;display:flex;gap:12px;align-items:center;justify-content:space-between;padding:17px 22px;flex-wrap:wrap}
+.home-v8 .alternative-box p{margin:4px 0 0;color:#6d637c;font-size:12px}
+.home-v8 .alternative-box strong{font-size:15px}
+.home-v8 .alternative-actions{display:flex;gap:9px;flex-wrap:wrap}
+.home-v8 .alternative-actions a{display:inline-flex;align-items:center;justify-content:center;min-height:42px;background:#fff;border:1px solid #d1c8e5;border-radius:9px;padding:10px 14px;font-weight:850;font-size:12px;color:#3e2868}
+.home-v8 .alternative-actions a:hover{border-color:#8f6bea;background:#fbf9ff}
+.home-v8 .home-footer{background:#18132f;color:#ccc5e1;padding:23px 0;margin-top:0}
+.home-v8 .home-footer .shell{display:flex;align-items:center;justify-content:space-between;gap:18px;flex-wrap:wrap}
+.home-v8 .home-footer p{font-size:11px;max-width:570px;color:#bdb5d2;margin:0;line-height:1.7}
+.home-v8 .home-footer nav{display:flex;gap:14px;flex-wrap:wrap}
+.home-v8 .home-footer a{color:#e1d6fc;font-size:11px;text-decoration:underline;text-underline-offset:3px}
+@media(max-width:1050px){
+ .home-v8 .start-card{grid-template-columns:minmax(0,1fr) 260px}
+ .home-v8 .step-grid{grid-template-columns:repeat(2,minmax(0,1fr))}
+ .home-v8 .step-link{min-height:176px}
+}
+@media(max-width:750px){
+ .home-v8 .shell{padding-left:15px;padding-right:15px}
+ .home-v8 .site-logo{min-width:0}
+ .home-v8 .header-main{display:flex;flex-wrap:nowrap;gap:10px}
+ .home-v8 .home-links>a{display:none}
+ .home-v8 .more-menu>summary{min-height:39px;padding:8px 12px}
+ .home-v8 .start-area{padding-top:12px}
+ .home-v8 .start-card{display:block;border-radius:16px}
+ .home-v8 .start-content{padding:24px 20px}
+ .home-v8 .start-content h1{font-size:clamp(28px,7.5vw,37px)}
+ .home-v8 .start-content>p{font-size:14px;margin-bottom:20px}
+ .home-v8 .start-visual{display:none}
+ .home-v8 .steps{padding-top:23px}
+ .home-v8 .section-top h2{font-size:25px}
+ .home-v8 .step-grid{gap:11px}
+ .home-v8 .step-link{padding:17px 14px;min-height:187px;gap:8px}
+ .home-v8 .step-link strong{font-size:14px}
+ .home-v8 .step-link p{font-size:12px}
+ .home-v8 .alternative-box{align-items:stretch;gap:12px}
+}
+@media(max-width:430px){
+ .home-v8 .step-grid{grid-template-columns:1fr}
+ .home-v8 .step-link{min-height:0;display:grid;grid-template-columns:43px 1fr;grid-template-rows:auto auto auto;column-gap:12px;row-gap:4px;padding:15px 16px}
+ .home-v8 .step-icon{grid-row:1 / 4;align-self:center}
+ .home-v8 .step-link strong{grid-column:2}
+ .home-v8 .step-link p{grid-column:2}
+ .home-v8 .step-link .go{grid-column:2;margin-top:4px}
+ .home-v8 .main-search input{font-size:13px;padding:10px}
+ .home-v8 .main-search button{padding:0 13px;font-size:12px}
+ .home-v8 .alternative-actions{display:grid;grid-template-columns:1fr;width:100%}
+ .home-v8 .alternative-actions a{width:100%}
+}
+@media(prefers-reduced-motion:reduce){html{scroll-behavior:auto}.home-v8 .step-link{transition:none}.home-v8 .step-link:hover{transform:none}}
