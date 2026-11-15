@@ -321,6 +321,18 @@
       "category": "hdd",
       "modelName": "HD SATA 3.5 1TB",
       "title": "HD SATA 3.5 1TB"
+    },
+    {
+      "partId": "r39-hdd-hd-sata-3-5-500gb",
+      "store": "mercadolivre",
+      "price": 141.49,
+      "checkedAt": "2026-11-15",
+      "url": "https://meli.la/2m4H37L",
+      "condition": "new",
+      "affiliate": true,
+      "category": "hdd",
+      "modelName": "HD SATA 3.5 500GB",
+      "title": "HD SATA 3.5 500GB"
     }
   ],
   "history": [
