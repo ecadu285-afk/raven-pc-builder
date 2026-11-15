@@ -1,0 +1,110 @@
+/* Raven PC Builder — vitrine premium de hardware, identidade própria. */
+.raven-home-pro{background:#f3f3fa;color:#1b192b}
+.raven-home-pro .market-header{position:sticky;top:0;z-index:90;background:#15152f;box-shadow:0 12px 27px #140b2924}
+.raven-home-pro .market-header .market-header-main{max-width:1340px;gap:24px;padding-block:15px}
+.raven-home-pro .market-header .market-search{border:0;border-radius:11px;box-shadow:0 0 0 2px #ffffff12;min-height:49px}
+.raven-home-pro .market-header .market-search button{background:#ff863f;border-left:1px solid #f57424;font-size:13px}
+.raven-home-pro .market-top-tools{gap:7px}
+.raven-home-pro .market-top-tools>a,.raven-home-pro .market-top-tools>button{font-size:12px;line-height:1.5;padding:8px 11px;border-radius:9px}
+.raven-home-pro .market-top-tools #accountOpen::before{content:"◉";font-size:18px;line-height:1;display:block;color:#ffa260}
+.raven-home-pro .market-top-tools a[href*="salvos"]::before{content:"♡";font-size:20px;display:block;line-height:1;color:#ffa260}
+.raven-home-pro .market-top-tools a[href*="carrinho"]::before{content:"▤";font-size:19px;display:block;line-height:1;color:#ffa260}
+.raven-home-pro .market-nav-strip{background:#211b3a;border-top-color:#48365f}
+.raven-home-pro .market-header .market-nav-strip .shell{max-width:1340px;justify-content:space-between;padding-block:10px}
+.raven-home-pro .market-nav-strip a{font-size:12px;color:#eee7ff}
+.raven-home-pro .start-area{max-width:1340px;padding-top:26px}
+.raven-home-pro .start-card{border:none;border-radius:23px;min-height:390px;grid-template-columns:minmax(0,1fr) minmax(270px,37%);background:linear-gradient(120deg,#13132d 0%,#21143c 56%,#322057 100%);box-shadow:0 18px 40px #1611251f;position:relative}
+.raven-home-pro .start-card:before{content:"";position:absolute;width:400px;height:400px;border-radius:100%;right:10%;top:-53%;background:#834ad62b;filter:blur(12px);pointer-events:none}
+.raven-home-pro .start-content{padding:clamp(30px,4.6vw,63px);position:relative;z-index:1;align-self:center}
+.raven-home-pro .start-tag{display:inline-block;border:1px solid #a183ba67;padding:8px 12px;border-radius:7px;background:#ffffff0d;color:#ffb077;font-size:10px;letter-spacing:.13em}
+.raven-home-pro .start-content h1{font-size:clamp(34px,4.25vw,61px);color:#fff;max-width:740px;letter-spacing:-.057em;line-height:1.04;margin:20px 0 16px}
+.raven-home-pro .start-content h1 span{color:#ff9352}
+.raven-home-pro .start-content>p{color:#ddd5ed;font-size:15px;line-height:1.65;margin-bottom:23px}
+.raven-home-pro .main-search{box-shadow:0 14px 24px #0002;border:0;min-height:51px;max-width:595px}
+.raven-home-pro .main-search button{background:#ff853e;color:#201529;border:0;font-weight:900}
+.raven-home-pro .main-search input{font-size:14px}
+.raven-hero-chips{display:flex;flex-wrap:wrap;gap:9px;margin:15px 0}
+.raven-hero-chips span{font-size:11px;border:1px solid #ffffff33;padding:6px 9px;border-radius:6px;color:#ecdfef;background:#ffffff0d}
+.raven-home-pro .search-hint{color:#cfc3e6!important;font-size:12px!important;margin:0 0 9px!important}
+.raven-hero-actions{display:flex;align-items:stretch;gap:10px;flex-wrap:wrap}
+.raven-home-pro .raven-register-home{display:inline-flex;margin:0;padding:12px 18px;background:#ff8b4c;color:#1e1431;border:0;border-radius:9px;font-size:12px;font-weight:950}
+.raven-hero-outline{display:inline-flex;align-items:center;justify-content:center;border:1px solid #b99dcd;border-radius:9px;padding:11px 18px;color:#f8f0ff!important;font-size:12px;font-weight:850;text-decoration:none}
+.raven-hero-outline:hover{background:#ffffff1c}
+.raven-home-pro .start-visual{background:radial-gradient(ellipse at center,#7353bd4b,transparent 68%);position:relative;min-height:350px}
+.raven-home-pro .start-visual:before{content:"HARDWARE  •  STUDIO 3D";position:absolute;left:14px;bottom:20px;color:#ffffff99;letter-spacing:.13em;font-size:10px;z-index:2}
+.raven-home-pro .hardware-fallback{opacity:.96}
+.raven-shop-categories{max-width:1340px;margin-top:35px}
+.raven-overline{margin:0 0 6px;color:#8354bf;font-size:10px;letter-spacing:.15em;font-weight:950}
+.raven-section-head{display:flex;align-items:end;justify-content:space-between;gap:16px;margin-bottom:17px}
+.raven-section-head h2{font-size:clamp(23px,2.8vw,31px);line-height:1.2;letter-spacing:-.045em;margin:0;font-weight:950}
+.raven-section-head>a{font-size:12px;color:#6636bc;font-weight:850;text-decoration:none}
+.raven-category-grid{display:grid;grid-template-columns:repeat(6,minmax(0,1fr));gap:11px}
+.raven-category-grid>a{border:1px solid #e5e0f0;border-radius:13px;background:#fff;min-width:0;text-decoration:none;display:flex;flex-direction:column;align-items:center;text-align:center;gap:6px;min-height:153px;padding:17px 10px;box-shadow:0 4px 15px #2420470b;transition:transform .18s,box-shadow .18s,border-color .18s}
+.raven-category-grid>a:hover{transform:translateY(-3px);box-shadow:0 11px 23px #251f4719;border-color:#b6a0ea}
+.raven-category-grid .raven-category-icon{width:66px;height:55px;display:grid;place-items:center;border-radius:13px;background:linear-gradient(135deg,#e9e0ff,#f2f1ff);border:1px solid #ddd2fa;font-size:16px;font-weight:1000;letter-spacing:-.05em;color:#5333ae;box-shadow:inset 0 -5px 0 #dccdf7}
+.raven-category-grid strong{font-size:13px;line-height:1.3;color:#262038}
+.raven-category-grid small{font-size:11px;line-height:1.2;color:#80768e}
+.raven-delivery-card{max-width:1340px;margin-top:26px;margin-bottom:0;background:#ffffff;border:1px solid #e9e5f1;border-radius:14px;padding-top:21px;padding-bottom:21px;display:flex;gap:19px;align-items:center;box-shadow:0 6px 16px #1f1c3509}
+.raven-delivery-icon{width:54px;height:54px;flex:none;border-radius:13px;background:#f3ebff;color:#7040bc;display:grid;place-items:center;font-size:29px}
+.raven-delivery-card>div:nth-child(2){flex:1;min-width:0}
+.raven-delivery-card strong{font-size:14px;color:#261e34}
+.raven-delivery-card p{font-size:12px;margin:4px 0;color:#655f6b;line-height:1.6}
+.raven-delivery-card small{display:block;font-size:10px;color:#86808f}
+.raven-delivery-card .raven-locate-status{margin-top:8px;color:#6b38a5;font-weight:700;min-height:0}
+.raven-delivery-actions{display:flex;gap:7px;flex-direction:column;flex-shrink:0}
+.raven-delivery-actions button,.raven-delivery-actions a{border:0;border-radius:9px;padding:11px 15px;text-decoration:none;font-size:12px;font-weight:850;text-align:center;cursor:pointer;white-space:nowrap}
+.raven-delivery-actions button{background:#30204c;color:#fff}
+.raven-delivery-actions button:disabled{opacity:.6;cursor:wait}
+.raven-delivery-actions a{background:#f0ebf7;color:#4e3673}
+.raven-home-pro .steps{max-width:1340px;padding-top:40px}
+.raven-home-pro .steps .section-top h2{font-weight:950;letter-spacing:-.04em}
+.raven-home-pro .step-grid .step-link{border:1px solid #e6e0f1;box-shadow:0 5px 16px #170e300d}
+.raven-home-pro .step-link:hover{transform:translateY(-3px)}
+.raven-home-pro .market-offers-section{max-width:1340px;margin-top:30px;margin-bottom:37px}
+.raven-home-pro .market-offers-section h2{font-size:clamp(24px,2.8vw,31px);font-weight:950}
+.raven-home-pro .market-offers-section .offer-card{box-shadow:0 6px 15px #2218360c;border-color:#e6e2f0}
+.raven-home-pro .market-offers-section .offer-info{gap:8px}
+.raven-home-pro .market-offers-section .offer-visual{height:188px}
+.raven-home-pro .market-offers-section .offer-info h3{font-size:13px}
+.raven-home-pro .market-offers-section .offer-link{background:#ff843e;color:#25142e}
+.raven-home-pro .market-offers-section .offer-link:hover{background:#ed742d}
+.raven-home-pro .market-hero-quick{color:#71667e;margin-top:15px}
+.raven-home-pro .alternatives{max-width:1340px}
+.raven-home-pro .alternative-box{background:#241b39;color:#fff;border-radius:15px}
+.raven-home-pro .alternative-box p{color:#c7b7e3}
+.raven-home-pro .home-footer{background:#191429}
+@media(max-width:1100px){
+ .raven-category-grid{grid-template-columns:repeat(3,minmax(0,1fr))}
+ .raven-home-pro .market-header .market-header-main{gap:8px}
+ .raven-home-pro .start-card{grid-template-columns:minmax(0,1fr) 30%}
+}
+@media(max-width:750px){
+ .raven-home-pro .market-header .market-header-main{gap:8px}
+ .raven-home-pro .start-area{padding-top:14px}
+ .raven-home-pro .start-card{display:block}
+ .raven-home-pro .start-content{padding:26px 22px 29px}
+ .raven-home-pro .start-content h1{font-size:clamp(30px,8vw,42px)}
+ .raven-home-pro .start-visual{display:none}
+ .raven-home-pro .market-header .market-nav-strip .shell{justify-content:flex-start;gap:15px;overflow-x:auto;flex-wrap:nowrap;scrollbar-width:thin}
+ .raven-home-pro .market-header .market-nav-strip .shell>a{white-space:nowrap;flex-shrink:0}
+ .raven-delivery-card{flex-wrap:wrap;align-items:flex-start;padding:18px}
+ .raven-delivery-actions{flex-direction:row;width:100%}
+ .raven-delivery-actions>*{flex:1}
+}
+@media(max-width:500px){
+ .raven-category-grid{grid-template-columns:repeat(3,minmax(0,1fr));gap:6px}
+ .raven-category-grid>a{min-height:125px;padding:12px 5px}
+ .raven-category-grid .raven-category-icon{width:51px;height:45px;font-size:13px}
+ .raven-category-grid strong{font-size:11px}
+ .raven-category-grid small{font-size:10px}
+ .raven-hero-actions{display:grid}
+ .raven-home-pro .raven-register-home{justify-content:center}
+ .raven-home-pro .market-header .market-top-tools{gap:3px}
+ .raven-home-pro .market-header .market-top-tools a,.raven-home-pro .market-header .market-top-tools button{font-size:10px;padding:4px 6px}
+ .raven-delivery-actions{flex-wrap:wrap}
+ .raven-delivery-actions>*{white-space:normal}
+ .raven-home-pro .market-offers-section .cards{grid-template-columns:repeat(2,minmax(0,1fr));gap:10px}
+ .raven-home-pro .market-offers-section .offer-info{padding:10px}
+ .raven-home-pro .market-offers-section .offer-visual{height:139px}
+}
+@media(prefers-reduced-motion:reduce){.raven-category-grid>a,.raven-home-pro .step-link{transition:none}}
