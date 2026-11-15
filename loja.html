@@ -65,7 +65,7 @@ function comparisons(){
 }
 function createPhoto(offers,cat){
  const root=el('div','photo');
- const real=offers.find(o=>safeImage(o.imageUrl,o.store)&&!(cat==='cpu'&&/\\bPC\\s+GAMER\\b/i.test(o.title||'')));
+ const real=offers.find(o=>safeImage(o.imageUrl,o.store)&&!(cat==='cpu'&&/\bPC\s+GAMER\b/i.test(o.title||'')));
  const category=categoryPhotos[cat]||categoryPhotos.other;
  const source=real?safeImage(real.imageUrl,real.store):category.url;
  const caption=el('span','photo-caption',real?'Foto do anúncio':'Foto ilustrativa');
