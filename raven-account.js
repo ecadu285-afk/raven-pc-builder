@@ -153,7 +153,7 @@ export async function ravenInitAccount({ onChange } = {}) {
     if (pill) pill.textContent = signed ? 'Conta conectada · 5 vagas privadas' : 'Conta privada · até 5 PCs';
   }
 
-  loginButton?.addEventListener('click', show);
+  loginButton?.addEventListener('click', () => { if (!accountUser) setMode('login'); show(); });
   el('raClose').addEventListener('click', () => dialog.close());
   dialog.addEventListener('click', (ev) => { if (ev.target === dialog) dialog.close(); });
   el('raToggle').addEventListener('click', () => setMode(mode === 'login' ? 'signup' : 'login'));
@@ -235,9 +235,9 @@ export async function ravenInitAccount({ onChange } = {}) {
       if (event === 'PASSWORD_RECOVERY') {
         setMode('recovery');
         show();
-      } else if (event === 'SIGNED_OUT') {
-        setMode('login');
       }
+      // INITIAL_SESSION pode conter usuário nulo ao abrir a página.
+      // Não substitua a tela "Criar conta" escolhida pelo visitante.
       paint();
       // Consultas à API só depois que o callback de Auth retornar.
       queueMicrotask(() => onAccountChange());
