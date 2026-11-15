@@ -357,6 +357,20 @@
       "category": "cpu",
       "modelName": "Intel Core i7-7700",
       "title": "Intel Core i7-7700"
+    },
+    {
+      "partId": "r30-cpu-amd-ryzen-3-4100",
+      "store": "shopee",
+      "price": 341.55,
+      "checkedAt": "2026-11-14",
+      "url": "https://s.shopee.com.br/30pXhZTTtK",
+      "condition": "new",
+      "affiliate": true,
+      "category": "cpu",
+      "modelName": "AMD Ryzen 3 4100",
+      "title": "Processador AMD Ryzen 3 4100 (4000 Series para PC)",
+      "imageUrl": "https://cf.shopee.com.br/file/br-11134201-820ma-muoi0ad7hs7448",
+      "priceCondition": "pix"
     }
   ],
   "history": [
