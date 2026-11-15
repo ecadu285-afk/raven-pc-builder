@@ -427,6 +427,18 @@
       "title": "Processador Amd Ryzen 7 5700x3d Oem 4.1ghz 8 Núcleos 16 Th",
       "imageUrl": "https://cf.shopee.com.br/file/br-11134207-820ll-mvf3nbfqq5fn98",
       "priceCondition": "pix"
+    },
+    {
+      "partId": "r32-cpu-intel-core-i3-3220",
+      "store": "shopee",
+      "price": 49.99,
+      "checkedAt": "2026-11-14",
+      "url": "https://s.shopee.com.br/8Kr5IZbg4K",
+      "condition": "new",
+      "affiliate": true,
+      "category": "cpu",
+      "modelName": "Intel Core i3-3220",
+      "title": "Intel Core i3-3220"
     }
   ],
   "history": [
