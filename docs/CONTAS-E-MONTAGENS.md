@@ -2,7 +2,7 @@
 
 A nova versão usa Supabase Auth + Postgres com Row Level Security (RLS). O GitHub Pages continua hospedando o site e o Raven Market Bot continua cuidando de peças/ofertas; não há servidor de senhas no Pages.
 
-## Para ativar
+## Configuração inicial (já executada neste projeto)
 
 1. Acesse https://supabase.com/dashboard e crie um projeto Supabase controlado pela Raven Creatives Studios.
 2. No painel do Supabase, abra **SQL Editor** e execute o arquivo `supabase/raven_saved_builds.sql` deste repositório. Verifique se a tabela e as três políticas RLS foram criadas.
@@ -21,7 +21,7 @@ A nova versão usa Supabase Auth + Postgres com Row Level Security (RLS). O GitH
 - Importar, sob ação explícita do usuário, até as vagas disponíveis de montagens antigas salvas neste navegador. A garagem antiga não é apagada automaticamente.
 - Continuar montando e compartilhando um PC sem entrar; salvar na conta requer login.
 
-### Testes obrigatórios antes de publicar
+### Testes de aceitação restantes
 
 1. Crie duas contas distintas (A e B). Salve uma montagem em A e confirme que B não consegue listá-la ou excluí-la.
 2. Salve cinco montagens em A. Tente salvar a sexta pelo site e por chamada direta à API com o token de A; ambos devem falhar. Depois exclua uma e salve outra.
@@ -35,4 +35,14 @@ A nova versão usa Supabase Auth + Postgres com Row Level Security (RLS). O GitH
 
 O GitHub Pages não hospeda senhas. O Supabase Auth as administra. A tabela `public.raven_saved_builds` só concede `select`, `insert` e `delete` aos usuários autenticados, protegida por políticas que comparam `auth.uid()` com `user_id`. Um trigger no Postgres impõe o limite de cinco inserções por usuário.
 
-Contas e banco **não estarão funcionais** enquanto os passos 1–5 não forem aplicados. A interface deve informar que o cadastro ainda não está ativado. Não publique como recurso pronto antes dos testes.
+As configurações do banco, da chave pública e do SMTP foram aplicadas. Ainda é necessária a validação funcional com usuários reais e verificação do deployment.
+
+## Implantação (15/11/2026)
+
+- A atualização #8 foi integrada à branch `main` em 15/11/2026.
+- O projeto Supabase está vinculado ao JavaScript público apenas com chave publishable.
+- Migração, RLS e limite de cinco montagens já foram instalados e verificados no Supabase.
+- A equipe confirmou o recebimento de um convite de teste por e-mail após configurar Resend SMTP e a verificação do domínio.
+- A Site URL e Redirect URL do Supabase foram configuradas para o endereço do GitHub Pages informado.
+- **Ainda não foram feitos testes de ponta a ponta do cadastro a partir da interface pública, confirmação de e-mail, isolamento de duas contas reais e limite de cinco via navegador.** Devem ser concluídos antes de uma campanha ou divulgação ampla. A publicação em `main` não equivale a uma verificação funcional do deploy do GitHub Pages.
+- O Security Advisor apontou aviso sobre proteção de senhas vazadas desativada; revisar disponibilidade/configuração antes do lançamento amplo.
