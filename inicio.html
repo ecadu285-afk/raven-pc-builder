@@ -6,30 +6,27 @@
 <meta name="description" content="Monte seu PC em 3D, aprenda o básico, encontre peças e descubra upgrades. Tudo em um só lugar, sem complicação.">
 <title>Raven PC Builder | Monte, aprenda e encontre suas peças</title>
 <link rel="stylesheet" href="storefront.css?v=71">
-<link rel="stylesheet" href="home-simple.css?v=9">
+<link rel="stylesheet" href="home-simple.css?v=9"><link rel="stylesheet" href="raven-market.css?v=1"><link rel="stylesheet" href="raven-account.css?v=1">
 </head>
 <body class="home-v8">
 <a href="#conteudo" class="skip-link" style="position:absolute;left:-9999px;top:0" onfocus="this.style.left='12px';this.style.zIndex='1000';this.style.background='white'" onblur="this.style.left='-9999px'">Pular para o conteúdo</a>
-<header class="site-header">
-<div class="shell header-main">
-<a class="site-logo" href="inicio.html" aria-label="Raven PC Builder — início"><span class="logo-mark">R.</span><span class="logo-type">RAVEN PC<small>BUILDER • HARDWARE</small></span></a>
-<nav class="home-links" aria-label="Menu principal">
-<a href="index.html">Montador 3D</a>
-<a href="index.html?conta=cadastro">Criar conta</a>
-<a href="produtos.html">Peças</a>
-<a href="aprender.html">Guia básico</a>
-<details class="more-menu"><summary aria-label="Abrir outras páginas">Menu</summary><div class="more-links">
-<a href="index.html">Montar PC em 3D</a>
-<a href="index.html?conta=cadastro">Cadastrar e salvar meus PCs</a>
-<a href="produtos.html">Comprar componentes</a>
-<a href="aprender.html">Aprender sobre PC</a>
-<a href="meu-pc.html">Melhorar meu PC</a>
-<a href="orcamento.html">Montar pelo orçamento</a>
-<a href="pcs-montados.html">PCs montados</a>
-<a href="servicos.html">Conhecer o projeto</a>
-</div></details>
+<header class="site-header market-header">
+<div class="shell market-header-main">
+<a class="site-logo" href="inicio.html" aria-label="Raven PC Builder, início"><span class="logo-mark">R.</span><span class="logo-type">RAVEN PC<small>BUILDER • HARDWARE</small></span></a>
+<form class="market-search" action="produtos.html" method="get" role="search">
+<input type="search" name="q" placeholder="Buscar processadores, SSDs, placas de vídeo..." aria-label="Buscar produtos" required>
+<button type="submit">Buscar</button></form>
+<nav class="market-top-tools" aria-label="Sua conta e suas listas">
+<button type="button" id="accountOpen">Minha conta</button>
+<a href="minha-conta.html#salvos">♡ Salvos <span class="market-header-count" data-market-count="saved">0</span></a>
+<a href="minha-conta.html#carrinho">Carrinho <span class="market-header-count" data-market-count="cart">0</span></a>
+<a class="market-tool-optional" href="minha-conta.html#compras">Compras</a>
 </nav>
 </div>
+<div class="market-nav-strip"><nav class="shell" aria-label="Navegação principal">
+<a href="inicio.html">Início</a><a href="index.html">Montador 3D</a><a href="produtos.html">Peças</a><a href="pcs-montados.html">PCs montados</a><a href="aprender.html">Raven Academy</a>
+<a class="market-cep-chip" href="minha-conta.html#endereco" data-market-cep>Informe seu CEP</a>
+</nav></div>
 </header>
 <main id="conteudo">
 <section class="shell start-area" aria-labelledby="start-title">
@@ -60,6 +57,7 @@
 <a class="step-link" href="meu-pc.html"><span class="step-icon" aria-hidden="true">+</span><strong>Melhorar meu PC</strong><p>Descubra o que avaliar antes de fazer um upgrade.</p><span class="go">Planejar upgrade ›</span></a>
 </div>
 </section>
+<section class="shell market-offers-section" aria-labelledby="market-featured-title"><div class="section-top"><h2 id="market-featured-title">Peças em destaque</h2><a href="produtos.html">Ver catálogo completo</a></div><div class="cards" id="home-deals"><p class="market-empty">Carregando as ofertas cadastradas...</p></div><p class="market-hero-quick">Preços e disponibilidade devem ser confirmados nas lojas parceiras. A Raven não recebe pagamentos.</p></section>
 <section class="shell alternatives" aria-label="Mais duas formas de começar">
 <div class="alternative-box">
 <div><strong>Prefere comprar pronto ou definir um valor?</strong><p>Duas opções rápidas, sem misturar com as peças avulsas.</p></div>
@@ -72,5 +70,6 @@
 <nav aria-label="Informações do projeto"><a href="servicos.html">Sobre o projeto</a><a href="afiliados.html">Afiliados</a><a href="privacidade.html">Privacidade</a><a href="creditos-imagens.html">Créditos</a></nav>
 </div></footer>
 <script type="module">if(window.matchMedia('(min-width: 751px)').matches){import('./hero-3d.js?v=8').catch(()=>{});}</script>
+<script type="module" src="storefront-shop.js?v=82"></script>
 </body>
 </html>
