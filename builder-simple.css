@@ -1,0 +1,108 @@
+/* Raven Builder 8.1 — o 3D e a escolha de peças primeiro.
+   Ferramentas originais continuam no DOM, recolhidas por <details>. */
+.builder-v8.app{display:block;min-height:100vh;background:#0c0d18}
+.builder-v8 .sidebar{position:sticky;top:0;height:auto;display:flex;flex-direction:row;align-items:center;justify-content:space-between;padding:10px clamp(14px,3vw,36px);gap:15px;z-index:35;background:#171229;border-bottom:1px solid #4c3b6d;overflow:visible;box-shadow:0 9px 20px #0002}
+.builder-v8 .sidebar .brand{flex:0 0 auto;font-size:13px;letter-spacing:.02em}
+.builder-v8 .sidebar .mark{height:38px;width:38px;border-radius:9px;background:#ff8439;color:#211128;border-color:#ff8439;font-size:20px}
+.builder-v8 .sidebar .brand small{font-size:9px;color:#c0afd7;letter-spacing:.1em}
+.builder-v8 .sidebar .builder-headlinks{display:flex;gap:8px;align-items:center}
+.builder-v8 .sidebar .builder-headlinks a{padding:10px 12px;text-decoration:none;color:#e4d5ff;border:1px solid transparent;border-radius:9px;font-size:12px;font-weight:800;white-space:nowrap}
+.builder-v8 .sidebar .builder-headlinks a:hover{border-color:#a58aff;background:#34254e}
+.builder-v8 .sidebar .builder-headlinks .builder-link-highlight{background:#6d43df;color:#fff}
+.builder-v8 main{max-width:1390px;padding:0 clamp(13px,2.8vw,36px)}
+.builder-v8 .topbar{height:49px;border-bottom:1px solid #302840;letter-spacing:0;display:flex;justify-content:space-between}
+.builder-v8 .topbar .backlink{color:#c9b2f4;text-decoration:none;font-size:12px;font-weight:800}
+.builder-v8 .topbar .backlink:hover{color:#fff}
+.builder-v8 .topbar .status{font-size:10px}
+.builder-v8 .topbar .ghost{font-size:11px;padding:7px 11px}
+.builder-v8 .heading{padding:21px 0 17px;align-items:center}
+.builder-v8 .heading h1{font-size:clamp(27px,3.25vw,41px);letter-spacing:-.045em;margin:0 0 7px}
+.builder-v8 .heading p{max-width:650px;font-size:13px;line-height:1.55}
+.builder-v8 .heading .counter strong{font-size:23px}
+.builder-v8 .heading .counter small{color:#afa7c2;font-size:10px;letter-spacing:.035em}
+.builder-v8 .builder-steps{border:1px solid #4a3a66;background:#171222;border-radius:12px;padding:10px 12px;margin:0 0 16px}
+.builder-v8 .builder-steps-head{font-size:11px;color:#cfbfeb;margin:1px 0 7px;font-weight:850}
+.builder-v8 #steps{display:flex!important;flex-wrap:nowrap;overflow-x:auto;gap:6px;scrollbar-width:thin;scrollbar-color:#6e5298 transparent;padding-bottom:3px}
+.builder-v8 #steps .step{width:auto;min-width:110px;flex:1 0 auto;min-height:42px;display:inline-flex;margin:0;padding:7px 9px;gap:6px;border:1px solid #3d304f;background:#100e1a;white-space:nowrap;flex-direction:row}
+.builder-v8 #steps .step span:last-child{font-size:11px}
+.builder-v8 #steps .step-num{width:24px;min-width:24px;height:24px}
+.builder-v8 #steps .step.active{background:#362456;border-color:#aa83fb;color:#fff}
+.builder-v8 #steps .step.done{background:#19291f}
+.builder-v8 .workspace{display:grid;grid-template-columns:minmax(0,1.15fr) minmax(300px,.85fr);gap:13px}
+.builder-v8 .viewport,.builder-v8 .config{border-radius:15px;border-color:#504165;min-height:0}
+.builder-v8 .viewport{min-height:490px;box-shadow:none}
+.builder-v8 #scene{min-height:350px;flex:1}
+.builder-v8 .viewport-top{padding:12px 15px;font-size:11px}
+.builder-v8 .viewport-top small,.builder-v8 .view-badge{display:none}
+.builder-v8 .view-bottom{padding:10px 13px;display:flex;align-items:center;justify-content:space-between;gap:12px;font-size:10px}
+.builder-v8 .builder-view-tools{margin-left:auto;position:relative}
+.builder-v8 .builder-view-tools>summary,.builder-v8 .builder-filter-tools>summary{list-style:none;cursor:pointer;display:inline-flex;align-items:center;justify-content:center;border:1px solid #63517a;border-radius:8px;padding:8px 11px;color:#ede1ff;font-size:11px;font-weight:850;white-space:nowrap}
+.builder-v8 .builder-view-tools>summary::-webkit-details-marker,.builder-v8 .builder-filter-tools>summary::-webkit-details-marker{display:none}
+.builder-v8 .builder-view-tools[open]>summary,.builder-v8 .builder-filter-tools[open]>summary{background:#382952}
+.builder-v8 .builder-view-tools .view-actions{display:flex;flex-wrap:wrap;gap:6px;justify-content:flex-end;padding-top:9px}
+.builder-v8 .builder-view-tools[open]{max-width:100%}
+.builder-v8 .builder-view-tools .view-actions .ghost{font-size:11px}
+.builder-v8 .config{padding:17px;min-width:0}
+.builder-v8 .config h2{font-size:23px;margin:3px 0}
+.builder-v8 .config-head p{margin-bottom:14px;font-size:12px}
+.builder-v8 .toolbar{display:grid;grid-template-columns:minmax(0,1fr) auto;gap:8px;align-items:start;margin-bottom:12px}
+.builder-v8 .toolbar input[type=search]{min-width:0;flex:none;width:100%;height:42px;margin:0;font-size:12px}
+.builder-v8 .builder-filter-tools{min-width:0;position:relative}
+.builder-v8 .builder-filter-tools>summary{height:42px}
+.builder-v8 .builder-filter-row{display:flex;gap:9px;flex-wrap:wrap;align-items:center;margin:10px 0 0}
+.builder-v8 .builder-filter-row select{flex:1;min-width:110px}
+.builder-v8 .options{max-height:380px}
+.builder-v8 .option{min-height:60px;padding:11px}
+.builder-v8 .option-desc{font-size:11px}
+.builder-v8 .step-actions{padding-top:14px}
+.builder-v8 .bottom{padding-top:15px}
+.builder-v8 .summary{gap:15px;align-items:center;padding:17px;border-color:#4b3d64}
+.builder-v8 .summary h3{font-size:18px}
+.builder-v8 .summary .summary-actions>div strong{font-size:22px}
+.builder-v8 .builder-share-tools{position:relative}
+.builder-v8 .builder-share-tools>summary{cursor:pointer;color:#e2d4f9;font-size:11px;font-weight:850;padding:9px 11px;border:1px solid #5d4a74;border-radius:9px}
+.builder-v8 .builder-share-tools .share-buttons{display:flex;flex-wrap:wrap;gap:7px;margin:10px 0}
+.builder-v8 .builder-share-tools .share-buttons button{font-size:11px;padding:9px}
+.builder-v8 .builder-advanced,.builder-v8 .builder-diagnostics{margin:14px 0;border:1px solid #443557;border-radius:13px;overflow:hidden;background:#171321}
+.builder-v8 .builder-advanced>summary,.builder-v8 .builder-diagnostics>summary{padding:14px 17px;cursor:pointer;color:#e8def6;font-size:13px;font-weight:850}
+.builder-v8 .builder-advanced>summary::marker,.builder-v8 .builder-diagnostics>summary::marker{color:#b48eff}
+.builder-v8 .builder-advanced-body{padding:0 12px 13px}
+.builder-v8 .builder-advanced .budget{margin:0 0 12px}
+.builder-v8 .builder-advanced .next-hub{margin:0}
+.builder-v8 .builder-diagnostics .diagnostics{margin:0;border:0;border-radius:0}
+.builder-v8 .site-footer{margin-top:14px;padding:14px 0;letter-spacing:0;gap:10px}
+.builder-v8 .site-footer nav{gap:13px}
+.builder-v8 .site-footer nav a{font-size:11px}
+.builder-v8 .note{line-height:1.5;color:#b3acbc}
+@media(max-width:1000px){.builder-v8 .workspace{grid-template-columns:1fr}.builder-v8 .viewport{min-height:360px}.builder-v8 #scene{min-height:330px}.builder-v8 .builder-steps{padding:9px}}
+@media(max-width:650px){
+ .builder-v8 .sidebar{padding:10px 12px}
+ .builder-v8 .sidebar .brand small{display:none}
+ .builder-v8 .sidebar .brand{font-size:11px}
+ .builder-v8 .sidebar .mark{height:33px;width:33px;font-size:18px}
+ .builder-v8 .sidebar .builder-headlinks a{font-size:10px;padding:8px 7px}
+ .builder-v8 .sidebar .builder-headlinks a:nth-child(3){display:none}
+ .builder-v8 main{padding:0 12px}
+ .builder-v8 .topbar{height:43px}
+ .builder-v8 .heading{padding:15px 0 12px}
+ .builder-v8 .heading h1{font-size:28px}
+ .builder-v8 .heading p{font-size:12px;max-width:100%}
+ .builder-v8 .heading .counter{display:flex;align-items:center;gap:8px;margin-top:9px;text-align:left}
+ .builder-v8 .heading .counter strong{font-size:20px}
+ .builder-v8 .heading .counter small{font-size:10px}
+ .builder-v8 .builder-steps{margin-bottom:11px}
+ .builder-v8 #steps .step{min-width:106px;flex:0 0 auto}
+ .builder-v8 .viewport{min-height:290px}
+ .builder-v8 #scene{min-height:235px}
+ .builder-v8 .viewport-top{padding:8px 11px}
+ .builder-v8 .view-bottom{padding:8px;flex-wrap:wrap}
+ .builder-v8 .config{padding:13px;min-height:0}
+ .builder-v8 .options{max-height:330px}
+ .builder-v8 .option{padding:10px}
+ .builder-v8 .summary{flex-direction:column;align-items:stretch}
+ .builder-v8 .summary-actions{width:100%;justify-content:space-between;gap:12px}
+ .builder-v8 .summary-actions>div{text-align:left}
+ .builder-v8 .step-actions{margin-top:4px}
+}
+@media(max-width:390px){.builder-v8 .sidebar .builder-headlinks a:nth-child(2){display:none}.builder-v8 .heading h1{font-size:25px}}
+@media(prefers-reduced-motion:reduce){.builder-v8 .option:hover{transform:none}}
