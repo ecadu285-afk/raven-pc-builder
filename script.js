@@ -1,5 +1,5 @@
 import {evaluateCompatibility,memoryConflicts} from './compatibility.js';
-import {ravenInitAccount,ravenGetAccount,ravenOpenAccount,ravenAccountConfigured,ravenListBuilds,ravenSaveBuild,ravenDeleteBuild} from './raven-account.js';
+import {ravenInitAccount,ravenGetAccount,ravenOpenAccount,ravenAccountConfigured,ravenListBuilds,ravenSaveBuild,ravenDeleteBuild} from './raven-account.js?v=2';
 import {catalog} from './catalog.js';
 const groups=[
  {id:'case',name:'Gabinete',icon:'▣',desc:'Escolha a estrutura e o visual da sua máquina.',options:[{id:'case1',name:'Raven Noir M-ATX',desc:'Preto fosco · vidro lateral · micro-ATX',price:320,form:'mATX',gpuMaxMm:300},{id:'case2',name:'Raven Obsidian ATX',desc:'Preto fosco · vidro lateral · ATX',price:490,form:'ATX',gpuMaxMm:360}]},
