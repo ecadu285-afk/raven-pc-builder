@@ -1,5 +1,4 @@
 import {catalog} from './catalog.js';
-import {categoryPhotos} from './product-photos.js';
 const known=new Map(Object.entries(catalog).flatMap(([category,items])=>items.map(item=>[item.id,{...item,category}])));
 const labels={cpu:'Processadores',board:'Placas-mãe',gpu:'Placas de vídeo',ram:'Memórias RAM',ssd:'SSDs',hdd:'HDs',psu:'Fontes',case:'Gabinetes',cooler:'Coolers',other:'Outras peças'};
 const glyphs={cpu:'CPU',board:'MB',gpu:'GPU',ram:'RAM',ssd:'SSD',hdd:'HD',psu:'PSU',case:'PC',cooler:'FAN',other:'PC'};
@@ -58,46 +57,44 @@ function imageFor(offer){
  }catch{return null}
 }
 function photoForGroup(item){
- // A menor oferta nem sempre possui imagem. Procura foto de outro anúncio do mesmo modelo.
+ // Fotos somente de anúncios do MESMO grupo de modelo e condição.
  for(const offer of item.items){
-   if(/\b(?:PC\s+gamer|computador\s+completo|gabinete\s+c\/)/i.test(offer.title||'')&&item.type==='cpu')continue;
+   if(item.type==='cpu' && /\b(?:pc\s*gamer|computador\s*completo)\b/i.test(offer.title||''))continue;
    const url=imageFor(offer);
-   if(url)return {url,illustrative:false};
+   if(url)return {url,offer};
  }
- const url=categoryPhotos[item.type]?.url||categoryPhotos.other.url;
- return {url,illustrative:true};
+ return null;
 }
-function categoryPhotosInNav(){
- for(const a of document.querySelectorAll('.cat-card')){
-  const key=new URL(a.href).searchParams.get('categoria');
-  const photo=categoryPhotos[key];
-  const frame=a.querySelector('.cat-symbol');
-  if(!frame||!photo||frame.querySelector('img'))continue;
-  const alt=frame.textContent;
-  frame.replaceChildren();
-  const img=document.createElement('img');img.loading='lazy';img.decoding='async';
-  img.src=photo.url;img.alt='Foto ilustrativa: '+(labels[key]||alt);
-  img.onerror=()=>{frame.replaceChildren(document.createTextNode(alt));};
-  frame.append(img);
+function productPlaceholder(type){
+ const root=element('div','hardware-placeholder placeholder-'+type);
+ root.setAttribute('aria-label','Miniatura estilizada da categoria, não é imagem do modelo');
+ const object=element('span','hardware-object',glyphs[type]||'PC');
+ object.setAttribute('aria-hidden','true');
+ root.append(object);
+ return root;
+}
+function categorySymbols(){
+ // Remover qualquer fotografia genérica previamente inserida em categorias.
+ for(const link of document.querySelectorAll('.cat-card')){
+   const frame=link.querySelector('.cat-symbol');
+   const key=new URL(link.href).searchParams.get('categoria');
+   if(!frame||!key)continue;
+   frame.replaceChildren(document.createTextNode(glyphs[key]||'PC'));
  }
 }
 function productCard(item){
  const o=item.best,article=element('article','offer-card');
  const visual=element('div','offer-visual');
  const photo=photoForGroup(item);
- const img=document.createElement('img');
- img.src=photo.url;img.loading='lazy';img.decoding='async';
- img.alt=photo.illustrative?'Foto ilustrativa de '+(labels[item.type]||'hardware'):'Imagem do anúncio do modelo '+item.model;
- let isFallback=photo.illustrative;
- img.onerror=()=>{
-   if(!isFallback){isFallback=true;img.src=categoryPhotos[item.type]?.url||categoryPhotos.other.url;
-      img.alt='Foto ilustrativa de '+(labels[item.type]||'hardware');caption.textContent='Foto ilustrativa';return;}
-   img.remove();visual.append(element('span','offer-glyph',glyphs[item.type]||'PC'));
- };
- visual.append(img);
- visual.append(element('span','offer-label',labels[item.type]||'Componente'));
- const caption=element('span','offer-photo-label',photo.illustrative?'Foto ilustrativa':'Foto do anúncio');
- visual.append(caption);
+ const caption=element('span','offer-photo-label',photo?'Foto do anúncio':'Sem foto deste modelo');
+ if(photo){
+   const img=document.createElement('img');
+   img.src=photo.url;img.loading='lazy';img.decoding='async';
+   img.alt='Foto cadastrada para '+item.model;
+   img.onerror=()=>{img.remove();visual.prepend(productPlaceholder(item.type));caption.textContent='Sem foto deste modelo';};
+   visual.append(img);
+ }else visual.append(productPlaceholder(item.type));
+ visual.append(element('span','offer-label',labels[item.type]||'Componente'),caption);
  const content=element('div','offer-info');
  const title=element('h3','',item.model);
  const store=element('div','offer-store',(item.primary.length>1?item.primary.length+' lojas · ':'')+'Menor oferta: '+shops[o.store].name+(o.condition==='used'?' · Usado':''));
@@ -151,7 +148,7 @@ async function start(){
    const data=await response.json();
    all=(Array.isArray(data.offers)?data.offers:[]).filter(valid);
    groups=grouped(all.filter(o=>!['pc','kit'].includes(category(o))));
-   categoryPhotosInNav();
+   categorySymbols();
    home();
    const search=$('catalog-search'),type=$('catalog-category'),shop=$('catalog-store'),order=$('catalog-order'),more=$('catalog-more');
    const params=new URLSearchParams(location.search);
