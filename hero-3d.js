@@ -130,7 +130,7 @@ if(host){
         p.geom.position.lerpVectors(p.assembled,p.expanded,motion);
         if(!reduced.matches)p.geom.position.y+=Math.sin(now*.0007+p.expanded.x)*.03;
       }
-      root.rotation.y+=(x + (reduced.matches?.10:.10+Math.sin(now*.00019)*.13)-root.rotation.y)*.032;
+      root.rotation.y+=(x + (reduced.matches ? .10 : (.10+Math.sin(now*.00019)*.13))-root.rotation.y)*.032;
       root.rotation.x+=(-.12+y-root.rotation.x)*.032;
       if(!reduced.matches)root.position.y=Math.sin(now*.00064)*.075;
       if(!reduced.matches)fan1.rotation.z=now*.00045;
