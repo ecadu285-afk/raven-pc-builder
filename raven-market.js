@@ -95,6 +95,12 @@ export async function ravenMarketSetCep(raw){
  currentCep=digits;repaint();
  return digits;
 }
+export async function ravenMarketClearCep(){
+ const {client,id}=requireLogin();
+ const {error}=await client.from(tables.profile).delete().eq('user_id',id);
+ if(error)throw Error(informativeError(error));
+ currentCep='';repaint();
+}
 export async function ravenMarketReviews(key){
  const client=ravenGetSupabaseClient();if(!client)return [];
  const {data,error}=await client.from(tables.reviews)
