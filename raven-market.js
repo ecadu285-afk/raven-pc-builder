@@ -50,8 +50,8 @@ export async function ravenMarketRefresh(){
   if(items.error)throw items.error;
   if(profile.error)throw profile.error;
   const data=items.data;
-  currentCep=profile.data?.cep||'';
   if(loadingAccountId!==currentId||ravenGetAccount()?.id!==currentId)return;
+  currentCep=profile.data?.cep||'';
   for(const x of data||[]) if(records[x.list_type])records[x.list_type].add(x.product_key);
  }catch(err){console.warn('Raven Market: não foi possível carregar listas',err);}
  if(loadingAccountId===currentId)repaint();
