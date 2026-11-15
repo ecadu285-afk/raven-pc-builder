@@ -56,3 +56,16 @@ main{min-height:55vh}
 @media(max-width:740px){.shell{padding:0 15px}.utility-bar .shell span:last-child{display:none}.header-main{flex-wrap:wrap;gap:13px;padding-top:11px;padding-bottom:12px}.site-logo{min-width:0}.site-search{flex-basis:100%;order:3;max-width:none}.site-nav{position:relative}.hero{grid-template-columns:1fr}.hero-copy{padding:30px 27px 6px}.hero h1{font-size:40px}.hero3d{height:290px}.hero-small{margin-top:10px}.perks{grid-template-columns:1fr}.categories{grid-template-columns:repeat(4,1fr)}.promo-grid{grid-template-columns:1fr}.cards{grid-template-columns:repeat(2,minmax(0,1fr))}.footer-inner{grid-template-columns:1fr 1fr}.catalog-intro{padding-top:23px}}
 @media(max-width:430px){.hero h1{font-size:36px}.categories{grid-template-columns:repeat(2,1fr)}.cards{grid-template-columns:repeat(2,minmax(0,1fr));gap:9px}.offer-visual{height:124px}.offer-info{padding:12px 10px}.offer-price{font-size:20px}.offer-card .offer-link{padding:9px 4px}.catalog-toolbar{grid-template-columns:1fr}.footer-inner{grid-template-columns:1fr}.section{padding-top:30px}}
 @media(prefers-reduced-motion:reduce){html{scroll-behavior:auto}.btn,.cat-card,.offer-card{transition:none}}
+
+/* RAVEN 7.1 — Fotos de componentes, prioridade às imagens reais dos anúncios. */
+.cat-symbol{height:72px;width:83px;background:#fff;border:1px solid #ebebf2;box-shadow:0 4px 12px #1b163015;overflow:hidden;position:relative}
+.cat-symbol:has(img)::after{display:none}
+.cat-symbol img{width:100%;height:100%;max-width:100%;object-fit:contain;padding:5px;background:#fff;display:block}
+.cat-card{min-height:145px;padding:13px 8px;gap:8px}
+.offer-visual{height:188px;background:#fff}
+.offer-visual img{object-fit:contain;width:100%;height:100%;padding:12px 18px 22px;background:#fff;transition:transform .24s ease}
+.offer-card:hover .offer-visual img{transform:scale(1.035)}
+.offer-photo-label{position:absolute;right:8px;bottom:7px;border-radius:5px;padding:3px 5px;background:#f4f3f8dd;color:#626377;font-size:9px;font-weight:700;line-height:1.2}
+.offer-visual:has(img) .offer-glyph{display:none}
+@media(max-width:430px){.cat-symbol{width:84px;height:74px}.cat-card{min-height:145px}.offer-visual{height:155px}.offer-visual img{padding:9px 9px 18px}}
+@media(prefers-reduced-motion:reduce){.offer-visual img{transition:none!important}.offer-card:hover .offer-visual img{transform:none!important}}
