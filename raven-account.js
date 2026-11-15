@@ -219,8 +219,12 @@ export async function ravenInitAccount({ onChange } = {}) {
   configured = ravenAccountConfigured();
   paint();
   const accountLinkMode = new URLSearchParams(location.search).get('conta');
-  if (accountLinkMode === 'cadastro') { setMode('signup'); show(); }
-  else if (accountLinkMode === '1') show();
+  // A tela premium de primeira visita recebe os links ?conta=...
+  // Não abra um segundo modal de login por cima dela.
+  if (!document.getElementById('raven-entry')) {
+    if (accountLinkMode === 'cadastro') { setMode('signup'); show(); }
+    else if (accountLinkMode === '1') show();
+  }
   if (!configured) {
     setMessage('Cadastro em preparação: falta conectar o serviço de contas e aplicar as regras do banco de dados.', true);
     onAccountChange();
