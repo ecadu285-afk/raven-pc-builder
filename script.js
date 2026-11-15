@@ -766,13 +766,16 @@ function ravenGarageRender(){
  }
 }
 async function ravenRefreshGarage(){
- if(!ravenGetAccount()){ravenCloudBuilds=[];ravenGarageRender();return}
+ const accountId=ravenGetAccount()?.id;
+ if(!accountId){ravenCloudBuilds=[];ravenGarageRender();return}
  try{
-  ravenCloudBuilds=await ravenListBuilds();
-  // Conta trocada durante a consulta: não exiba dados antigos.
-  if(!ravenGetAccount()){ravenCloudBuilds=[];}
+  const builds=await ravenListBuilds();
+  // Impede que uma consulta da conta antiga apareça após trocar de usuário.
+  if(ravenGetAccount()?.id!==accountId)return;
+  ravenCloudBuilds=builds;
   ravenGarageRender();
  }catch(err){
+  if(ravenGetAccount()?.id!==accountId)return;
   ravenCloudBuilds=[];ravenGarageRender();
   ravenGarageNotice(err.message||'Não foi possível carregar suas montagens.');
  }
