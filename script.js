@@ -754,6 +754,9 @@ function ravenGarageRender(){
   const actions=document.createElement('div');actions.className='next-inline';
   const load=document.createElement('button');load.type='button';load.className='primary';
   load.textContent='Carregar';load.onclick=()=>ravenSetBuild(entry.parts||{});
+  const buy=document.createElement('button');buy.type='button';buy.className='ghost';
+  buy.textContent='Lista de compras';
+  buy.onclick=()=>{ravenSetBuild(entry.parts||{});ravenCopyShopping();};
   const del=document.createElement('button');del.type='button';del.className='ghost';del.textContent='Excluir';
   del.onclick=async()=>{
    if(ravenGarageBusy||!confirm('Excluir esta montagem da sua conta?'))return;
@@ -762,7 +765,7 @@ function ravenGarageRender(){
    catch(err){ravenGarageNotice(err.message||'Não foi possível excluir.');}
    finally{ravenGarageBusy=false;del.disabled=false;}
   };
-  actions.append(load,del);card.append(label,actions);ravenGarageEl.append(card);
+  actions.append(load,buy,del);card.append(label,actions);ravenGarageEl.append(card);
  }
 }
 async function ravenRefreshGarage(){
