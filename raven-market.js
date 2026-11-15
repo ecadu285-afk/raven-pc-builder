@@ -7,6 +7,7 @@ const records = { saved:new Set(), cart:new Set() };
 let syncHandler = () => {};
 let initialized = false;
 let loadingAccountId = null;
+let currentCep = '';
 
 export const ravenMarketUser = () => ravenGetAccount();
 export const ravenMarketSaved = (kind,key) => Boolean(records[kind]?.has(key));
@@ -27,21 +28,29 @@ function informativeError(err){
 function repaint(){
  const user=ravenGetAccount();
  const acc=document.getElementById('marketWelcome');
+ for(const n of document.querySelectorAll('[data-market-cep]'))n.textContent=currentCep?'CEP '+currentCep.slice(0,5)+'-'+currentCep.slice(5):'Informe seu CEP';
  if(acc)acc.textContent=user ? 'Olá, '+(user.user_metadata?.full_name||user.email?.split('@')[0]||'cliente Raven') : 'Entre ou crie sua conta';
  for(const kind of ['saved','cart']){
   for(const node of document.querySelectorAll('[data-market-count="'+kind+'"]'))node.textContent=String(records[kind].size);
  }
  syncHandler();
+ window.dispatchEvent(new CustomEvent('raven-market-update'));
 }
 export async function ravenMarketRefresh(){
  const currentId=ravenGetAccount()?.id;
  loadingAccountId=currentId||null;
- records.saved.clear();records.cart.clear();
+ records.saved.clear();records.cart.clear();currentCep='';
  if(!currentId){repaint();return}
  try{
   const {client}=requireLogin();
-  const {data,error}=await client.from(tables.items).select('product_key,list_type').eq('user_id',currentId).limit(500);
-  if(error)throw error;
+  const [items,profile]=await Promise.all([
+    client.from(tables.items).select('product_key,list_type').eq('user_id',currentId).limit(500),
+    client.from(tables.profile).select('cep').eq('user_id',currentId).maybeSingle()
+  ]);
+  if(items.error)throw items.error;
+  if(profile.error)throw profile.error;
+  const data=items.data;
+  currentCep=profile.data?.cep||'';
   if(loadingAccountId!==currentId||ravenGetAccount()?.id!==currentId)return;
   for(const x of data||[]) if(records[x.list_type])records[x.list_type].add(x.product_key);
  }catch(err){console.warn('Raven Market: não foi possível carregar listas',err);}
@@ -83,6 +92,7 @@ export async function ravenMarketSetCep(raw){
  ? await client.from(tables.profile).update({cep:digits}).eq('user_id',id)
  : await client.from(tables.profile).insert({user_id:id,cep:digits});
  if(result.error)throw Error(informativeError(result.error));
+ currentCep=digits;repaint();
  return digits;
 }
 export async function ravenMarketReviews(key){
