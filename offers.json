@@ -225,6 +225,18 @@
       "category": "cpu",
       "modelName": "AMD Ryzen 5 4500",
       "title": "AMD Ryzen 5 4500"
+    },
+    {
+      "partId": "r32-cpu-intel-core-i5-4570",
+      "store": "shopee",
+      "price": 214.68,
+      "checkedAt": "2026-11-14",
+      "url": "https://s.shopee.com.br/9AQCQ8mvQp",
+      "condition": "new",
+      "affiliate": true,
+      "category": "cpu",
+      "modelName": "Intel Core i5-4570",
+      "title": "Intel Core i5-4570"
     }
   ],
   "history": [
