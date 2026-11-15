@@ -333,6 +333,18 @@
       "category": "hdd",
       "modelName": "HD SATA 3.5 500GB",
       "title": "HD SATA 3.5 500GB"
+    },
+    {
+      "partId": "r30-cpu-amd-ryzen-5-7600x",
+      "store": "shopee",
+      "price": 936.84,
+      "checkedAt": "2026-11-14",
+      "url": "https://s.shopee.com.br/AKc9qKkK7Z",
+      "condition": "new",
+      "affiliate": true,
+      "category": "cpu",
+      "modelName": "AMD Ryzen 5 7600X",
+      "title": "AMD Ryzen 5 7600X"
     }
   ],
   "history": [
