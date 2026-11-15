@@ -28,12 +28,14 @@ function fitName(type,name){
 const budgetDays=(value,now)=>{const t=Date.parse(String(value||'')+'T00:00:00Z');return Number.isFinite(t)?Math.floor((now-t)/86400000):Infinity;};
 function withSpecs(o,now,maxAge){
  if(!o||!Number.isFinite(o.price)||o.price<=0||!o.url||!o.partId||!o.store)return null;
+ const allowed={amazon:['amazon.com.br','amazon.com','amzn.to','link.amazon'],mercadolivre:['mercadolivre.com.br','mercadolivre.com','meli.la'],shopee:['shopee.com.br','shopee.com','shope.ee']};
+ try{const u=new URL(o.url);if(u.protocol!=='https:'||u.username||u.password||!allowed[o.store]?.some(d=>u.hostname===d||u.hostname.endsWith('.'+d)))return null;}catch{return null}
  const age=budgetDays(o.checkedAt,now);if(age<0||age>maxAge)return null;
  const type=o.category||Object.entries(CATALOG).find(([,map])=>map.has(o.partId))?.[0];
  if(!['cpu','board','ram','ssd','hdd','gpu','psu','case','cooler'].includes(type))return null;
  const productName=o.modelName||o.title||'';if(!productName||!/https:\/\//.test(o.url))return null;
  // Impedir que anúncios de PCs completos vendidos como CPU contaminem o orçamento.
- if(type==='cpu'&&(/\bcpu gamer\b/i.test(o.title||'')&&/\bgabinete\b/i.test(o.title||'')))return null;
+ if(type==='cpu'&&/\b(?:gabinete|pc completo|pc gamer|computador completo)\b/i.test(o.title||'')&&!/\b(?:sem gabinete|somente cpu)\b/i.test(o.title||''))return null;
  let p=CATALOG[type]?.get(o.partId)||fitName(type,productName);
  if(p)p={...p};
  else if(type==='board'&&BOARD_MANUAL[o.partId])p={id:o.partId,name:productName,...BOARD_MANUAL[o.partId]};
@@ -70,7 +72,7 @@ function isKnownModernBoard(board,cpu){
  if(board.socket!==cpu.socket)return false;
  const n=String(board.name||'').toUpperCase();
  // AMD Ryzen 3200G/3400G não suportados por placas A520 e B550 modernas em geral.
- if(/\b(3200G|3400G)\b/i.test(cpu.name)&&/\b(A520|B550)\b/i.test(n))return false;
+ if(/\b(3200G|3400G)\b/i.test(cpu.name)&&/(?:^|\W)(?:A520|B550)[A-Z0-9-]*/i.test(n))return false;
  return true;
 }
 function profileScore(parts,purpose){
@@ -78,7 +80,11 @@ function profileScore(parts,purpose){
  const cpuScore=Number(cpu?.tier)||1;
  const gpuScore=Number(gpu?.tier)||(gpu?.id==='igpu'?0.8:1);
  const bonus=(ram?.gb>=16?5:ram?.gb>=8?3:0)+(/\bSSD\b/i.test(storage?.name||'')?5:0);
- return (purpose==='games'?cpuScore*15+gpuScore*35:cpuScore*28+gpuScore*10)+bonus;
+ if(purpose==='games'){
+  // Um PC gamer desbalanceado, com CPU extrema e GPU de entrada, não é bom custo-benefício.
+  return Math.min(cpuScore,gpuScore)*37+gpuScore*14+Math.min(cpuScore,3)*5+bonus-Math.max(0,cpuScore-gpuScore-1.2)*14;
+ }
+ return Math.min(cpuScore,4)*18+Math.min(gpuScore,2)*8+bonus+(cpu?.igpu?3:0);
 }
 const partsPrices=selection=>Object.values(selection).reduce((sum,x)=>sum+(x?.offer?.price||0),0);
 function validBudgetParts(parts){
@@ -92,7 +98,7 @@ function selectedVersion(pool,{budget=1000,brand='all',purpose='general',storage
  const drivePool=pool.ssd.filter(x=>storage!=='ssd'||x.originalType==='ssd').slice(0,8);
  const dedicated=pool.gpu.slice(0,9);
  const coolerPool=pool.cooler;
- let bestWithin=null,bestOutside=null;
+ let bestWithin=null,bestOutside=null,completeWithin=null,completeOutside=null;
  const choose=(candidate)=>{
    const cost=partsPrices(candidate.selected),complete=!!candidate.selected.cooler || candidate.coolerIncluded;
    const {valid,unknown,warnings}=validBudgetParts(candidate.parts);
@@ -103,7 +109,11 @@ function selectedVersion(pool,{budget=1000,brand='all',purpose='general',storage
    const within=cost<=budget;
    if(within){
      if(!bestWithin||score>bestWithin.score||(score===bestWithin.score&&cost<bestWithin.cost))bestWithin=record;
-   }else if(!bestOutside||cost<bestOutside.cost||(cost===bestOutside.cost&&score>bestOutside.score))bestOutside=record;
+     if(complete&&(!completeWithin||score>completeWithin.score||(score===completeWithin.score&&cost<completeWithin.cost)))completeWithin=record;
+   }else{
+     if(!bestOutside||cost<bestOutside.cost||(cost===bestOutside.cost&&score>bestOutside.score))bestOutside=record;
+     if(complete&&(!completeOutside||cost<completeOutside.cost||(cost===completeOutside.cost&&score>completeOutside.score)))completeOutside=record;
+   }
  };
  for(const c of cpus){
   for(const b of pool.board){
@@ -134,14 +144,14 @@ function selectedVersion(pool,{budget=1000,brand='all',purpose='general',storage
    }
   }
  }
- return {within:bestWithin,minimum:bestOutside};
+ return {within:bestWithin,minimum:bestOutside,completeWithin,completeOutside};
 }
 export function recommendBudget(offers,{budget=1000,brand='all',purpose='general',storage='any',now=Date.now(),maxAgeDays=14}={}){
  const limit=Math.max(0,Number(budget)||0),pool=availableForBudget(offers,{now,maxAgeDays});
  const searched=selectedVersion(pool,{budget:limit,brand,purpose,storage});
- const chosen=searched.within||searched.minimum;
+ const chosen=searched.completeWithin||searched.within||searched.completeOutside||searched.minimum;
  const lacking=BUILD_GROUPS.filter(([key])=>!pool[key].length).map(([,name])=>name);
  if(!pool.cpu.some(x=>brand==='all'||(brand==='intel'?/^Intel\b/i:/^AMD\b/i).test(x.part.name)))lacking.push('Processador da marca selecionada');
- return {budget:limit,brand,purpose,storage,chosen,withinBudget:!!searched.within,missingTypes:lacking,
+ return {budget:limit,brand,purpose,storage,chosen,withinBudget:!!chosen&&chosen.cost<=limit,completeQuote:!!chosen?.complete,minimumCompleteCost:searched.completeOutside?.cost||null,missingTypes:lacking,
    pricesAreLive:false,availableCounts:Object.fromEntries(Object.entries(pool).map(([key,val])=>[key,val.length]))};
 }
