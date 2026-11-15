@@ -96,3 +96,8 @@
  .home-v8 .alternative-actions a{width:100%}
 }
 @media(prefers-reduced-motion:reduce){html{scroll-behavior:auto}.home-v8 .step-link{transition:none}.home-v8 .step-link:hover{transform:none}}
+
+/* Conta Raven: botão acessível na primeira dobra, inclusive no celular */
+.home-v8 .raven-register-home{display:inline-flex;align-items:center;justify-content:center;margin-top:8px;padding:12px 15px;border-radius:11px;background:#2f2045;color:#fff;font-size:13px;font-weight:800;text-decoration:none;border:1px solid #634589;line-height:1.35}
+.home-v8 .raven-register-home:hover,.home-v8 .raven-register-home:focus-visible{background:#50336d;outline-offset:3px}
+@media(max-width:750px){.home-v8 .raven-register-home{display:flex;max-width:100%;text-align:center;min-height:44px}}
