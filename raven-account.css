@@ -1,0 +1,39 @@
+/* RAVEN PC BUILDER — conta e garagem privada */
+.raven-account-dialog{max-width:440px;width:calc(100% - 32px);max-height:min(90vh,780px);overflow-y:auto;border:1px solid #635185;border-radius:18px;background:#171329;color:#f7f1ff;padding:26px;box-shadow:0 24px 95px #000a}
+.raven-account-dialog::backdrop{background:#07040bc9;backdrop-filter:blur(4px)}
+.raven-account-dialog[open]{display:block}
+.raven-account-dialog [hidden]{display:none!important}
+.raven-account-dialog h2{font-size:1.55rem;margin:4px 32px 8px 0;color:#fff}
+.raven-account-dialog p{font-size:.9rem;line-height:1.6;color:#c6bdd7}
+.raven-account-dialog form{display:grid;gap:12px;margin-top:15px}
+.raven-account-dialog label{display:grid;gap:6px;font-size:13px;color:#e1d9f1}
+.raven-account-dialog input{width:100%;box-sizing:border-box;min-height:44px;padding:11px 13px;border-radius:10px;background:#0c0d18;border:1px solid #66547d;color:#fff;font-size:16px}
+.raven-account-dialog input:focus{outline:2px solid #fb9751;outline-offset:1px}
+.raven-account-dialog button{cursor:pointer;min-height:40px;border-radius:9px}
+.raven-account-dialog .ra-close{position:absolute;top:14px;right:16px;background:transparent;border:0;color:#fff;font-size:24px}
+.raven-account-dialog .ra-actions{display:flex;flex-wrap:wrap;gap:8px;margin-top:13px}
+.raven-account-dialog .ra-actions button{padding:9px 11px;background:transparent;border:1px solid #5f506d;color:#e6dbf5;font-size:12px}
+.raven-account-dialog .ra-primary{background:#ff8d43;color:#211329;border:0;padding:10px 18px;font-weight:800}
+.raven-account-dialog .ra-message{margin:12px 0;min-height:22px;color:#d6ffca;white-space:pre-line}
+.raven-account-dialog .ra-message[data-error="true"]{color:#ffb4ae}
+.raven-account-dialog .ra-footnote{font-size:12px;color:#b5adcb}
+.builder-v8 #accountOpen,.builder-v8 #garageOpen{white-space:nowrap}
+.builder-v8 .next-panel #garageCounter{font-size:12px;font-weight:700;color:#ffb578;margin:4px 0 12px}
+.builder-v8 .garage-entry{display:flex;gap:12px;align-items:center;justify-content:space-between;flex-wrap:wrap}
+.builder-v8 .garage-entry .next-inline{justify-content:flex-end}
+.builder-v8 .ra-garage-login{margin-top:9px}
+@media(max-width:680px){.raven-account-dialog{padding:20px}.builder-v8 #accountOpen,.builder-v8 #garageOpen{font-size:11px;padding:8px 10px}}
+
+/* Barra superior: evitar estouro no celular com conta + montagens */
+@media(max-width:700px){
+ .builder-v8 .topbar{height:auto;min-height:50px;display:flex;gap:8px;flex-wrap:wrap;padding:8px 0}
+ .builder-v8 .topbar .top-right{margin-left:auto;display:flex;flex-wrap:wrap;gap:6px;justify-content:flex-end}
+ .builder-v8 .topbar .status{display:none}
+ .builder-v8 #accountOpen,.builder-v8 #garageOpen{white-space:normal;min-height:38px;padding:7px 9px;line-height:1.2}
+}
+@media(max-width:440px){
+ .builder-v8 .topbar .backlink{display:none}
+ .builder-v8 .topbar .top-right{width:100%;justify-content:space-between}
+ .builder-v8 #garageOpen,.builder-v8 #accountOpen{flex:1 1 auto}
+ .builder-v8 .topbar #reset{padding:7px 8px;font-size:11px}
+}

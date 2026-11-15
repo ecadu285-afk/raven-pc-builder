@@ -1,4 +1,5 @@
 import {evaluateCompatibility,memoryConflicts} from './compatibility.js';
+import {ravenInitAccount,ravenGetAccount,ravenOpenAccount,ravenAccountConfigured,ravenListBuilds,ravenSaveBuild,ravenDeleteBuild} from './raven-account.js';
 import {catalog} from './catalog.js';
 const groups=[
  {id:'case',name:'Gabinete',icon:'▣',desc:'Escolha a estrutura e o visual da sua máquina.',options:[{id:'case1',name:'Raven Noir M-ATX',desc:'Preto fosco · vidro lateral · micro-ATX',price:320,form:'mATX',gpuMaxMm:300},{id:'case2',name:'Raven Obsidian ATX',desc:'Preto fosco · vidro lateral · ATX',price:490,form:'ATX',gpuMaxMm:360}]},
@@ -709,17 +710,151 @@ ravenLoadOffers();
 document.getElementById('marketShopping')?.addEventListener('click',ravenCopyShopping);
 
 
-// RAVEN 4.0 — Garagem local e Smart Build. Sem autenticação ou sincronização em nuvem.
-const RAVEN_GARAGE_KEY='raven-pc-garage-v4';
+
+/* RAVEN — garagem privada: até cinco PCs por usuário autenticado. */
 const ravenGarageEl=document.getElementById('garageList');
-function ravenReadGarage(){try{const v=JSON.parse(localStorage.getItem(RAVEN_GARAGE_KEY)||'[]');return Array.isArray(v)?v.filter(x=>x&&typeof x.name==='string'&&x.parts&&typeof x.parts==='object').slice(0,40):[]}catch{return []}}
-function ravenGarageNotice(msg){const n=document.getElementById('garageNotice');if(n)n.textContent=msg}
-function ravenSetBuild(parts){const ids=groups.map(g=>g.options.some(o=>o.id===parts[g.id])?parts[g.id]:null);applyPreset(ids);document.getElementById('raven-next')?.scrollIntoView({behavior:'smooth',block:'start'});}
-function ravenGarageRender(){if(!ravenGarageEl)return;ravenGarageEl.replaceChildren();const entries=ravenReadGarage();if(!entries.length){const p=document.createElement('p');p.className='next-note';p.textContent='Nenhuma montagem salva ainda.';ravenGarageEl.append(p);return}entries.forEach((entry,i)=>{const card=document.createElement('div');card.className='garage-entry';const label=document.createElement('div');const title=document.createElement('strong');title.textContent=entry.name;const small=document.createElement('small');small.textContent=Object.keys(entry.parts).length+'/8 peças · '+new Date(entry.savedAt).toLocaleDateString('pt-BR');label.append(title,small);const actions=document.createElement('div');actions.className='next-inline';const load=document.createElement('button');load.type='button';load.className='ghost';load.textContent='Carregar';load.onclick=()=>ravenSetBuild(entry.parts);const del=document.createElement('button');del.type='button';del.className='ghost';del.textContent='Excluir';del.onclick=()=>{if(!confirm('Excluir esta montagem salva?'))return;const all=ravenReadGarage();all.splice(i,1);localStorage.setItem(RAVEN_GARAGE_KEY,JSON.stringify(all));ravenGarageRender()};actions.append(load,del);card.append(label,actions);ravenGarageEl.append(card)})}
-document.getElementById('garageSave')?.addEventListener('click',()=>{const name=document.getElementById('garageName').value.trim()||'Minha montagem';if(!Object.keys(chosen).length){ravenGarageNotice('Escolha ao menos uma peça antes de salvar.');return}const all=ravenReadGarage();if(all.length>=40){ravenGarageNotice('Limite de 40 montagens. Exclua uma antes de salvar.');return}all.unshift({name,parts:{...chosen},savedAt:new Date().toISOString()});try{localStorage.setItem(RAVEN_GARAGE_KEY,JSON.stringify(all));ravenGarageNotice('Montagem salva neste navegador. Exporte uma cópia de segurança.');ravenGarageRender()}catch{ravenGarageNotice('Não foi possível salvar: armazenamento indisponível ou cheio.')}});
-document.getElementById('garageExport')?.addEventListener('click',()=>{const data={schemaVersion:1,app:'Raven PC Builder',builds:ravenReadGarage()};const a=document.createElement('a');a.href=URL.createObjectURL(new Blob([JSON.stringify(data,null,2)],{type:'application/json'}));a.download='raven-minha-garagem.json';a.click();setTimeout(()=>URL.revokeObjectURL(a.href),1000)});
-document.getElementById('garageImport')?.addEventListener('change',async e=>{const f=e.target.files?.[0];if(!f)return;if(f.size>200000){ravenGarageNotice('Arquivo muito grande.');return}try{const data=JSON.parse(await f.text());if(data.app!=='Raven PC Builder'||!Array.isArray(data.builds))throw Error('Formato inválido');const clean=data.builds.slice(0,40).filter(b=>b&&typeof b.name==='string'&&b.parts&&typeof b.parts==='object').map(b=>({name:b.name.slice(0,55),parts:Object.fromEntries(groups.map(g=>[g.id,b.parts[g.id]]).filter(([k,v])=>groups.find(g=>g.id===k).options.some(o=>o.id===v))),savedAt:new Date().toISOString()}));localStorage.setItem(RAVEN_GARAGE_KEY,JSON.stringify(clean));ravenGarageRender();ravenGarageNotice(clean.length+' montagem(ns) importada(s). O arquivo substituiu a garagem anterior.')}catch{ravenGarageNotice('Arquivo inválido. Use um JSON exportado pela garagem Raven.')}e.target.value=''});
+let ravenCloudBuilds=[];
+let ravenGarageBusy=false;
+function ravenGarageNotice(msg){
+ const n=document.getElementById('garageNotice');if(n)n.textContent=msg;
+}
+function ravenSetBuild(parts){
+ const ids=groups.map(g=>g.options.some(o=>o.id===parts[g.id])?parts[g.id]:null);
+ applyPreset(ids);
+ document.querySelector('.builder-advanced').open=true;
+ document.getElementById('raven-next')?.scrollIntoView({behavior:'smooth',block:'start'});
+}
+function ravenGarageRender(){
+ if(!ravenGarageEl)return;
+ ravenGarageEl.replaceChildren();
+ const count=document.getElementById('garageCounter');
+ if(count)count.textContent=ravenGetAccount()?ravenCloudBuilds.length+' de 5 montagens utilizadas':'Entre na sua conta para salvar até 5 PCs';
+ if(!ravenGetAccount()){
+  const p=document.createElement('p');p.className='next-note';
+  p.textContent=ravenAccountConfigured()
+   ?'Suas montagens salvas ficam vinculadas à sua conta. Entre ou cadastre-se para começar.'
+   :'O cadastro precisa ser ativado para salvar montagens privadas.';
+  const login=document.createElement('button');login.type='button';login.className='primary ra-garage-login';
+  login.textContent='Entrar / Criar conta';login.onclick=ravenOpenAccount;
+  ravenGarageEl.append(p,login);return;
+ }
+ if(!ravenCloudBuilds.length){
+  const p=document.createElement('p');p.className='next-note';
+  p.textContent='Nenhuma montagem salva na sua conta. Escolha peças e clique em Salvar PC.';
+  ravenGarageEl.append(p);return;
+ }
+ for(const entry of ravenCloudBuilds){
+  const card=document.createElement('div');card.className='garage-entry';
+  const label=document.createElement('div');
+  const title=document.createElement('strong');title.textContent=entry.name;
+  const small=document.createElement('small');
+  const qty=groups.filter(g=>entry.parts&&g.options.some(o=>o.id===entry.parts[g.id])).length;
+  small.textContent=qty+'/8 peças · '+new Date(entry.created_at).toLocaleDateString('pt-BR');
+  label.append(title,small);
+  const actions=document.createElement('div');actions.className='next-inline';
+  const load=document.createElement('button');load.type='button';load.className='primary';
+  load.textContent='Carregar';load.onclick=()=>ravenSetBuild(entry.parts||{});
+  const buy=document.createElement('button');buy.type='button';buy.className='ghost';
+  buy.textContent='Lista de compras';
+  buy.onclick=()=>{ravenSetBuild(entry.parts||{});ravenCopyShopping();};
+  const del=document.createElement('button');del.type='button';del.className='ghost';del.textContent='Excluir';
+  del.onclick=async()=>{
+   if(ravenGarageBusy||!confirm('Excluir esta montagem da sua conta?'))return;
+   ravenGarageBusy=true;del.disabled=true;
+   try{await ravenDeleteBuild(entry.id);await ravenRefreshGarage();ravenGarageNotice('Montagem excluída da sua conta.');}
+   catch(err){ravenGarageNotice(err.message||'Não foi possível excluir.');}
+   finally{ravenGarageBusy=false;del.disabled=false;}
+  };
+  actions.append(load,buy,del);card.append(label,actions);ravenGarageEl.append(card);
+ }
+}
+async function ravenRefreshGarage(){
+ const accountId=ravenGetAccount()?.id;
+ if(!accountId){ravenCloudBuilds=[];ravenGarageRender();return}
+ try{
+  const builds=await ravenListBuilds();
+  // Impede que uma consulta da conta antiga apareça após trocar de usuário.
+  if(ravenGetAccount()?.id!==accountId)return;
+  ravenCloudBuilds=builds;
+  ravenGarageRender();
+ }catch(err){
+  if(ravenGetAccount()?.id!==accountId)return;
+  ravenCloudBuilds=[];ravenGarageRender();
+  ravenGarageNotice(err.message||'Não foi possível carregar suas montagens.');
+ }
+}
+document.getElementById('garageOpen')?.addEventListener('click',()=>{
+ document.querySelector('.builder-advanced').open=true;
+ document.getElementById('raven-next')?.scrollIntoView({behavior:'smooth',block:'start'});
+});
+document.getElementById('garageSave')?.addEventListener('click',async()=>{
+ const name=document.getElementById('garageName').value.trim().slice(0,55)||'Minha montagem';
+ if(!Object.keys(chosen).length){ravenGarageNotice('Escolha ao menos uma peça antes de salvar.');return}
+ if(!ravenGetAccount()){ravenGarageNotice('Entre na conta para salvar seu PC.');ravenOpenAccount();return}
+ if(ravenCloudBuilds.length>=5){ravenGarageNotice('Você já tem cinco montagens. Exclua uma antes de salvar outra.');return}
+ if(ravenGarageBusy)return;
+ ravenGarageBusy=true;
+ const btn=document.getElementById('garageSave');btn.disabled=true;
+ try{
+  await ravenSaveBuild(name,{...chosen});
+  await ravenRefreshGarage();
+  ravenGarageNotice('Montagem salva em sua conta. Você pode acessá-la de outros dispositivos.');
+ }catch(err){ravenGarageNotice(err.message||'Não foi possível salvar.')}
+ finally{ravenGarageBusy=false;btn.disabled=false;}
+});
+document.getElementById('garageExport')?.addEventListener('click',()=>{
+ if(!ravenGetAccount()){ravenOpenAccount();return}
+ const data={schemaVersion:2,app:'Raven PC Builder',builds:ravenCloudBuilds.map(b=>({
+  name:b.name,parts:b.parts,savedAt:b.created_at
+ }))};
+ const a=document.createElement('a');
+ a.href=URL.createObjectURL(new Blob([JSON.stringify(data,null,2)],{type:'application/json'}));
+ a.download='raven-minhas-montagens.json';a.click();
+ setTimeout(()=>URL.revokeObjectURL(a.href),1000);
+});
+function ravenCleanImportedBuilds(builds){
+ return builds.filter(b=>b&&typeof b.name==='string'&&b.parts&&typeof b.parts==='object'&&!Array.isArray(b.parts))
+  .map(b=>({
+   name:(b.name.trim().slice(0,55)||'Minha montagem'),
+   parts:Object.fromEntries(groups.map(g=>[g.id,b.parts[g.id]])
+     .filter(([k,v])=>groups.find(g=>g.id===k).options.some(o=>o.id===v)))
+  })).filter(b=>Object.keys(b.parts).length>0);
+}
+async function ravenImportBuilds(builds){
+ if(!ravenGetAccount()){ravenGarageNotice('Entre para importar suas montagens.');ravenOpenAccount();return}
+ if(ravenGarageBusy)return;
+ const space=Math.max(0,5-ravenCloudBuilds.length);
+ if(!space){ravenGarageNotice('As cinco vagas estão ocupadas. Exclua uma montagem primeiro.');return}
+ const clean=ravenCleanImportedBuilds(builds).slice(0,space);
+ if(!clean.length){ravenGarageNotice('Nenhuma montagem válida disponível para importar.');return}
+ ravenGarageBusy=true;
+ let saved=0;
+ try{
+  for(const item of clean){await ravenSaveBuild(item.name,item.parts);saved++;}
+  ravenGarageNotice(saved+' montagem(ns) importada(s) para sua conta.');
+ }catch(err){ravenGarageNotice(saved+' importada(s). '+(err.message||'Falha na importação.'))}
+ finally{ravenGarageBusy=false;await ravenRefreshGarage();}
+}
+document.getElementById('garageImport')?.addEventListener('change',async e=>{
+ const file=e.target.files?.[0];if(!file)return;
+ try{
+  if(file.size>200000)throw Error('Arquivo muito grande.');
+  const data=JSON.parse(await file.text());
+  if(data.app!=='Raven PC Builder'||!Array.isArray(data.builds))throw Error('Formato inválido.');
+  await ravenImportBuilds(data.builds);
+ }catch(err){ravenGarageNotice(err.message||'Arquivo inválido.');}
+ e.target.value='';
+});
+document.getElementById('garageImportLocal')?.addEventListener('click',async()=>{
+ let data=[];
+ try{data=JSON.parse(localStorage.getItem('raven-pc-garage-v4')||'[]');}catch{}
+ if(!Array.isArray(data)||!data.length){ravenGarageNotice('Nenhuma montagem antiga foi encontrada neste navegador.');return}
+ await ravenImportBuilds(data);
+});
+ravenGarageRender();
+ravenInitAccount({onChange:ravenRefreshGarage});
+
 document.getElementById('smartGenerate')?.addEventListener('click',()=>{const budget=Number(document.getElementById('smartBudget').value),out=document.getElementById('smartResult');if(!Number.isFinite(budget)||budget<600||budget>25000){out.textContent='Informe um orçamento entre R$ 600 e R$ 25.000.';return}const candidates=ravenMarketBundles().filter(p=>p.price<=budget).sort((a,b)=>b.count-a.count||b.price-a.price);if(!candidates.length){out.textContent='Ainda não há kit inicial com anúncios confirmados dentro desse orçamento. Não será gerado um PC com valores fictícios.';return}const choice=candidates[0];ravenSetBuild(choice.ids);out.textContent=choice.title+' — subtotal publicado de '+fmt(choice.price)+' para '+choice.count+'/8 peças. Ainda NÃO é um PC completo. Acrescente as demais peças quando houver ofertas publicadas, conferindo BIOS, fonte, cooler e compatibilidade.';});
 document.getElementById('nextShare')?.addEventListener('click',()=>document.getElementById('link')?.click());
 document.getElementById('nextImage')?.addEventListener('click',()=>document.getElementById('shot')?.click());
-ravenGarageRender();
+// Garagem inicializada junto ao login e ao banco de dados.
