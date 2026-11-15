@@ -237,6 +237,18 @@
       "category": "cpu",
       "modelName": "Intel Core i5-4570",
       "title": "Intel Core i5-4570"
+    },
+    {
+      "partId": "r32-cpu-intel-core-i5-3470",
+      "store": "shopee",
+      "price": 123.5,
+      "checkedAt": "2026-11-14",
+      "url": "https://s.shopee.com.br/4LKwfBTpD8",
+      "condition": "new",
+      "affiliate": true,
+      "category": "cpu",
+      "modelName": "Intel Core i5-3470",
+      "title": "Intel Core i5-3470"
     }
   ],
   "history": [
