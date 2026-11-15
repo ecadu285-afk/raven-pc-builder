@@ -345,6 +345,18 @@
       "category": "cpu",
       "modelName": "AMD Ryzen 5 7600X",
       "title": "AMD Ryzen 5 7600X"
+    },
+    {
+      "partId": "r32-cpu-intel-core-i7-7700",
+      "store": "shopee",
+      "price": 495.88,
+      "checkedAt": "2026-11-14",
+      "url": "https://s.shopee.com.br/6VPRGOhfoQ",
+      "condition": "new",
+      "affiliate": true,
+      "category": "cpu",
+      "modelName": "Intel Core i7-7700",
+      "title": "Intel Core i7-7700"
     }
   ],
   "history": [
