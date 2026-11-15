@@ -1,0 +1,41 @@
+/* RAVEN 7 — acabamento visual das páginas de ferramentas.
+   A vitrine usa storefront.css; este arquivo apenas harmoniza as ferramentas escuras.
+   Não altera estrutura, classes de WebGL, formulários ou lógica de compatibilidade. */
+:root {
+ --lime:#ff8538;
+ --accent:#a778ff;
+ --border:#504368;
+}
+html{scroll-behavior:smooth}
+body{font-family:Inter,system-ui,-apple-system,"Segoe UI",Arial,sans-serif}
+:is(a,button,input,select,textarea):focus-visible{outline:3px solid #ff8a38;outline-offset:3px}
+::selection{background:#8051ce;color:white}
+a:hover{transition:color .18s ease}
+:is(.panel,.card,.tile,.lesson-head,.step,.stat,.feature-card){
+ border-radius:14px;
+}
+:is(.nav-cta,.button.primary,.btn.primary,.primary.btn){
+ background-color:#ff8538;
+ border-color:#ff8538;
+ color:#1a0c22;
+ font-weight:900;
+}
+:is(.button.primary,.btn.primary):hover{background:#ffab6d;border-color:#ffab6d}
+:is(.hero .eyebrow,.kicker,.eyebrow,.section-label){letter-spacing:.12em;font-weight:850}
+:is(.card,.tile,.panel){transition:border-color .18s ease,box-shadow .18s ease}
+:is(.card,.tile):hover{border-color:#a17cff}
+a:where([href="produtos.html"],[href="loja.html"]) {text-underline-offset:3px}
+.app .sidebar{border-right:1px solid #4a365b}
+.app .sidebar .brand .mark{background:#ff8538;color:#21102c}
+.app .raven-quick-nav a:hover{background:#3c2650}
+.app .primary{background:#ff8538;color:#1e0f28}
+.app .raven-build-options a{border-color:#685083}
+.app .raven-build-options a:hover{border-color:#ff8538}
+body .products .offer-choice a{color:#e7c9ff}
+body .products .price{color:#e6d4ff}
+body .products .link{background:#ff8538!important;color:#25112e!important}
+body .products .link:hover{background:#ffa962!important}
+@media(prefers-reduced-motion:reduce){
+ html{scroll-behavior:auto}
+ :is(.card,.tile,.panel){transition:none}
+}
