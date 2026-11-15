@@ -3,8 +3,7 @@
  * Reaproveita o Supabase Auth da loja (sessão persistente, sem guardar senhas no código).
  * Visitantes podem navegar sem login; dados salvos exigem conta.
  */
-import { ravenMarketUser } from './raven-market.js';
-import { ravenGetSupabaseClient } from './raven-account.js';
+import { ravenGetAccount, ravenGetSupabaseClient } from './raven-account.js';
 
 const panel=document.getElementById('raven-entry');
 if(panel){
@@ -39,14 +38,18 @@ if(panel){
    // Espera carregar o estado de autenticação; evita mostrar login
    // para usuários já conectados.
    if(!accountReady)return;
-   const needLogin=!ravenMarketUser()&&!browsed;
+   const needLogin=!ravenGetAccount()&&!browsed;
    panel.hidden=!needLogin;
    document.body.classList.toggle('raven-entry-active',needLogin);
    if(needLogin){$('entryEmail').focus({preventScroll:true});}
  }
- window.addEventListener('raven-market-update',()=>{
-   accountReady=true;render();
- });
+ function authReady(){accountReady=true;render();}
+ window.addEventListener('raven-auth-ready',authReady);
+ window.addEventListener('raven-market-update',authReady);
+ // Caso o estado tenha sido carregado antes do módulo da tela.
+ if(ravenGetSupabaseClient()){
+   ravenGetSupabaseClient().auth.getUser().then(authReady).catch(authReady);
+ }
  $('entryLoginTab').addEventListener('click',()=>screen('login'));
  $('entrySignupTab').addEventListener('click',()=>screen('signup'));
  $('entryForgot').addEventListener('click',()=>screen('forgot'));
