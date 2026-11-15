@@ -2,73 +2,72 @@
 <html lang="pt-BR">
 <head>
 <meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
-<meta name="theme-color" content="#18132f"><meta name="description" content="Explore peças para PC por categoria, compare anúncios publicados e monte seu computador em 3D. Raven PC Builder.">
-<meta property="og:title" content="Raven PC Builder | Peças, PCs montados e montador 3D"><meta property="og:type" content="website">
-<title>Raven PC Builder | Hardware, ofertas e montador 3D</title>
+<meta name="theme-color" content="#18132f">
+<meta name="description" content="Monte seu PC em 3D, aprenda o básico, encontre peças e descubra upgrades. Tudo em um só lugar, sem complicação.">
+<title>Raven PC Builder | Monte, aprenda e encontre suas peças</title>
 <link rel="stylesheet" href="storefront.css?v=71">
+<link rel="stylesheet" href="home-simple.css?v=8">
 </head>
-<body>
-<a class="skip-link" href="#conteudo" style="position:absolute;left:-9999px;top:0" onfocus="this.style.left='12px'" onblur="this.style.left='-9999px'">Pular para conteúdo</a>
-<div class="utility-bar"><div class="shell"><span>RAVEN PC BUILDER <strong>•</strong> Conheça peças, compare ofertas, monte seu PC</span><span>Indicações de lojas parceiras · Sem pagamentos aqui</span></div></div>
+<body class="home-v8">
+<a href="#conteudo" class="skip-link" style="position:absolute;left:-9999px;top:0" onfocus="this.style.left='12px';this.style.zIndex='1000';this.style.background='white'" onblur="this.style.left='-9999px'">Pular para o conteúdo</a>
 <header class="site-header">
 <div class="shell header-main">
-<a class="site-logo" href="inicio.html" aria-label="Raven PC Builder, início"><span class="logo-mark">R.</span><span class="logo-type">RAVEN PC<small>BUILDER • HARDWARE</small></span></a>
-<form class="site-search" action="produtos.html" method="get" role="search"><input aria-label="Pesquisar peças e componentes" type="search" name="q" placeholder="Qual peça você procura? Ex.: RX 550, Ryzen 5..." required><button type="submit">Buscar</button></form>
-<div class="header-actions"><a href="index.html">Montador 3D</a><a href="servicos.html">Sobre o projeto</a></div>
+<a class="site-logo" href="inicio.html" aria-label="Raven PC Builder — início"><span class="logo-mark">R.</span><span class="logo-type">RAVEN PC<small>BUILDER • HARDWARE</small></span></a>
+<nav class="home-links" aria-label="Menu principal">
+<a href="index.html">Montador 3D</a>
+<a href="produtos.html">Peças</a>
+<a href="aprender.html">Guia básico</a>
+<details class="more-menu"><summary aria-label="Abrir outras páginas">Menu</summary><div class="more-links">
+<a href="index.html">Montar PC em 3D</a>
+<a href="produtos.html">Comprar componentes</a>
+<a href="aprender.html">Aprender sobre PC</a>
+<a href="meu-pc.html">Melhorar meu PC</a>
+<a href="orcamento.html">Montar pelo orçamento</a>
+<a href="pcs-montados.html">PCs montados</a>
+<a href="servicos.html">Conhecer o projeto</a>
+</div></details>
+</nav>
 </div>
-<nav class="site-nav" aria-label="Categorias principais"><div class="shell nav-scroll"><a href="produtos.html">Todas as peças</a><a href="produtos.html?categoria=gpu">Placas de vídeo</a><a href="produtos.html?categoria=cpu">Processadores</a><a href="produtos.html?categoria=board">Placas-mãe</a><a href="produtos.html?categoria=ram">Memória RAM</a><a href="produtos.html?categoria=ssd">SSDs</a><a href="pcs-montados.html">PCs montados</a><a href="orcamento.html">Por orçamento</a></div></nav>
 </header>
 <main id="conteudo">
-<div class="shell hero-wrap">
-<section class="hero" aria-label="Conheça o Raven PC Builder">
-<div class="hero-copy">
-<span class="eyebrow">HARDWARE, COMPATIBILIDADE E OFERTAS</span>
-<h1>Seu próximo PC <em>começa aqui.</em></h1>
-<p>Encontre peças de computador, compare anúncios de diferentes lojas e simule sua montagem em um ambiente 3D.</p>
-<div class="actions"><a class="btn btn-orange" href="produtos.html">Explorar catálogo</a><a class="btn btn-outline" href="index.html">Montar em 3D</a></div>
-<div class="hero-small">Sem estoque próprio. Compras realizadas nas lojas anunciantes.</div>
+<section class="shell start-area" aria-labelledby="start-title">
+<div class="start-card">
+<div class="start-content">
+<div class="start-tag">BEM-VINDO AO RAVEN PC BUILDER</div>
+<h1 id="start-title">Seu PC começa <span>por aqui.</span></h1>
+<p>Quer montar, comprar peças ou melhorar seu computador? Escolha o que precisa. A gente te mostra por onde começar.</p>
+<form class="main-search" action="produtos.html" method="get" role="search">
+<input type="search" name="q" aria-label="Buscar produtos e peças de computador" placeholder="Buscar processador, placa de vídeo, SSD..." autocomplete="off" required>
+<button type="submit">Buscar peças</button>
+</form>
+<p class="search-hint">Ou escolha uma opção abaixo para começar.</p>
 </div>
-<div class="hero3d" data-raven-hero3d role="img" aria-label="Modelo 3D interativo de placa-mãe, processador, memórias RAM, placa de vídeo e SSD se expandindo na montagem. Ilustração digital, não representa um produto real.">
+<div class="start-visual" data-raven-hero3d role="img" aria-label="Maquete 3D ilustrativa de placa-mãe, CPU, RAM, GPU e SSD flutuando">
 <div class="hardware-fallback"><div class="fallback-board" aria-hidden="true"></div></div>
 <canvas hidden aria-hidden="true"></canvas>
-<div class="hero-3d-tag">3D INTERATIVO · Passe o mouse</div>
+</div>
 </div>
 </section>
-<div class="perks" aria-label="O que você encontra aqui"><div class="perk"><b>01</b><span><strong>Peças por categoria</strong>Encontre sem ficar procurando em várias páginas.</span></div><div class="perk"><b>02</b><span><strong>Comparação de anúncios</strong>Links para Shopee, Mercado Livre e Amazon.</span></div><div class="perk"><b>03</b><span><strong>Montador 3D</strong>Explore uma configuração antes de comprar.</span></div></div>
-</div>
-<section class="shell section" id="categorias" aria-labelledby="cats-title">
-<div class="section-head"><div><span class="eyebrow">CATÁLOGO DE HARDWARE</span><h2 id="cats-title">Compre por categoria</h2></div><a class="all-link" href="produtos.html">Ver todas as peças ›</a></div>
-<div class="categories"><a class="cat-card" href="produtos.html?categoria=gpu"><span class="cat-symbol" aria-hidden="true">GPU</span><strong>Placas de vídeo</strong></a>
-<a class="cat-card" href="produtos.html?categoria=cpu"><span class="cat-symbol" aria-hidden="true">CPU</span><strong>Processadores</strong></a>
-<a class="cat-card" href="produtos.html?categoria=board"><span class="cat-symbol" aria-hidden="true">MB</span><strong>Placas-mãe</strong></a>
-<a class="cat-card" href="produtos.html?categoria=ram"><span class="cat-symbol" aria-hidden="true">RAM</span><strong>Memória RAM</strong></a>
-<a class="cat-card" href="produtos.html?categoria=ssd"><span class="cat-symbol" aria-hidden="true">SSD</span><strong>SSDs</strong></a>
-<a class="cat-card" href="produtos.html?categoria=psu"><span class="cat-symbol" aria-hidden="true">PSU</span><strong>Fontes</strong></a>
-<a class="cat-card" href="produtos.html?categoria=case"><span class="cat-symbol" aria-hidden="true">PC</span><strong>Gabinetes</strong></a>
-<a class="cat-card" href="produtos.html?categoria=hdd"><span class="cat-symbol" aria-hidden="true">HD</span><strong>HDs</strong></a></div>
-</section>
-<section class="shell section" aria-labelledby="choice-title">
-<div class="section-head"><div><span class="eyebrow">DO SEU JEITO</span><h2 id="choice-title">Como você quer montar?</h2></div></div>
-<div class="promo-grid">
-<article class="promo"><span class="eyebrow">ORÇAMENTO PERSONALIZADO</span><h3>Um PC dentro do seu planejamento.</h3><p>Informe sua verba, compare Intel e AMD e confira os componentes que ainda precisam de cotação.</p><a href="orcamento.html">Planejar por orçamento ›</a></article>
-<article class="promo"><span class="eyebrow">PRONTO PARA USAR</span><h3>Prefere comprar um PC montado?</h3><p>Computadores completos e kits em uma vitrine separada, com filtros de preço e loja.</p><a href="pcs-montados.html">Ver PCs montados ›</a></article>
+<section class="shell steps" aria-labelledby="actions-title">
+<div class="section-top"><div><h2 id="actions-title">O que você quer fazer?</h2><p>Quatro caminhos. Escolha o seu.</p></div></div>
+<div class="step-grid">
+<a class="step-link" href="index.html"><span class="step-icon" aria-hidden="true">3D</span><strong>Montar meu PC</strong><p>Escolha as peças e visualize uma montagem em 3D.</p><span class="go">Abrir montador ›</span></a>
+<a class="step-link" href="produtos.html"><span class="step-icon" aria-hidden="true">PC</span><strong>Comprar peças</strong><p>Encontre componentes e compare anúncios das lojas.</p><span class="go">Ver catálogo ›</span></a>
+<a class="step-link" href="aprender.html"><span class="step-icon" aria-hidden="true">?</span><strong>Aprender sobre PC</strong><p>Entenda as peças, a montagem e a limpeza básica.</p><span class="go">Ver mini guia ›</span></a>
+<a class="step-link" href="meu-pc.html"><span class="step-icon" aria-hidden="true">+</span><strong>Melhorar meu PC</strong><p>Descubra o que avaliar antes de fazer um upgrade.</p><span class="go">Planejar upgrade ›</span></a>
 </div>
 </section>
-<section class="shell section" aria-labelledby="deals-title">
-<div class="section-head"><div><span class="eyebrow">ANÚNCIOS PUBLICADOS</span><h2 id="deals-title">Peças em destaque</h2></div><a class="all-link" href="produtos.html">Ver catálogo completo ›</a></div>
-<p class="countline" style="margin-top:-7px">Ofertas cadastradas: <strong id="live-offer-count">—</strong>. Preços conferidos nas datas indicadas, sujeitos a alteração.</p>
-<div class="cards" id="home-deals" aria-live="polite"><div class="no-offers">Carregando peças publicadas...</div></div>
-</section>
-<section class="shell section" aria-labelledby="help-title">
-<div class="section-head"><div><span class="eyebrow">APRENDA O ESSENCIAL</span><h2 id="help-title">Não sabe qual peça escolher?</h2></div></div>
-<div style="display:flex;gap:15px;flex-wrap:wrap;align-items:center;background:#fff;border:1px solid #e1e2ec;padding:22px 25px;border-radius:15px;justify-content:space-between">
-<div><strong style="font-size:17px">Guia rápido: montagem, limpeza e compatibilidade</strong><p style="color:#626b7c;margin:7px 0 0;max-width:610px;font-size:13px">O básico para entender seu PC sem um curso enorme. Para uma experiência mais prática, entre no montador 3D.</p></div>
-<div class="actions"><a class="btn btn-purple" href="aprender.html">Abrir guia</a><a class="btn btn-light" href="servicos.html" style="border:1px solid #e2def0">Serviços do Studio</a></div>
+<section class="shell alternatives" aria-label="Mais duas formas de começar">
+<div class="alternative-box">
+<div><strong>Prefere comprar pronto ou definir um valor?</strong><p>Duas opções rápidas, sem misturar com as peças avulsas.</p></div>
+<div class="alternative-actions"><a href="orcamento.html">Montar por orçamento ›</a><a href="pcs-montados.html">Ver PCs já montados ›</a></div>
 </div>
-<div class="disclaimer"><strong>Transparência:</strong> o Raven PC Builder indica ofertas de lojas externas e pode receber comissões de afiliado. Não vendemos nem processamos pagamentos. Confira disponibilidade, preço atual, garantia, frete e especificações diretamente na loja antes de comprar.</div>
 </section>
 </main>
-<footer class="footer"><div class="shell"><div class="footer-inner"><div><a class="site-logo" href="inicio.html"><span class="logo-mark">R.</span><span class="logo-type">RAVEN PC<small>BUILDER • HARDWARE</small></span></a><p>Ferramentas digitais para pesquisar, comparar e compreender peças de computador. Um projeto da Raven Creatives Studios.</p></div><div><h4>Explore</h4><div class="footer-links"><a href="produtos.html">Peças de PC</a><a href="pcs-montados.html">PCs montados</a><a href="orcamento.html">Montar por orçamento</a><a href="index.html">Montador 3D</a></div></div><div><h4>Informações</h4><div class="footer-links"><a href="servicos.html">Serviços</a><a href="aprender.html">Guia de PC</a><a href="afiliados.html">Transparência comercial</a><a href="privacidade.html">Privacidade</a></div></div></div><div class="footer-bottom">© 2026 Raven Creatives Studios. O modelo 3D é ilustrativo; os anúncios pertencem às lojas indicadas.</div></div><div class="shell" style="padding-top:14px;font-size:11px"><a href="creditos-imagens.html" style="text-decoration:underline;color:#cfc5ed">Créditos das fotos de componentes</a></div></footer>
-<script type="module" src="storefront-shop.js?v=71"></script>
-<script type="module" src="hero-3d.js?v=7"></script>
-</body></html>
+<footer class="home-footer"><div class="shell">
+<p>Raven PC Builder — projeto da Raven Creatives Studios. Os preços e anúncios são de lojas externas; confirme valores, frete e compatibilidade antes de comprar. Alguns links podem gerar comissão.</p>
+<nav aria-label="Informações do projeto"><a href="servicos.html">Sobre o projeto</a><a href="afiliados.html">Afiliados</a><a href="privacidade.html">Privacidade</a><a href="creditos-imagens.html">Créditos</a></nav>
+</div></footer>
+<script type="module">if(window.matchMedia('(min-width: 751px)').matches){import('./hero-3d.js?v=8').catch(()=>{});}</script>
+</body>
+</html>
