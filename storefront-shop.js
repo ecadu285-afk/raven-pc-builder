@@ -45,7 +45,10 @@ function isRecent(o){const days=offerAgeDays(o.checkedAt);return days>=0&&days<=
 function identity(o){
  const ref=known.get(o.partId);
  const model=o.modelName||ref?.name||o.partId||o.title;
- return [category(o),o.condition==='used'?'used':'new',normalize(model)].join('|');
+ const kind=category(o);
+ const announced=String(o.title||o.modelName||'');
+ const capacity=['gpu','ram','ssd','hdd'].includes(kind)?(announced.match(/\b(2|3|4|6|8|10|12|16|20|24|32|48|64|128|240|256|480|500|512|1000|1024|2000|2048)\s*(GB|TB)\b/i)||[]):[];
+ return [kind,o.condition==='used'?'used':'new',normalize(model),capacity[0]?normalize(capacity[0]):''].join('|');
 }
 function grouped(offers){
  const map=new Map();
@@ -79,6 +82,8 @@ function imageFor(offer){
 function photoForGroup(item){
  // Fotos somente de anúncios do MESMO grupo de modelo e condição.
  for(const offer of item.items){
+   // Não reutilize foto de outra referência como se fosse do produto mais barato.
+   if(offer.partId!==item.best.partId)continue;
    if(item.type==='cpu' && /\b(?:pc\s*gamer|computador\s*completo)\b/i.test(offer.title||''))continue;
    const url=imageFor(offer);
    if(url)return {url,offer};
