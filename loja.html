@@ -23,15 +23,16 @@
 .photo .mock-gpu,.photo .mock-ssd,.photo .mock-ram,.photo .mock-hdd{width:123px;height:63px}
 .photo .mock-board{width:100px;height:110px}
 .photo .mock-case{width:78px;height:110px}
-</style><link rel="stylesheet" href="raven-theme.css?v=71"><link rel="stylesheet" href="raven-accent-v7.css?v=7"></head><body>
+</style><link rel="stylesheet" href="raven-theme.css?v=71"><link rel="stylesheet" href="raven-accent-v7.css?v=7"><meta property="og:site_name" content="Raven PC Builder"><meta property="og:type" content="website"><meta name="robots" content="index,follow"></head><body>
 <header><strong>RAVEN <span>PC BUILDER</span></strong><nav aria-label="Menu"><a href="inicio.html">Início</a><a href="index.html">Montador 3D</a><a href="produtos.html">Peças</a><a href="pcs-montados.html">PCs montados</a><a href="orcamento.html">Orçamento</a><a href="loja.html" aria-current="page">Todos os anúncios</a><a href="servicos.html">Serviços</a><a href="meu-pc.html">Upgrade do meu PC</a><a href="aprender.html">Hardware 3D</a><a href="aprender.html">Guia básico de PC</a><a href="afiliados.html">Transparência</a></nav></header>
 <main><p style="font-size:13px"><a href="produtos.html" style="color:#c2a6ff;font-weight:800">← Voltar à página de produtos e categorias</a></p><span class="eyebrow">RAVEN MARKETPLACE · LOJA DE COMPONENTES</span><h1>Todos os anúncios em uma só vitrine.</h1><p class="intro">Explore anúncios publicados e compare ofertas para o mesmo modelo nas lojas. Para escolher por categoria, use a página de produtos. A compra é realizada diretamente na Amazon, Mercado Livre ou Shopee. O RAVEN não processa pagamentos nem vende diretamente os produtos.</p>
-<div class="disclosure"><strong>Transparência:</strong> alguns links são de afiliado e podem gerar comissão para o RAVEN sem custo adicional de indicação. <strong>Como associado da Amazon, eu recebo por compras qualificadas.</strong> Preços informados pelo operador após conferência, sujeitos a mudanças na loja. Comparações usam apenas o mesmo modelo, condição e ofertas recentes; não consideram frete, cupons ou diferenças de pagamento. Confirme preço, frete, estoque, condição e garantia na loja.</div>
+<div class="disclosure"><strong>Transparência:</strong> alguns links são de afiliado e podem gerar comissão para o RAVEN sem custo adicional de indicação. A condição de afiliado deve ser confirmada individualmente para cada anúncio e programa. Preços cadastrados pelo operador, sem confirmação automatizada nas lojas e sujeitos a mudanças. Comparações usam apenas o mesmo modelo, condição e ofertas recentes; não consideram frete, cupons ou diferenças de pagamento. Confirme preço, frete, estoque, condição e garantia na loja.</div>
 <section aria-label="Filtrar ofertas" class="controls"><label>Buscar peça<input id="q" type="search" placeholder="Ryzen, RTX, DDR4, gabinete…"></label><label>Categoria<select id="cat"><option value="all">Todas as categorias</option></select></label><label>Loja<select id="store"><option value="all">Todas as lojas</option><option value="amazon">Amazon</option><option value="mercadolivre">Mercado Livre</option><option value="shopee">Shopee</option></select></label><label>Orçamento<select id="budget"><option value="all">Qualquer valor</option><option value="300">Até R$ 300</option><option value="500">Até R$ 500</option><option value="1000">Até R$ 1.000</option><option value="2000">Até R$ 2.000</option><option value="3000">Até R$ 3.000</option></select></label><label>Ordenar<select id="order"><option value="recent">Mais recentes</option><option value="low">Menor preço cadastrado</option><option value="high">Maior preço cadastrado</option></select></label></section>
 <p id="count" role="status">Carregando ofertas publicadas...</p><div id="products" class="products" aria-live="polite"></div>
 </main><footer>© 2026 RAVEN Creatives Studios · Compras realizadas nos sites das lojas. <a href="produtos.html">Produtos</a> · <a href="servicos.html">Serviços</a> · <a href="index.html">Montador</a> · <a href="meu-pc.html">Upgrade do meu PC</a> · <a href="termos.html">Termos</a> · <a href="privacidade.html">Privacidade</a><p><a href="creditos-imagens.html">Créditos das fotos ilustrativas</a></p></footer>
 <script type="module">
 import {catalog} from './catalog.js';
+import {publicOffers} from './offer-policy.mjs';
 const refs=new Map(Object.entries(catalog).flatMap(([category,list])=>list.map(p=>[p.id,{name:p.name,category}])));
 const cats={cpu:'Processadores',board:'Placas-mãe',gpu:'Placas de vídeo',ram:'Memória RAM',ssd:'SSDs',hdd:'HDs',psu:'Fontes',case:'Gabinetes',cooler:'Coolers'};
 const stores={amazon:{name:'Amazon',hosts:['amazon.com.br','amzn.to','link.amazon']},mercadolivre:{name:'Mercado Livre',hosts:['mercadolivre.com.br','mercadolivre.com','meli.la']},shopee:{name:'Shopee',hosts:['shopee.com.br','shopee.com','shope.ee']}};
@@ -122,7 +123,7 @@ function offerEntry(o){
  const line=el('div','offer-choice'),description=el('div');
  const vendor=el('strong','',stores[o.store]?.name||o.store);
  const value=el('span','',money(o.price)+(o.condition==='used'?' · Usado':' · Novo'));
- const details=el('span','offer-freshness','Conferido em '+o.checkedAt.split('-').reverse().join('/')+(ageDays(o)>14?' · Preço antigo':''));
+ const details=el('span','offer-freshness','Registrado em '+o.checkedAt.split('-').reverse().join('/')+(ageDays(o)>14?' · Preço antigo':''));
  description.append(vendor,document.createTextNode('  '),value,document.createElement('br'),details);
  const a=el('a','','Ver oferta');a.href=o.url;a.target='_blank';a.rel=o.affiliate?'noopener noreferrer sponsored':'noopener noreferrer';
  a.setAttribute('aria-label','Abrir anúncio de '+nameOf(o)+' na '+(stores[o.store]?.name||o.store));
@@ -147,7 +148,7 @@ function render(){
   if(g.offers.length>1){
    content.append(el('p','group-subtitle','Ofertas agrupadas pela referência do produto, não necessariamente pelo mesmo fabricante ou SKU. Compare a capacidade, a condição, a garantia e a versão no anúncio.'));
   } else {
-   content.append(el('p','group-subtitle','Preço confirmado na data informada. Confira as condições antes de comprar.'));
+   content.append(el('p','group-subtitle','Preço cadastrado na data informada. Confira as condições antes de comprar.'));
   }
   const options=el('div','offer-options');for(const o of g.choices)options.append(offerEntry(o));content.append(options);
   if(g.extra.length){
@@ -163,7 +164,7 @@ async function load(){
  try{
   const response=await fetch('./offers.json',{cache:'no-store'});if(!response.ok)throw Error('HTTP '+response.status);
   const doc=await response.json();
-  rows=(Array.isArray(doc.offers)?doc.offers:[]).filter(valid).map(o=>({...o,category:o.category||refs.get(o.partId)?.category||'other',modelName:o.modelName||refs.get(o.partId)?.name||''}));
+  rows=publicOffers(doc.offers).filter(valid).map(o=>({...o,category:o.category||refs.get(o.partId)?.category||'other',modelName:o.modelName||refs.get(o.partId)?.name||''}));
  }catch(e){rows=[];error=e.message;}
  const filter=$('cat'),present=new Set(rows.map(o=>o.category));
  Object.entries(cats).forEach(([key,label])=>{if(present.has(key)){const option=el('option','',label);option.value=key;filter.append(option);}});

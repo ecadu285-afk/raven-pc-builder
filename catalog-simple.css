@@ -58,3 +58,6 @@
 }
 @media(max-width:400px){.catalog-v8 .catalog-quick .categories{grid-template-columns:repeat(4,minmax(0,1fr))}.catalog-v8 .simple-header-links a:nth-child(2){display:none}.catalog-v8 .catalog-toolbar label:last-child{grid-column:1/-1}.catalog-v8 .catalog-results .cards{gap:9px}}
 @media(prefers-reduced-motion:reduce){.hardware-object,.offer-visual img{transition:none!important}}
+
+/* Raven 6.2: avisos de confiança de ofertas */
+.offer-trust-note{font-size:.76rem;line-height:1.42;opacity:.83;margin:2px 0 7px}

@@ -1,0 +1,32 @@
+name: Raven - testes e qualidade das ofertas
+on:
+  push:
+    paths:
+      - '**.js'
+      - '**.mjs'
+      - '**.json'
+      - '**.html'
+      - 'tools/**'
+      - '.github/workflows/raven-quality.yml'
+  pull_request:
+  workflow_dispatch:
+  schedule:
+    - cron: '0 12 * * 1'
+permissions:
+  contents: read
+jobs:
+  audit:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+      - name: Testes de compatibilidade
+        run: node compatibility.test.mjs
+      - name: Testes de segurança de ofertas
+        run: node tools/offer-policy.test.mjs
+      - name: Verificar ofertas publicadas
+        run: node tools/audit-offers.mjs --strict
+      - name: Verificar links internos e sintaxe
+        run: node tools/site-sanity.mjs

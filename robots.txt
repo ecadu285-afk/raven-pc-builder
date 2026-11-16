@@ -1,0 +1,3 @@
+User-agent: *
+Allow: /
+# Adicione 'Sitemap: https://DOMINIO-REAL/sitemap.xml' após configurar o domínio oficial.

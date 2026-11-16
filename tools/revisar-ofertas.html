@@ -1,0 +1,96 @@
+<!doctype html>
+<html lang="pt-BR"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Raven | Revisão local de ofertas</title>
+<style>
+:root{color-scheme:dark;font-family:system-ui,Arial;background:#11151c;color:#ebf0f5}
+*{box-sizing:border-box}body{max-width:1400px;margin:auto;padding:24px}
+header{display:flex;justify-content:space-between;align-items:center;gap:16px;flex-wrap:wrap}
+h1{margin:0;font-size:24px}p,small{color:#adbac9;line-height:1.5}
+.notice{padding:12px 16px;background:#2a2118;border:1px solid #80613c;border-radius:12px;margin:18px 0}
+.toolbar{display:flex;gap:8px;flex-wrap:wrap;margin:16px 0}
+button,.file-label{padding:10px 14px;border:1px solid #5b6979;background:#202b38;color:#eef6ff;cursor:pointer;border-radius:9px;font:inherit;font-weight:600}
+button:hover,.file-label:hover{border-color:#77c8a2}button:disabled{opacity:.4;cursor:not-allowed}
+button.primary{background:#18824e;border-color:#1cb16e}
+button.danger{background:#713a36;border-color:#b75b55}
+input,select,textarea{border:1px solid #526071;background:#171f2b;color:white;border-radius:8px;padding:10px;width:100%;font:inherit}
+input[type=file]{display:none}label{display:block;font-size:13px;margin-bottom:10px;color:#d7e4ed}
+label input,label select,label textarea{margin-top:6px}
+.grid{display:grid;grid-template-columns:minmax(310px,1.2fr) minmax(310px,1fr);gap:18px}
+.panel{background:#171e28;padding:16px;border:1px solid #354150;border-radius:12px}
+#items{max-height:630px;overflow-y:auto;display:grid;gap:5px;margin-top:10px}
+.item{display:flex;justify-content:space-between;gap:12px;text-align:left;min-width:0;font-size:13px;font-weight:400}
+.item span{overflow:hidden;text-overflow:ellipsis;white-space:nowrap;max-width:75%}
+.item.active{border-color:#66d6a5;background:#214338}
+.fields{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:10px}
+.fields .full{grid-column:1/-1}
+.status{margin:10px 0;white-space:pre-wrap;min-height:40px}
+@media(max-width:850px){.grid{grid-template-columns:1fr}body{padding:14px}.fields{grid-template-columns:1fr}}
+</style></head><body>
+<header><div><h1>RAVEN · Revisão de ofertas</h1><p>Organize e aprove anúncios antes de exportar o catálogo.</p></div><a href="../inicio.html" style="color:#8bdec0">Voltar ao site</a></header>
+<div class="notice"><strong>Ferramenta local, sem autenticação.</strong> Esta página não altera o GitHub nem o Supabase. Não a anuncie como painel administrativo online. Dados importados ficam somente nesta aba; exporte o arquivo para preservar alterações.</div>
+<div class="toolbar">
+<button id="load">Carregar offers.json atual</button>
+<label class="file-label" for="import">Importar JSON do robô</label><input id="import" type="file" accept=".json,application/json">
+<button id="export" class="primary">Exportar catálogo revisado</button>
+</div>
+<div id="status" class="status" role="status"></div>
+<div class="grid">
+<section class="panel"><h2>Ofertas</h2><input id="search" type="search" placeholder="Buscar modelo, loja ou ID"><div id="stats"></div><div id="items"></div></section>
+<section class="panel"><h2>Editar anúncio</h2><p id="selection">Selecione um registro.</p>
+<form id="form" hidden>
+<div class="fields">
+<label class="full">Título<input name="title" required></label>
+<label>Modelo<input name="modelName"></label>
+<label>ID da peça<input name="partId" required></label>
+<label>Preço (R$)<input name="price" type="number" min="0.01" step="0.01" required></label>
+<label>Categoria<select name="category"><option value="cpu">Processador</option><option value="board">Placa-mãe</option><option value="gpu">Placa de vídeo</option><option value="ram">RAM</option><option value="ssd">SSD</option><option value="hdd">HD</option><option value="psu">Fonte</option><option value="case">Gabinete</option><option value="cooler">Cooler</option><option value="pc">PC pronto</option><option value="kit">Kit</option><option value="other">Outro</option></select></label>
+<label>Loja<select name="store"><option value="mercadolivre">Mercado Livre</option><option value="shopee">Shopee</option><option value="amazon">Amazon</option></select></label>
+<label>Condição<select name="condition"><option value="new">Novo</option><option value="used">Usado</option><option value="refurbished">Recondicionado</option></select></label>
+<label>Consulta em<input type="date" name="checkedAt" required></label>
+<label class="full">Link do anúncio<input type="url" name="url" required></label>
+<label class="full">Imagem (URL autorizada)<input type="url" name="imageUrl"></label>
+<label>Afiliado<select name="affiliateStatus"><option value="pending">Não comprovado</option><option value="confirmed">Confirmado</option></select></label>
+<label>Status<select name="reviewStatus"><option value="pending">Pendente</option><option value="hold">Suspenso</option><option value="approved">Aprovado</option></select></label>
+<label class="full">Observação de revisão<textarea name="reviewNote" rows="2"></textarea></label>
+</div>
+<div class="toolbar"><button class="primary" type="submit">Salvar e deixar pendente</button><button id="approve" type="button">Aprovar</button><button id="hold" type="button" class="danger">Suspender</button></div>
+</form><pre id="validation" style="white-space:pre-wrap;font-size:12px;color:#e8c796"></pre></section>
+</div>
+<script type="module">
+import {auditOffer,qualityReport} from '../offer-policy.mjs';
+const $=id=>document.getElementById(id);let data={offers:[],history:[]};let index=-1;
+const fields=['title','modelName','partId','price','category','store','condition','checkedAt','url','imageUrl','affiliateStatus','reviewStatus','reviewNote'];
+const message=t=>{$('status').textContent=t;};
+const norm=t=>String(t||'').normalize('NFD').replace(/[\u0300-\u036f]/g,'').toLowerCase();
+const key=o=>String(o.store||'')+'|'+String(o.url||'')+'|'+String(o.partId||'');
+function render(){
+ const q=norm($('search').value);const report=qualityReport(data.offers);
+ $('stats').textContent=report.total+' anúncios · '+report.published+' elegíveis · '+report.blocked+' bloqueados';
+ const box=$('items');box.replaceChildren();
+ data.offers.forEach((o,i)=>{if(q&&!norm([o.title,o.modelName,o.partId,o.store].join(' ')).includes(q))return;
+ const b=document.createElement('button');b.type='button';b.className='item'+(i===index?' active':'');
+ const title=document.createElement('span');title.textContent=(i+1)+'. '+(o.title||o.modelName||o.partId||'Sem título');
+ const state=document.createElement('small');state.textContent=o.reviewStatus||'legado';b.append(title,state);b.onclick=()=>select(i);box.append(b);
+ });
+ if(index>=0)validate();
+}
+function select(i){
+ index=i;const o=data.offers[i];if(!o)return;
+ $('selection').textContent='Registro '+(i+1);$('form').hidden=false;
+ for(const f of fields){const el=$('form').elements.namedItem(f);if(el)el.value=String(o[f]??'');}
+ render();
+}
+function formData(){
+ const o={...data.offers[index]};for(const f of fields){const el=$('form').elements.namedItem(f);if(el)o[f]=f==='price'?Number(el.value):el.value.trim();}
+ if(!o.reviewStatus)o.reviewStatus='pending';return o;
+}
+function validate(){const o=data.offers[index];const r=auditOffer(o);$('validation').textContent='Publicável: '+(r.displayable?'SIM (regras automáticas)':'NÃO')+'\n'+r.errors.concat(r.warnings).join('\n');}
+$('form').onsubmit=e=>{e.preventDefault();if(index<0)return;data.offers[index]={...formData(),reviewStatus:'pending'};message('Edição salva como pendente. Aprove após a revisão.');render();select(index);};
+$('hold').onclick=()=>{if(index<0)return;data.offers[index]={...formData(),reviewStatus:'hold'};message('Oferta suspensa.');render();select(index);};
+$('approve').onclick=()=>{if(index<0)return;const o={...formData(),reviewStatus:'approved'};const r=auditOffer(o);if(!r.displayable){message('Não aprovado: '+r.errors.join('; '));return;}data.offers[index]=o;message('Oferta aprovada nas regras automáticas. Confira manualmente o anúncio externo.');render();select(index);};
+$('load').onclick=async()=>{try{const r=await fetch('../offers.json',{cache:'no-store'});if(!r.ok)throw Error('HTTP '+r.status);const incoming=await r.json();if(!Array.isArray(incoming.offers))throw Error('Formato não reconhecido');data={...incoming,offers:incoming.offers.map(o=>({...o}))};index=-1;$('form').hidden=true;render();message('Catálogo carregado.');}catch(e){message('Erro: '+e.message);}};
+$('import').onchange=async e=>{const file=e.target.files?.[0];if(!file)return;try{const incoming=JSON.parse(await file.text());const rows=Array.isArray(incoming)?incoming:Array.isArray(incoming.offers)?incoming.offers:null;if(!rows)throw Error('JSON precisa conter offers[]');let added=0,changed=0;const map=new Map(data.offers.map((o,i)=>[key(o),i]));for(const row of rows){if(!row||typeof row!=='object')continue;const k=key(row);if(!row.partId||!row.store||!row.url)continue;const oldIndex=map.get(k);if(oldIndex===undefined){map.set(k,data.offers.length);data.offers.push({...row,reviewStatus:'pending'});added++;}else{const original=data.offers[oldIndex];const next={...original,...row};if(JSON.stringify({...original,reviewStatus:null,reviewNote:null})!==JSON.stringify({...next,reviewStatus:null,reviewNote:null})){data.offers[oldIndex]={...next,reviewStatus:'pending'};changed++;}}}index=-1;$('form').hidden=true;render();message('Importação: '+added+' novos e '+changed+' alterados, todos pendentes.');}catch(err){message('Importação rejeitada: '+err.message);}e.target.value='';};
+$('export').onclick=()=>{if(!Array.isArray(data.offers)||!data.offers.length){message('Carregue um catálogo antes de exportar.');return;}const blob=new Blob([JSON.stringify(data,null,2)+'\n'],{type:'application/json'});const url=URL.createObjectURL(blob);const a=document.createElement('a');a.href=url;a.download='offers.json';a.click();setTimeout(()=>URL.revokeObjectURL(url),1000);message('Arquivo exportado. Revise antes de publicar no GitHub.');};
+$('search').oninput=render;
+render();
+</script></body></html>
