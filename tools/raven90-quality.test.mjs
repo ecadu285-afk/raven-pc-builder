@@ -1,0 +1,16 @@
+import assert from 'node:assert/strict';
+import {offerQuality,rankFeaturedGroups} from '../raven90-quality.mjs';
+const now=new Date('2026-11-16T12:00:00Z');
+const base={partId:'5600g',store:'shopee',url:'https://shopee.com.br/valid',price:670,checkedAt:'2026-11-15',title:'AMD Ryzen 5 5600G',modelName:'AMD Ryzen 5 5600G',category:'cpu',condition:'new',affiliate:false,imageUrl:'https://cf.shopee.com.br/file/valid'};
+const good=offerQuality(base,now);
+assert.equal(good.canDisplay,true);assert.equal(good.needsPhoto,false);assert.equal(good.recent,true);
+const without=offerQuality({...base,imageUrl:null},now);
+assert.equal(without.needsPhoto,true);assert.ok(without.score<good.score);
+const generic=offerQuality({...base,title:'SSD SATA 2.5 1TB',modelName:'SSD SATA 2.5 1TB',category:'ssd'},now);
+assert.ok(generic.reasons.some(x=>x.includes('Marca')));
+const old=offerQuality({...base,checkedAt:'2026-10-01'},now);assert.equal(old.recent,false);
+const blocked=offerQuality({...base,reviewStatus:'hold'},now);assert.equal(blocked.canDisplay,false);assert.equal(blocked.state,'suspensa');
+const groups=[{best:{...base,price:900,imageUrl:null},type:'cpu',primary:[]},{best:{...base,url:'https://shopee.com.br/2',price:880},type:'gpu',primary:[{}]}];
+const ranked=rankFeaturedGroups(groups,now);assert.equal(ranked.length,2);assert.equal(ranked[0].type,'gpu');
+assert.equal(rankFeaturedGroups([],now).length,0);
+console.log('PASS: Raven 8/9 qualidade, fotos e destaques (9 cenários)');

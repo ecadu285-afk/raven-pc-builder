@@ -1,3 +1,5 @@
 User-agent: *
 Allow: /
-# Adicione 'Sitemap: https://DOMINIO-REAL/sitemap.xml' após configurar o domínio oficial.
+Disallow: /raven-pc-builder/tools/
+Disallow: /raven-pc-builder/supabase/
+Sitemap: https://ecadu285-afk.github.io/raven-pc-builder/sitemap.xml
