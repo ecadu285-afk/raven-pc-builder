@@ -4,6 +4,7 @@ import {
   ravenMarketUser, ravenMarketReviews, ravenMarketReviewCreate,
   ravenMarketReviewDelete, ravenMarketOpenAccount
 } from './raven-market.js';
+import {publicOffers} from './offer-policy.mjs';
 
 const known=new Map(Object.entries(catalog).flatMap(([category,items])=>items.map(item=>[item.id,{...item,category}])));
 const labels={cpu:'Processadores',board:'Placas-mãe',gpu:'Placas de vídeo',ram:'Memórias RAM',ssd:'SSDs',hdd:'HDs',psu:'Fontes',case:'Gabinetes',cooler:'Coolers',other:'Outras peças'};
@@ -142,7 +143,8 @@ function productCard(item){
  review.addEventListener('click',()=>openMarketReviews(item));
  marketActions.append(save,cart,review);
  const a=element('a','offer-link',isRecent(o)?'Ver oferta':'Conferir preço na loja');a.href=safeUrl(o.url,o.store);a.target='_blank';a.rel=o.affiliate?'noopener noreferrer sponsored':'noopener noreferrer';
- content.append(title,store,price,marketActions,a);
+ const note=element('p','offer-trust-note',o.affiliateStatus==='confirmed'?'Link comissionado, conforme programa da loja.':'Comissão não confirmada · preço e estoque a conferir');
+ content.append(title,store,price,note,marketActions,a);
  if(item.primary.length>1||item.others.length){
    const detail=element('details','offer-alternatives');
    detail.append(element('summary','',(item.primary.length+item.others.length-1)+' outra(s) oferta(s) para comparar'));
@@ -287,7 +289,7 @@ async function start(){
    const response=await fetch('./offers.json',{cache:'no-store'});
    if(!response.ok)throw Error('Falha HTTP '+response.status);
    const data=await response.json();
-   all=(Array.isArray(data.offers)?data.offers:[]).filter(valid);
+   all=publicOffers(data.offers).filter(valid);
    groups=grouped(all.filter(o=>!['pc','kit'].includes(category(o))));
    categorySymbols();
    home();

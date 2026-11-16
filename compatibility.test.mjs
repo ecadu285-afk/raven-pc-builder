@@ -1,6 +1,6 @@
 import assert from 'node:assert/strict';
-import {evaluateCompatibility,cpuMemoryGenerations} from '../compatibility.js';
-import {catalog} from '../catalog.js';
+import {evaluateCompatibility,cpuMemoryGenerations} from './compatibility.js';
+import {catalog} from './catalog.js';
 const item=(type,id)=>{const v=catalog[type].find(x=>x.id===id);assert.ok(v,`${type}/${id}`);return v};
 const base={case:item('case','c-atx'),board:item('board','h61m-b'),cpu:item('cpu','i7-3770'),ram:item('ram','d3-8'),gpu:item('gpu','rx470'),ssd:item('ssd','sata120'),psu:item('psu','p450'),cooler:null};
 const run=(p)=>evaluateCompatibility({...base,...p});

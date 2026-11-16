@@ -1,0 +1,13 @@
+# Arquivos locais e credenciais: nunca publicar
+.env
+.env.*
+private/
+**/private/
+**/token.json
+**/config.json
+**/secrets.json
+**/market.json
+**/oauth*.json
+*.log
+relatorio-ofertas.json
+__pycache__/

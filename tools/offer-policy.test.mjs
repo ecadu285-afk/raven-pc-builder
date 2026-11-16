@@ -1,0 +1,18 @@
+import assert from 'node:assert/strict';
+import {auditOffer,offerAgeDays,publicOffers,trustedOfferUrl} from '../offer-policy.mjs';
+const now=new Date('2026-11-15T13:00:00Z');
+const sample={partId:'5600g',title:'Ryzen 5 5600G',category:'cpu',price:800,store:'mercadolivre',url:'https://meli.la/abcdef',checkedAt:'2026-11-15',condition:'new',affiliate:true};
+assert.equal(auditOffer(sample,now).displayable,true);
+assert.equal(auditOffer({...sample,reviewStatus:'pending'},now).displayable,false);
+assert.equal(auditOffer({...sample,reviewStatus:'hold'},now).displayable,false);
+assert.equal(auditOffer({...sample,category:'cpu',title:'PC Gamer completo Ryzen 5 5600G'},now).displayable,false);
+assert.equal(auditOffer({...sample,partId:'i3-3240',price:5990},now).displayable,false);
+assert.equal(auditOffer({...sample,category:'ssd',title:'SSD SATA 1TB',price:3799},now).displayable,false);
+assert.equal(auditOffer({...sample,checkedAt:'2026-09-01'},now).displayable,false);
+assert.equal(auditOffer({...sample,checkedAt:'2026-12-01'},now).displayable,false);
+assert.equal(auditOffer({...sample,checkedAt:'2026-02-30'},now).displayable,false);
+assert.equal(offerAgeDays('2026-11-15',now),0);
+assert.equal(trustedOfferUrl('https://mercadolivre.com.br.evil.test/fake','mercadolivre'),null);
+assert.equal(trustedOfferUrl('javascript:alert(1)','mercadolivre'),null);
+assert.equal(publicOffers([sample,{...sample,reviewStatus:'hold'}],now).length,1);
+console.log('PASS: 13 verificações de publicação segura das ofertas');

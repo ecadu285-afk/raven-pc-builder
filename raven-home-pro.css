@@ -108,3 +108,7 @@
  .raven-home-pro .market-offers-section .offer-visual{height:139px}
 }
 @media(prefers-reduced-motion:reduce){.raven-category-grid>a,.raven-home-pro .step-link{transition:none}}
+
+/* Raven 6.2: navegação visível e legível em telas menores */
+.market-nav-strip nav{overflow-x:auto;overscroll-behavior-x:contain;scrollbar-width:thin}
+.market-nav-strip nav a{white-space:nowrap}

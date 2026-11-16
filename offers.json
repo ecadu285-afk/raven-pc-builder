@@ -163,7 +163,9 @@
       "affiliate": true,
       "category": "ssd",
       "modelName": "SSD SATA 2.5 1TB",
-      "title": "SSD SATA 2.5 1TB"
+      "title": "SSD SATA 2.5 1TB",
+      "reviewStatus": "hold",
+      "reviewNote": "Revisar preço, categoria, modelo e anúncio antes de publicar novamente"
     },
     {
       "partId": "r39-ssd-ssd-sata-2-5-500gb",
@@ -412,7 +414,9 @@
       "modelName": "AMD Ryzen 7 5700G",
       "title": "CPU GAMER SNOW AMD RYZEN 7 5700G, 16GB RAM, NVME 500GB, WATERCOOLER 240mm, Gabinete C/3 Fans RGB",
       "imageUrl": "https://cf.shopee.com.br/file/br-11134207-81ztc-mk9q05p4bh8j7e",
-      "priceCondition": "pix"
+      "priceCondition": "pix",
+      "reviewStatus": "hold",
+      "reviewNote": "Revisar preço, categoria, modelo e anúncio antes de publicar novamente"
     },
     {
       "partId": "r30-cpu-amd-ryzen-7-5700x3d",
@@ -718,7 +722,9 @@
       "imageUrl": "",
       "priceCondition": "",
       "category": "ssd",
-      "modelName": "SSD SATA 2.5 1TB"
+      "modelName": "SSD SATA 2.5 1TB",
+      "reviewStatus": "hold",
+      "reviewNote": "Revisar preço, categoria, modelo e anúncio antes de publicar novamente"
     },
     {
       "partId": "r39-ssd-ssd-sata-2-5-500gb",
@@ -1264,7 +1270,9 @@
       "imageUrl": "https://cf.shopee.com.br/file/br-11134207-820l7-ml7352sln66e75",
       "priceCondition": "pix",
       "category": "cpu",
-      "modelName": "Intel Core i3-3240"
+      "modelName": "Intel Core i3-3240",
+      "reviewStatus": "hold",
+      "reviewNote": "Revisar preço, categoria, modelo e anúncio antes de publicar novamente"
     },
     {
       "partId": "5500",

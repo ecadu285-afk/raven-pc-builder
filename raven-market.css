@@ -100,3 +100,5 @@
 .builder-v8 .builder-account-menu-links a{color:#f4eaff;text-decoration:none;border-radius:7px;padding:10px;font-size:12px;font-weight:750}
 .builder-v8 .builder-account-menu-links a:hover{background:#433051}
 @media(max-width:440px){.builder-v8 .builder-account-menu>summary{font-size:11px;padding:8px}}
+
+.offer-trust-note{font-size:.76rem;line-height:1.42;opacity:.83;margin:2px 0 7px}

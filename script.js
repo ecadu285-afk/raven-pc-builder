@@ -1,6 +1,7 @@
 import {evaluateCompatibility,memoryConflicts} from './compatibility.js';
 import {ravenInitAccount,ravenGetAccount,ravenOpenAccount,ravenAccountConfigured,ravenListBuilds,ravenSaveBuild,ravenDeleteBuild} from './raven-account.js';
 import {catalog} from './catalog.js';
+import {publicOffers} from './offer-policy.mjs';
 const groups=[
  {id:'case',name:'Gabinete',icon:'▣',desc:'Escolha a estrutura e o visual da sua máquina.',options:[{id:'case1',name:'Raven Noir M-ATX',desc:'Preto fosco · vidro lateral · micro-ATX',price:320,form:'mATX',gpuMaxMm:300},{id:'case2',name:'Raven Obsidian ATX',desc:'Preto fosco · vidro lateral · ATX',price:490,form:'ATX',gpuMaxMm:360}]},
  {id:'board',name:'Placa-mãe',icon:'▦',desc:'A base que conecta todos os componentes.',options:[{id:'b550',name:'B550M AM4 DDR4',desc:'Micro-ATX · soquete AM4 · DDR4',price:650,socket:'AM4',memory:'DDR4',form:'mATX',biosNote:'Verifique a versão da BIOS para a CPU escolhida.'},{id:'b450',name:'B450M AM4 DDR4',desc:'Micro-ATX · soquete AM4 · DDR4',price:480,socket:'AM4',memory:'DDR4',form:'mATX',biosNote:'Verifique a versão da BIOS para a CPU escolhida.'},{id:'b650',name:'B650M AM5 DDR5',desc:'Micro-ATX · soquete AM5 · DDR5',price:900,socket:'AM5',memory:'DDR5',form:'mATX'},{id:'b650atx',name:'B650 ATX AM5 DDR5',desc:'ATX · soquete AM5 · DDR5 · mais espaço',price:1150,socket:'AM5',memory:'DDR5',form:'ATX'}]},
@@ -699,7 +700,7 @@ function ravenRenderGallery(){
 }
 for(const id of ['offerGallerySearch','offerGalleryCategory','offerGalleryStore','offerGalleryRecent'])document.getElementById(id)?.addEventListener(id==='offerGallerySearch'?'input':'change',ravenRenderGallery);
 
-async function ravenLoadOffers(){try{const r=await fetch('./offers.json',{cache:'no-store'});if(!r.ok)throw Error('HTTP '+r.status);const data=await r.json();ravenOffers=Array.isArray(data.offers)?data.offers.filter(ravenVerifiedOffer):[];ravenHistory=Array.isArray(data.history)?data.history.filter(h=>ravenVerifiedOffer({...h,url:h.url||'https://'+(RAVEN_STORES[h.store]?.domain||'invalid')})):[];}catch(e){ravenOffers=[];console.warn('Ofertas indisponíveis:',e);}ravenOffersLoaded=true;ravenRenderMarketPresets();render();ravenRenderMarket();ravenRenderGallery();}
+async function ravenLoadOffers(){try{const r=await fetch('./offers.json',{cache:'no-store'});if(!r.ok)throw Error('HTTP '+r.status);const data=await r.json();ravenOffers=publicOffers(data.offers).filter(ravenVerifiedOffer);ravenHistory=Array.isArray(data.history)?data.history.filter(h=>ravenVerifiedOffer({...h,url:h.url||'https://'+(RAVEN_STORES[h.store]?.domain||'invalid')})):[];}catch(e){ravenOffers=[];console.warn('Ofertas indisponíveis:',e);}ravenOffersLoaded=true;ravenRenderMarketPresets();render();ravenRenderMarket();ravenRenderGallery();}
 document.getElementById('onlyOffers')?.addEventListener('change',ravenRenderMarket);
 document.getElementById('marketRefresh')?.addEventListener('click',ravenLoadOffers);
 // A lista de ofertas acompanha a seleção sem alterar a lógica 3D existente.
