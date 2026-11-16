@@ -8,6 +8,7 @@ import {publicOffers} from './offer-policy.mjs';
 import {filterCatalogOffers} from './catalog-filters.mjs';
 import {productFacts,productFactsDescription} from './product-details.mjs';
 import {evidenceFor} from './raven79-intel.mjs';
+import {offerQuality,rankFeaturedGroups} from './raven90-quality.mjs';
 
 const known=new Map(Object.entries(catalog).flatMap(([category,items])=>items.map(item=>[item.id,{...item,category}])));
 const labels={cpu:'Processadores',board:'Placas-mãe',gpu:'Placas de vídeo',ram:'Memórias RAM',ssd:'SSDs',hdd:'HDs',psu:'Fontes',case:'Gabinetes',cooler:'Coolers',other:'Outras peças'};
@@ -124,8 +125,11 @@ function productCard(item){
  visual.append(element('span','offer-label',labels[item.type]||'Componente'),caption);
  const content=element('div','offer-info');
  const title=element('h3','',item.model);
+ const quality=offerQuality(o);
  const store=element('div','offer-store',(item.primary.length>1?item.primary.length+' lojas · ':'')+(isRecent(o)?'Menor preço recente: ':'Preço antigo cadastrado em: ')+shops[o.store].name+(o.condition==='used'?' · Usado':''));
  const price=element('div','offer-price',BRL(o.price));
+ article.dataset.dataQuality=quality.state;
+ article.title='Completude do anúncio: '+quality.reasons.slice(0,3).join('; ');
  price.append(element('small','',isRecent(o)
     ? 'Preço conferido em '+o.checkedAt.split('-').reverse().join('/')
     : 'PREÇO ANTIGO · última conferência '+o.checkedAt.split('-').reverse().join('/')+'. Consulte o anúncio antes de comprar.'));
@@ -296,15 +300,9 @@ ravenMarketInit(()=>{
 
 function home(){
  const root=$('home-deals');if(!root)return;
- const priority=['gpu','cpu','board','ram','ssd','psu','case','hdd'];
- const sorted=[];
- for(const categoryName of priority){
-   const matches=groups.filter(g=>g.type===categoryName).sort((a,b)=>a.best.price-b.best.price);
-   if(matches.length)sorted.push(matches[0]);
- }
- // Evita várias ofertas do mesmo grupo e mantém diversidade.
- for(const item of groups.slice().sort((a,b)=>a.best.price-b.best.price))if(sorted.length<8&&!sorted.includes(item))sorted.push(item);
- root.replaceChildren(...sorted.slice(0,8).map(productCard));
+ // A seleção da vitrine leva em conta completude e consulta recente, sem declarar validação.
+ const sorted=rankFeaturedGroups(groups);
+ root.replaceChildren(...sorted.map(productCard));
  const count=$('live-offer-count');if(count)count.textContent=String(all.length);
  if(!sorted.length)root.append(element('div','no-offers','Ainda não há ofertas publicadas para exibir.'));
 }

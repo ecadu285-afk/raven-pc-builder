@@ -36,6 +36,8 @@ jobs:
         run: node tools/builder-published-parts.test.mjs
       - name: Testar ferramentas Raven 7.2–7.9
         run: node tools/raven79.test.mjs
+      - name: Testar Raven 8.0 a 9.0
+        run: node tools/raven90.test.mjs
       - name: Verificar ofertas publicadas
         run: node tools/audit-offers.mjs --strict
       - name: Verificar links internos e sintaxe
