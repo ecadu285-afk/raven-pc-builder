@@ -875,7 +875,19 @@ document.getElementById('garageImportLocal')?.addEventListener('click',async()=>
 ravenGarageRender();
 ravenInitAccount({onChange:ravenRefreshGarage});
 
-document.getElementById('smartGenerate')?.addEventListener('click',()=>{const budget=Number(document.getElementById('smartBudget').value),out=document.getElementById('smartResult');if(!Number.isFinite(budget)||budget<600||budget>25000){out.textContent='Informe um orçamento entre R$ 600 e R$ 25.000.';return}const candidates=ravenMarketBundles().filter(p=>p.price<=budget).sort((a,b)=>b.count-a.count||b.price-a.price);if(!candidates.length){out.textContent='Ainda não há kit inicial com anúncios confirmados dentro desse orçamento. Não será gerado um PC com valores fictícios.';return}const choice=candidates[0];ravenSetBuild(choice.ids);out.textContent=choice.title+' — subtotal publicado de '+fmt(choice.price)+' para '+choice.count+'/8 peças. Ainda NÃO é um PC completo. Acrescente as demais peças quando houver ofertas publicadas, conferindo BIOS, fonte, cooler e compatibilidade.';});
+document.getElementById('smartGenerate')?.addEventListener('click',()=>{
+ const budget=Number(document.getElementById('smartBudget').value);
+ const out=document.getElementById('smartResult');
+ if(!Number.isFinite(budget)||budget<600||budget>25000){
+  out.textContent='Informe um orçamento entre R$ 600 e R$ 25.000.';return;
+ }
+ const goal=document.getElementById('smartGoal').value;
+ const purpose={office:'general',gaming:'games',creative:'creative',upgrade:'upgrade'}[goal]||'general';
+ const next=new URL('orcamento.html',location.href);
+ next.searchParams.set('valor',String(budget));
+ next.searchParams.set('uso',purpose);
+ window.location.href=next.href;
+});
 document.getElementById('nextShare')?.addEventListener('click',()=>document.getElementById('link')?.click());
 document.getElementById('nextImage')?.addEventListener('click',()=>document.getElementById('shot')?.click());
 // Garagem inicializada junto ao login e ao banco de dados.
