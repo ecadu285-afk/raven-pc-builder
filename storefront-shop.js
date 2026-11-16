@@ -7,6 +7,7 @@ import {
 import {publicOffers} from './offer-policy.mjs';
 import {filterCatalogOffers} from './catalog-filters.mjs';
 import {productFacts,productFactsDescription} from './product-details.mjs';
+import {evidenceFor} from './raven79-intel.mjs';
 
 const known=new Map(Object.entries(catalog).flatMap(([category,items])=>items.map(item=>[item.id,{...item,category}])));
 const labels={cpu:'Processadores',board:'Placas-mãe',gpu:'Placas de vídeo',ram:'Memórias RAM',ssd:'SSDs',hdd:'HDs',psu:'Fontes',case:'Gabinetes',cooler:'Coolers',other:'Outras peças'};
@@ -85,6 +86,7 @@ function photoForGroup(item){
    // Não reutilize foto de outra referência como se fosse do produto mais barato.
    if(offer.partId!==item.best.partId)continue;
    if(item.type==='cpu' && /\b(?:pc\s*gamer|computador\s*completo)\b/i.test(offer.title||''))continue;
+   if(evidenceFor(offer,catalog).issues.length)continue;
    const url=imageFor(offer);
    if(url)return {url,offer};
  }
@@ -153,7 +155,13 @@ function productCard(item){
  marketActions.append(save,cart,review);
  const a=element('a','offer-link',isRecent(o)?'Ver oferta':'Conferir preço na loja');a.href=safeUrl(o.url,o.store);a.target='_blank';a.rel=o.affiliate?'noopener noreferrer sponsored':'noopener noreferrer';
  const note=element('p','offer-trust-note',o.affiliateStatus==='confirmed'?'Link comissionado, conforme programa da loja.':'Comissão não confirmada · preço e estoque a conferir');
- content.append(title,store,price,note);
+ const evidence=evidenceFor(o,catalog);
+ const evidenceLine=element('p','offer-model-evidence',evidence.label+' · '+evidence.imageStatus);
+ if(evidence.issues.length){
+  evidenceLine.classList.add('needs-review');
+  evidenceLine.textContent='Revisão de modelo necessária: '+evidence.issues.join('; ')+'. Confira o SKU antes da compra.';
+ }
+ content.append(title,store,price,note,evidenceLine);
  const detailFacts=productFacts(o,known.get(o.partId));
  const technical=element('details','offer-technical');
  const technicalSummary=element('summary','',detailFacts.length?'Ficha técnica disponível ('+detailFacts.length+' dados)':'Detalhes e identificação');
@@ -169,7 +177,9 @@ function productCard(item){
  }else{
   technical.append(element('p','offer-spec-disclaimer','Não há ficha técnica confiável para esta referência. Confira as especificações diretamente no anúncio.'));
  }
- content.append(technical,marketActions,a);
+ const historyLink=element('a','offer-history-link','Histórico de preços registrados');
+ historyLink.href='historico.html?produto='+encodeURIComponent(o.partId);
+ content.append(technical,historyLink,marketActions,a);
  if(item.primary.length>1||item.others.length){
    const detail=element('details','offer-alternatives');
    detail.append(element('p','offer-comparison-warning','Compare capacidade, revisão, marca e condição. Anúncios agrupados podem não ter exatamente o mesmo SKU.'));

@@ -1,0 +1,67 @@
+/* Raven 7.9 — ferramentas novas independentes do CSS legado */
+:root{color-scheme:dark;--bg:#0e1018;--panel:#1b1d2b;--panel2:#252339;--line:#403d55;--text:#f8f5ff;--muted:#c4bfd5;--accent:#bda5ff;--mint:#b8f7b5;--warning:#f4d69a}
+*{box-sizing:border-box}
+html{scroll-behavior:smooth}
+body{font:15px/1.58 system-ui,-apple-system,Segoe UI,sans-serif;color:var(--text);background:radial-gradient(ellipse at 18% -7%,#3c2c52 0%,transparent 35%),var(--bg);min-height:100vh;margin:0}
+button,input,textarea,select{font:inherit}a{color:var(--accent)}button{cursor:pointer}button:disabled{cursor:not-allowed;opacity:.5}
+a:focus-visible,button:focus-visible,input:focus-visible,textarea:focus-visible,select:focus-visible,summary:focus-visible{outline:3px solid var(--mint);outline-offset:3px}
+.raven-wrap{max-width:1210px;margin:0 auto;padding:0 22px}
+.raven-top{position:sticky;top:0;z-index:30;background:#171321ee;border-bottom:1px solid var(--line);backdrop-filter:blur(12px)}
+.raven-nav{min-height:64px;display:flex;gap:14px;align-items:center;justify-content:space-between;flex-wrap:wrap;padding-block:10px}
+.raven-mark{font-weight:900;color:var(--text);text-decoration:none;letter-spacing:.06em;font-size:14px}
+.raven-mark span{display:inline-flex;background:#e48a4a;color:#140e1e;border-radius:9px;padding:6px 8px;margin-right:8px;font-size:17px}
+.raven-nav-links{display:flex;gap:15px;align-items:center;flex-wrap:wrap}
+.raven-nav-links a{text-decoration:none;color:#d9cfee;font-size:12px;font-weight:700}
+.raven-nav-links a:hover,.raven-nav-links a[aria-current=page]{color:var(--mint)}
+.raven-main{padding-top:46px;padding-bottom:70px}
+.raven-eyebrow{font-size:11px;letter-spacing:.18em;color:var(--mint);text-transform:uppercase;font-weight:800}
+.raven-hero h1{font-size:clamp(32px,5vw,56px);letter-spacing:-.045em;line-height:1.12;margin:12px 0 10px}
+.raven-hero h1 em{font-style:normal;color:var(--accent)}
+.raven-hero p{max-width:850px;color:var(--muted);margin-bottom:22px}
+.raven-panel{border:1px solid var(--line);border-radius:18px;background:linear-gradient(155deg,#211c2c,#191d26);padding:clamp(16px,3vw,28px);margin-top:22px;box-shadow:0 8px 32px #0002}
+.raven-panel h2{font-size:clamp(19px,2.6vw,26px);margin:0 0 12px}
+.raven-panel h3{font-size:17px;margin:6px 0 12px}
+.raven-muted,.raven-foot{color:var(--muted);font-size:13px}
+.raven-notice{color:#e6ddc9;border-left:3px solid var(--warning);background:#37301f;padding:12px 14px;border-radius:9px;font-size:12px;line-height:1.6}
+.raven-notice.safe{border-color:var(--mint);background:#1e2e27;color:#ddf1e7}
+.raven-controls{display:flex;align-items:end;gap:12px;flex-wrap:wrap}
+.raven-controls label{display:grid;gap:5px;flex:1;min-width:180px;font-size:12px;color:var(--muted)}
+.raven-controls input,.raven-controls select,.raven-controls textarea,.raven-field{width:100%;min-width:0;padding:12px 14px;border-radius:10px;border:1px solid #686078;background:#10111c;color:var(--text)}
+.raven-btn{border:1px solid #9781c8;padding:11px 15px;border-radius:10px;background:#a68adb;color:#160d20;font-weight:850;text-decoration:none;display:inline-flex;align-items:center;justify-content:center;min-height:43px;font-size:13px}
+.raven-btn.secondary{background:#2d2741;color:#f7f1ff}
+.raven-btn:hover{filter:brightness(1.1)}
+.raven-cards{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:12px}
+.raven-card{border:1px solid var(--line);border-radius:13px;padding:16px;background:#151923;min-width:0}
+.raven-card h3{font-size:15px}
+.raven-card b{color:var(--mint)}
+.raven-card small{color:var(--muted)}
+.raven-card p{font-size:13px}
+.raven-pill{display:inline-flex;gap:5px;align-items:center;background:#293344;border:1px solid #5c697c;border-radius:50px;font-size:11px;padding:3px 9px;color:#e1eaf0}
+.raven-results{display:grid;gap:10px}
+.raven-result{padding:12px;border-radius:10px;border:1px solid #4b4962;background:#1c2230}
+.raven-result strong,.raven-result small{display:block}
+.raven-result small{font-size:12px;color:var(--muted)}
+.raven-table-scroll{overflow-x:auto}
+.raven-table{width:100%;border-collapse:collapse;font-size:13px;min-width:560px}
+.raven-table th,.raven-table td{text-align:left;border-bottom:1px solid var(--line);padding:10px 9px;vertical-align:top}
+.raven-table th{color:var(--mint);font-size:11px}
+.raven-table td{word-break:break-word}
+.raven-comparison{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:14px}
+.raven-comparison textarea{min-height:98px;resize:vertical}
+.raven-comparison .raven-card{display:grid;align-content:start;gap:9px}
+.raven-histogram{display:grid;grid-template-columns:120px 1fr 95px;gap:8px;align-items:center;margin-top:12px;font-size:12px}
+.raven-bar-bg{background:#252b36;border-radius:99px;height:13px;overflow:hidden}
+.raven-bar{height:100%;background:linear-gradient(90deg,#bda5ff,#b8f7b5);border-radius:99px}
+.raven-date{color:var(--muted)}
+.raven-chat{display:grid;gap:12px;max-height:60vh;overflow-y:auto;padding:10px 0}
+.raven-msg{padding:13px 15px;border-radius:13px;border:1px solid var(--line);max-width:95%;white-space:pre-wrap;font-size:13px;line-height:1.65}
+.raven-msg.user{justify-self:end;background:#302643;border-color:#8b70ba}
+.raven-msg.assistant{justify-self:start;background:#182a26;border-color:#426f5a}
+.raven-shortcuts{display:flex;gap:7px;flex-wrap:wrap;margin-top:10px}
+.raven-shortcuts button{border:1px solid #686078;background:#28253c;color:#dfd5f1;padding:8px 10px;border-radius:8px;font-size:12px;cursor:pointer}
+.raven-footer{border-top:1px solid var(--line);padding:22px 0 28px;color:var(--muted);font-size:12px}
+.raven-status{padding:12px 0;font-size:13px;color:#d8eacb;min-height:30px}
+.raven-status:empty{display:none}
+@media(max-width:900px){.raven-cards,.raven-comparison{grid-template-columns:1fr 1fr}}
+@media(max-width:650px){.raven-wrap{padding-inline:14px}.raven-main{padding-top:27px}.raven-nav{align-items:flex-start}.raven-nav-links{gap:12px}.raven-comparison,.raven-cards{grid-template-columns:1fr}.raven-controls>*{min-width:100%!important}.raven-table{min-width:520px}.raven-histogram{grid-template-columns:85px 1fr 80px}.raven-hero h1{font-size:34px}}
+@media(prefers-reduced-motion:reduce){html{scroll-behavior:auto}*,*::before,*::after{animation-duration:.01ms!important;transition-duration:.01ms!important}}

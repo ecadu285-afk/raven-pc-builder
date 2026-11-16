@@ -141,3 +141,21 @@
 .raven-part-comparison a{display:block;margin:5px 0;border-radius:6px;padding:6px 9px;font-size:11px;color:#d5eec6;text-decoration:underline;text-underline-offset:3px}
 .raven-part-comparison a:hover{background:rgba(146,198,157,.12)}
 @media(max-width:700px){.raven-builder-list-actions{align-items:stretch}.raven-builder-shortcuts{width:100%}.raven-builder-shortcuts button{flex:1;min-width:110px}.raven-step-count{font-size:9px}}
+
+
+/* Raven 7.8 — controles compactos e acessíveis no celular */
+#raven-lowpower[aria-pressed="true"]{border-color:#7bb691;color:#d8ffcb;background:#203329}
+#raven-lowpower{min-height:36px;font-size:11px;white-space:normal}
+@media(max-width:760px){
+ #steps{display:flex;flex-wrap:nowrap;overflow-x:auto;scroll-snap-type:x proximity;overscroll-behavior-x:contain;scrollbar-width:thin;padding-bottom:8px}
+ #steps .step{min-width:129px;flex:0 0 auto;scroll-snap-align:start}
+ .builder-headlinks{overflow-x:auto;scrollbar-width:thin;overscroll-behavior-x:contain}
+ .builder-headlinks a{white-space:nowrap}
+ .view-bottom{gap:8px;flex-wrap:wrap}
+ .config .toolbar input[type="search"]{min-width:0;width:100%}
+ .raven-builder-list-actions{gap:7px}
+ .raven-part-comparison a{min-height:38px;display:flex;align-items:center}
+}
+@media(prefers-reduced-motion:reduce){
+ .view-badge,.status i{animation:none!important}
+}

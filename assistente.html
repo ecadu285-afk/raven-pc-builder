@@ -1,0 +1,72 @@
+<!doctype html><html lang="pt-BR"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<meta name="theme-color" content="#171321"><meta name="description" content="Assistente Raven Beta ajuda a planejar computadores por orçamento e uso com regras transparentes e anúncios aprovados.">
+<title>Assistente Raven Beta | PC Builder 7.9</title><link rel="stylesheet" href="raven79.css?v=1"></head><body>
+<header class="raven-top"><div class="raven-wrap raven-nav"><a class="raven-mark" href="inicio.html"><span>R.</span>RAVEN PC BUILDER</a>
+<nav class="raven-nav-links"><a href="inicio.html">Início</a><a href="produtos.html">Peças</a><a href="index.html">Montador 3D</a><a href="orcamento.html">Orçamento</a><a href="comparar-pcs.html">Comparar PCs</a><a href="historico.html">Histórico</a></nav></div></header>
+<main class="raven-wrap raven-main">
+<div class="raven-hero"><div class="raven-eyebrow">RAVEN 7.9 · ASSISTENTE INTELIGENTE BETA</div><h1>Converse com a <em>Raven.</em></h1>
+<p>Diga para que quer seu computador e quanto pode investir. O assistente interpreta o pedido e consulta anúncios aprovados, sem prometer configurações perfeitas.</p></div>
+<div class="raven-notice safe"><strong>Como funciona:</strong> esta primeira versão usa regras locais de classificação e compatibilidade, <strong>não é um modelo de IA generativa</strong>. Nenhuma mensagem é enviada a provedores de IA. As cotações são cadastradas, não consultadas em tempo real.</div>
+<section class="raven-panel" aria-label="Conversa com o assistente">
+<div id="chat" class="raven-chat" aria-live="polite"><div class="raven-msg assistant">Raven Assistente Beta: Qual é seu orçamento e para que vai usar o PC? Exemplo: Quero um PC para jogos até R$ 3.000.</div></div>
+<form id="form"><div class="raven-controls"><label style="flex:1 1 65%">Descreva o PC que você precisa<input id="query" type="text" maxlength="500" required autocomplete="off" placeholder="Ex.: PC para editar vídeos com R$ 4.000"></label><button class="raven-btn" type="submit" id="send" disabled>Consultar ofertas</button></div></form>
+<div class="raven-shortcuts" aria-label="Exemplos">
+<button type="button" data-query="Quero um PC para jogos até R$ 3000">PC para jogos R$ 3.000</button>
+<button type="button" data-query="PC para editar vídeos por R$ 4000">PC para edição R$ 4.000</button>
+<button type="button" data-query="Quero um PC barato para estudar com R$ 2000">PC para estudos R$ 2.000</button>
+<button type="button" data-query="Base para upgrades futuros com R$ 4500 AMD">Upgrade AMD R$ 4.500</button>
+</div>
+<p class="raven-status" id="status" role="status">Carregando anúncios aprovados...</p>
+</section>
+<section class="raven-panel"><h2>Como interpretar as respostas</h2>
+<div class="raven-cards"><div class="raven-card"><h3>Compatibilidade</h3><p>Verificação parcial de socket, memória, gabinete e outros campos. BIOS e especificações reais sempre precisam de conferência.</p></div>
+<div class="raven-card"><h3>Preços</h3><p>Apenas anúncios publicados e registrados nos últimos 14 dias. Frete, taxas e variações não são incluídos.</p></div>
+<div class="raven-card"><h3>Privacidade</h3><p>O texto é processado pelo navegador. Não inclua senhas, CPF, endereço ou informações privadas.</p></div></div>
+</section></main>
+<footer class="raven-footer"><div class="raven-wrap">Raven Creatives Studios · Assistente experimental de regras · <a href="afiliados.html">Transparência comercial</a></div></footer>
+<script type="module">
+import {publicOffers} from './offer-policy.mjs';
+import {recommendBudget,BUILD_GROUPS} from './budget-engine.js';
+import {understandHardwareRequest,assistantExplanation} from './raven79-assistant.mjs';
+const $=id=>document.getElementById(id),BRL=n=>Number(n).toLocaleString('pt-BR',{style:'currency',currency:'BRL'});
+const node=(tag,cls,text)=>{const e=document.createElement(tag);if(cls)e.className=cls;if(text!==undefined)e.textContent=text;return e};
+let offers=[];
+function addMessage(type,text){const el=node('div','raven-msg '+type,text);$('chat').append(el);el.scrollIntoView({behavior:'smooth',block:'nearest'});return el}
+function buildList(result,reply){
+ const q=result?.chosen;if(!q)return;
+ const wrap=node('div','raven-msg assistant');
+ wrap.append(node('strong','','Peças consideradas no subtotal:'));
+ const list=node('ul');
+ for(const [key,label] of BUILD_GROUPS){
+  const item=node('li');
+  const value=q.selected[key],isIntegrated=key==='gpu'&&q.parts?.gpu?.id==='igpu';
+  item.append(node('span','',label+': '+(value?.part?.name|| (isIntegrated?'Vídeo integrado declarado':'Não cotado'))));
+  if(value?.offer?.url){
+   const link=node('a','', ' · '+BRL(value.offer.price)+' na loja');
+   link.href=value.offer.url;link.rel='noopener noreferrer'+(value.offer.affiliate?' sponsored':'');link.target='_blank';item.append(link);
+  }list.append(item);
+ }
+ wrap.append(list);
+ const next=node('a','raven-btn secondary','Ver planejamento detalhado');
+ next.href='orcamento.html?valor='+encodeURIComponent(String(reply.budget))+'&uso='+encodeURIComponent(reply.purpose);
+ wrap.append(next);
+ $('chat').append(wrap);
+}
+$('form').addEventListener('submit',e=>{
+ e.preventDefault();
+ const text=$('query').value.trim();if(!text||text.length>500)return;
+ addMessage('user',text);$('query').value='';
+ const request=understandHardwareRequest(text);
+ const result=request.budget!==null?recommendBudget(offers,{budget:request.budget,brand:request.brand,
+  purpose:request.purpose,storage:request.storage}):null;
+ addMessage('assistant',assistantExplanation(request,result));
+ buildList(result,request);
+});
+document.querySelectorAll('[data-query]').forEach(btn=>btn.addEventListener('click',()=>{$('query').value=btn.dataset.query;$('query').focus()}));
+async function init(){
+ try{const response=await fetch('./offers.json',{cache:'no-store'});if(!response.ok)throw Error('HTTP '+response.status);
+ const data=await response.json();offers=publicOffers(data.offers);$('send').disabled=false;
+ $('status').textContent=offers.length+' anúncios elegíveis carregados. Informe seu orçamento.';
+ }catch(e){$('status').textContent='Não foi possível carregar os anúncios. Consulte o planejador após atualizar a página: '+e.message}
+}init();
+</script></body></html>

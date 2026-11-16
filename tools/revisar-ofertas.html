@@ -32,6 +32,8 @@ label input,label select,label textarea{margin-top:6px}
 <button id="load">Carregar offers.json atual</button>
 <label class="file-label" for="import">Importar JSON do robô</label><input id="import" type="file" accept=".json,application/json">
 <button id="preview" type="button">Prévia e validação</button>
+<button id="audit79" type="button">Auditoria do Market Bot 7.5</button>
+<button id="report79" type="button">Exportar relatório de qualidade</button>
 <button id="export" class="primary">Exportar catálogo revisado</button>
 </div>
 <div id="status" class="status" role="status"></div>
@@ -61,6 +63,8 @@ label input,label select,label textarea{margin-top:6px}
 <script type="module">
 import {auditOffer,qualityReport} from '../offer-policy.mjs';
 import {stageBotOffers} from '../offer-import65.mjs';
+import {catalog} from '../catalog.js';
+import {marketQualitySummary} from '../raven79-intel.mjs';
 const $=id=>document.getElementById(id);let data={offers:[],history:[]};let index=-1;let lastStage=null;
 const fields=['title','modelName','partId','price','category','store','condition','checkedAt','url','imageUrl','affiliateStatus','reviewStatus','reviewNote'];
 const message=t=>{$('status').textContent=t;};
@@ -112,6 +116,36 @@ $('preview').onclick=()=>{
   'Categorias: '+Object.entries(categories).map(([k,n])=>k+' '+n).join(', ')+
   (blocked.length?'\nPrimeiros bloqueios:\n'+blocked.join('\n'):'')+
   '\nNa exportação, pendentes continuam bloqueados para visitantes. Faça a publicação apenas por sua conta GitHub.');
+};
+// Auditoria local somente com campos públicos; sem chaves de afiliado nem API.
+function cleanQualityReport(){
+ if(!Array.isArray(data.offers)||!data.offers.length)throw Error('Carregue offers.json antes de auditar.');
+ return marketQualitySummary(data.offers,catalog);
+}
+$('audit79').onclick=()=>{
+ try{
+  const r=cleanQualityReport();
+  const stores=Object.entries(r.byStore).map(([k,v])=>k+': '+v).join(', ');
+  const issues=r.issues.slice(0,10).map(x=>x.store+' / '+x.partId+': '+x.problems.join('; '));
+  message('AUDITORIA RAVEN 7.5 (não publica): '+r.total+' registros · '+r.eligible+' elegíveis · '+r.recent+' preços recentes · '+
+   r.withoutPhoto+' elegíveis sem foto · '+r.withoutReference+' sem referência técnica cadastrada · '+r.duplicates.length+
+   ' duplicatas de URL/modelo.\nLojas: '+stores+(issues.length?'\nPendências principais:\n'+issues.join('\n'):'')+
+   '\nFotos e especificações continuam sujeitas à conferência do modelo exato.');
+ }catch(e){message(e.message)}
+};
+$('report79').onclick=()=>{
+ try{
+  const r=cleanQualityReport();
+  const body={schemaVersion:1,kind:'raven-market-quality-report',generatedAt:new Date().toISOString(),
+   total:r.total,eligible:r.eligible,recent:r.recent,withoutPhoto:r.withoutPhoto,
+   withoutReference:r.withoutReference,needsReview:r.needsReview,
+   byStore:r.byStore,duplicates:r.duplicates,issues:r.issues,disclaimer:r.disclaimer};
+  const blob=new Blob([JSON.stringify(body,null,2)+'\n'],{type:'application/json'});
+  const url=URL.createObjectURL(blob),a=document.createElement('a');
+  a.href=url;a.download='raven-market-auditoria-7-5.json';a.click();
+  setTimeout(()=>URL.revokeObjectURL(url),1000);
+  message('Relatório de auditoria exportado, sem credenciais. Nenhuma alteração foi publicada.');
+ }catch(e){message(e.message)}
 };
 $('export').onclick=()=>{
  if(!Array.isArray(data.offers)||!data.offers.length){message('Carregue um catálogo antes de exportar.');return;}
