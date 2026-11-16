@@ -165,7 +165,11 @@ function productCard(item){
   evidenceLine.classList.add('needs-review');
   evidenceLine.textContent='Revisão de modelo necessária: '+evidence.issues.join('; ')+'. Confira o SKU antes da compra.';
  }
- content.append(title,store,price,note,evidenceLine);
+ const caution=element('p','raven90-product-check',
+ quality.needsModel?'Identificação incompleta · confira marca, referência e capacidade na loja.':
+ quality.needsPhoto?'Foto não cadastrada · confirme o modelo no anúncio.':
+ 'Dados cadastrados · confirme vendedor, estado e preço na loja.');
+ content.append(title,store,price,caution,note,evidenceLine);
  const detailFacts=productFacts(o,known.get(o.partId));
  const technical=element('details','offer-technical');
  const technicalSummary=element('summary','',detailFacts.length?'Ficha técnica disponível ('+detailFacts.length+' dados)':'Detalhes e identificação');
