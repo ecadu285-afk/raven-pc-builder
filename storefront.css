@@ -79,3 +79,10 @@ main{min-height:55vh}
 .offer-spec-disclaimer{display:block;font-size:.72rem;line-height:1.45;color:#c0cfbe;margin-top:9px}
 .offer-comparison-warning{font-size:.74rem;line-height:1.55;color:#edc997;padding:4px 0}
 @media(max-width:450px){.offer-facts{grid-template-columns:1fr}}
+
+
+/* Raven 7.2/7.3 — procedência explícita de modelos e fotos */
+.offer-model-evidence{font-size:.73rem;line-height:1.5;color:#bfe7be;border-left:2px solid #80bb83;padding:3px 0 3px 9px;margin:7px 0}
+.offer-model-evidence.needs-review{color:#f2d8a5;border-color:#c79959;background:rgba(137,95,23,.12)}
+.offer-history-link{display:inline-flex;align-items:center;margin:7px 0 11px;font-size:.76rem;color:#c4a9f3;text-decoration:underline;text-underline-offset:3px;font-weight:750}
+@media(max-width:670px){.offer-history-link{min-height:36px;align-items:center}}
