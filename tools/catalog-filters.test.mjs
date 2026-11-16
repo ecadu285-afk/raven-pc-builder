@@ -17,4 +17,11 @@ assert.equal(test({maxPrice:600}).length,1);
 assert.equal(test({photoOnly:true}).length,1);
 assert.equal(test({maxPrice:'abc'}).length,3);
 assert.equal(validPriceLimit(-1),null);
-console.log('PASS: filtros 6.4 (11 cenários)');
+// Raven 6.6: filtro recente nunca deve reaproveitar uma oferta antiga.
+const byRecency=filters=>filterCatalogOffers(offers,filters,{
+ categoryOf:x=>x.category,isRecent:o=>o.partId==='a'&&o.store==='shopee'});
+assert.equal(byRecency({recentOnly:true}).length,1);
+assert.equal(byRecency({recentOnly:true,category:'gpu'}).length,0);
+assert.equal(byRecency({recentOnly:false}).length,3);
+assert.equal(test({recentOnly:true}).length,0); // Falha fechada sem verificação de data.
+console.log('PASS: filtros 6.6 (15 cenários)');
