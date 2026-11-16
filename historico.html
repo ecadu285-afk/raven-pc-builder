@@ -1,0 +1,81 @@
+<!doctype html>
+<html lang="pt-BR"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<meta name="description" content="Consulte preços cadastrados e alterações históricas realmente registradas no Raven PC Builder, com datas e lojas.">
+<meta name="theme-color" content="#171321"><title>Histórico de preços | Raven PC Builder 7.9</title>
+<link rel="stylesheet" href="raven79.css?v=1"></head><body>
+<header class="raven-top"><div class="raven-wrap raven-nav">
+<a class="raven-mark" href="inicio.html"><span>R.</span>RAVEN PC BUILDER</a>
+<nav class="raven-nav-links" aria-label="Navegação">
+<a href="inicio.html">Início</a><a href="produtos.html">Peças</a><a href="index.html">Montador 3D</a><a href="orcamento.html">Orçamento</a><a href="comparar-pcs.html">Comparar PCs</a><a href="assistente.html">Assistente</a></nav></div></header>
+<main class="raven-wrap raven-main">
+<div class="raven-hero"><div class="raven-eyebrow">RAVEN 7.4 · REGISTROS REAIS</div>
+<h1>Histórico <em>de preços.</em></h1>
+<p>Consulte alterações de valor cadastradas, a data de conferência e as lojas. Os preços são registros de anúncios, não cotações em tempo real.</p></div>
+<div class="raven-notice">O histórico começa onde o Raven possui registros. Não inventamos preços de dias anteriores. Comparações entre lojas não provam que duas ofertas possuem o mesmo vendedor, condição ou SKU.</div>
+<section class="raven-panel" aria-labelledby="historico-select"><h2 id="historico-select">Pesquisar componente</h2>
+<div class="raven-controls"><label>Buscar nome ou modelo<input type="search" id="filter" placeholder="Ryzen, SSD, RAM, GTX..." autocomplete="off"></label>
+<label>Modelo com anúncio aprovado<select id="part"><option value="">Carregando catálogo...</option></select></label>
+<label>Loja<select id="store"><option value="all">Todas as lojas</option><option value="mercadolivre">Mercado Livre</option><option value="shopee">Shopee</option><option value="amazon">Amazon</option><option value="kabum">KaBuM!</option><option value="terabyte">TerabyteShop</option></select></label></div>
+<p class="raven-status" id="status" role="status" aria-live="polite"></p>
+</section>
+<section class="raven-panel"><h2>Registros disponíveis</h2>
+<div class="raven-cards" id="metrics"></div><div id="timeline" class="raven-results" aria-live="polite"></div>
+<p class="raven-foot">Um ponto é o preço registrado naquela data. Não há cálculo de desconto ou variação quando faltam datas comparáveis.</p></section>
+<section class="raven-panel"><h2>Qualidade do catálogo</h2><div id="catalogStatus" class="raven-cards"></div><p class="raven-muted">Se você administra o Raven, continue cadastrando imagens e registrando os preços conferidos pelo Market Bot. A função de histórico registra apenas alterações fornecidas pelo catálogo; não pesquisa lojas sozinha.</p></section>
+</main><footer class="raven-footer"><div class="raven-wrap">Raven Creatives Studios · Informação de hardware e transparência de anúncios · <a href="afiliados.html">Links de afiliados</a></div></footer>
+<script type="module">
+import {catalog} from './catalog.js';
+import {publicOffers} from './offer-policy.mjs';
+import {catalogHealth,priceTimeline} from './raven79-intel.mjs';
+const $=id=>document.getElementById(id);
+const money=n=>Number(n).toLocaleString('pt-BR',{style:'currency',currency:'BRL'});
+const node=(tag,cls,text)=>{const e=document.createElement(tag);if(cls)e.className=cls;if(text!==undefined)e.textContent=text;return e};
+let offers=[],history=[],models=[],health=null;
+function labelItem(label,value){const card=node('div','raven-card');card.append(node('small','',label),node('h3','',String(value)));return card}
+function selectModels(){
+ const q=$('filter').value.toLowerCase().normalize('NFD').replace(/[\u0300-\u036f]/g,'');
+ const filtered=models.filter(m=>m.name.toLowerCase().normalize('NFD').replace(/[\u0300-\u036f]/g,'').includes(q));
+ const selected=$('part').value;$('part').replaceChildren();
+ const empty=node('option','','Escolha um produto');empty.value='';$('part').append(empty);
+ for(const m of filtered){const opt=node('option','',m.name);opt.value=m.partId;$('part').append(opt)}
+ if(filtered.some(m=>m.partId===selected))$('part').value=selected;
+ else if(filtered.length===1)$('part').value=filtered[0].partId;
+ draw();
+}
+function draw(){
+ const id=$('part').value,root=$('timeline');root.replaceChildren();$('metrics').replaceChildren();
+ if(!id){root.append(node('p','raven-muted','Selecione um modelo acima para consultar as datas disponíveis.'));return}
+ const timeline=priceTimeline(id,offers,history,new Date(),$('store').value==='all'?null:$('store').value);
+ const points=timeline.points;
+ $('metrics').append(labelItem('Registros',points.length),labelItem('Datas diferentes',new Set(points.map(p=>p.date)).size),
+ labelItem('Lojas representadas',new Set(points.map(p=>p.store)).size));
+ const note=node('div','raven-notice',timeline.notice);root.append(note);
+ if(!points.length){root.append(node('p','raven-muted','Não há registros de preço para essa seleção de modelo e loja.'));return}
+ const max=Math.max(...points.map(p=>p.price),1);
+ for(const p of points){
+  const row=node('div','raven-histogram');
+  row.append(node('span','raven-date',p.date.split('-').reverse().join('/')));
+  const barbg=node('div','raven-bar-bg');const bar=node('div','raven-bar');
+  bar.style.width=Math.max(3,p.price/max*100).toFixed(1)+'%';
+  bar.setAttribute('aria-label','Barra proporcional de '+money(p.price));barbg.append(bar);
+  row.append(barbg,node('strong','',money(p.price)));
+  const detail=node('div','raven-muted',(p.store==='mercadolivre'?'Mercado Livre':p.store==='shopee'?'Shopee':p.store)+' · '+p.kind);
+  root.append(row,detail);
+ }
+}
+async function init(){
+ try{
+  const response=await fetch('./offers.json',{cache:'no-store'});if(!response.ok)throw Error('HTTP '+response.status);
+  const documentData=await response.json();
+  offers=publicOffers(documentData.offers);history=Array.isArray(documentData.history)?documentData.history:[];
+  health=catalogHealth(documentData.offers,catalog);
+  const ids=new Map();
+  for(const o of offers){if(!ids.has(o.partId))ids.set(o.partId,{partId:o.partId,name:o.modelName||o.title||o.partId})}
+  models=[...ids.values()].sort((a,b)=>a.name.localeCompare(b.name,'pt-BR'));
+  selectModels();
+  $('catalogStatus').append(labelItem('Anúncios elegíveis',health.eligible),labelItem('Preços recentes',health.recent),labelItem('Sem foto cadastrada',health.withoutPhoto));
+  $('status').textContent='Catálogo carregado · '+models.length+' modelos com anúncios elegíveis. Histórico: '+history.length+' registro(s) anteriores armazenados.';
+ }catch(e){$('status').textContent='Erro ao abrir o histórico: '+e.message}
+}
+$('filter').addEventListener('input',selectModels);$('part').addEventListener('change',draw);$('store').addEventListener('change',draw);init();
+</script></body></html>
