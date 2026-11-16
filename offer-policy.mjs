@@ -4,7 +4,9 @@
 export const TRUSTED_SHOPS = Object.freeze({
   mercadolivre: ['mercadolivre.com.br','mercadolivre.com','meli.la'],
   shopee: ['shopee.com.br','shopee.com','shope.ee'],
-  amazon: ['amazon.com.br','amazon.com','amzn.to','link.amazon']
+  amazon: ['amazon.com.br','amazon.com','amzn.to','link.amazon'],
+  kabum: ['kabum.com.br'],
+  terabyte: ['terabyteshop.com.br']
 });
 export const OFFER_MAX_AGE_DAYS = 45;
 const CATEGORIES = new Set(['cpu','board','gpu','ram','ssd','hdd','psu','case','cooler','pc','kit','other']);

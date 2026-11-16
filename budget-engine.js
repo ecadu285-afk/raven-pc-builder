@@ -28,7 +28,7 @@ function fitName(type,name){
 const budgetDays=(value,now)=>{const t=Date.parse(String(value||'')+'T00:00:00Z');return Number.isFinite(t)?Math.floor((now-t)/86400000):Infinity;};
 function withSpecs(o,now,maxAge){
  if(!o||!Number.isFinite(o.price)||o.price<=0||!o.url||!o.partId||!o.store)return null;
- const allowed={amazon:['amazon.com.br','amazon.com','amzn.to','link.amazon'],mercadolivre:['mercadolivre.com.br','mercadolivre.com','meli.la'],shopee:['shopee.com.br','shopee.com','shope.ee']};
+ const allowed={amazon:['amazon.com.br','amazon.com','amzn.to','link.amazon'],mercadolivre:['mercadolivre.com.br','mercadolivre.com','meli.la'],shopee:['shopee.com.br','shopee.com','shope.ee'],kabum:['kabum.com.br'],terabyte:['terabyteshop.com.br']};
  try{const u=new URL(o.url);if(u.protocol!=='https:'||u.username||u.password||!allowed[o.store]?.some(d=>u.hostname===d||u.hostname.endsWith('.'+d)))return null;}catch{return null}
  const age=budgetDays(o.checkedAt,now);if(age<0||age>maxAge)return null;
  const type=o.category||Object.entries(CATALOG).find(([,map])=>map.has(o.partId))?.[0];
