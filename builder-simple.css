@@ -106,3 +106,22 @@
 }
 @media(max-width:390px){.builder-v8 .sidebar .builder-headlinks a:nth-child(2){display:none}.builder-v8 .heading h1{font-size:25px}}
 @media(prefers-reduced-motion:reduce){.builder-v8 .option:hover{transform:none}}
+
+
+/* Raven 6.9 — diagnóstico guiado sem aprovação fictícia de hardware */
+.builder-health{margin:17px 0 24px;padding:21px;border:1px solid rgba(180,223,151,.3);border-radius:17px;background:linear-gradient(125deg,#171e21,#171725);color:#edf5ef}
+.builder-health-heading{display:flex;justify-content:space-between;align-items:center;gap:15px;flex-wrap:wrap}
+.builder-health-heading h2{margin:5px 0 9px;font-size:clamp(19px,2.5vw,26px)}
+.builder-health-heading>span{font-size:11px;color:#b8c5c0}
+.builder-health p{font-size:12px;color:#d0dad1;line-height:1.6}
+.raven-health-list{list-style:none;margin:14px 0;padding:0;display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:9px}
+.raven-health-list li{display:grid;gap:6px;border:1px solid #46535a;background:#171d26;border-radius:10px;padding:12px;min-width:0;font-size:12px}
+.raven-health-list strong{color:#e9f5f0;font-size:12px}
+.raven-health-list span{color:#c7d4d1;line-height:1.5}
+.raven-health-list li.health-match{border-color:#568c5e}
+.raven-health-list li.health-warning{border-color:#ac8051}
+.raven-health-list li.health-error{border-color:#bd6262}
+.raven-health-list li.health-unknown{border-color:#5c677a}
+.raven-health-power{padding:11px 14px;border-radius:10px;background:#1d3325;border:1px solid #447e58}
+.raven-health-disclaimer{opacity:.85}
+@media(max-width:760px){.raven-health-list{grid-template-columns:1fr}.builder-health{padding:14px}}
