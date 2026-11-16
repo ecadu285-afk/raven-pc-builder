@@ -116,7 +116,7 @@ function productCard(item){
  visual.append(element('span','offer-label',labels[item.type]||'Componente'),caption);
  const content=element('div','offer-info');
  const title=element('h3','',item.model);
- const store=element('div','offer-store',(item.primary.length>1?item.primary.length+' lojas · ':'')+'Menor oferta: '+shops[o.store].name+(o.condition==='used'?' · Usado':''));
+ const store=element('div','offer-store',(item.primary.length>1?item.primary.length+' lojas · ':'')+(isRecent(o)?'Menor preço recente: ':'Preço antigo cadastrado em: ')+shops[o.store].name+(o.condition==='used'?' · Usado':''));
  const price=element('div','offer-price',BRL(o.price));
  price.append(element('small','',isRecent(o)
     ? 'Preço conferido em '+o.checkedAt.split('-').reverse().join('/')
@@ -152,7 +152,8 @@ function productCard(item){
    const detail=element('details','offer-alternatives');
    detail.append(element('summary','',(item.primary.length+item.others.length-1)+' outra(s) oferta(s) para comparar'));
    for(const v of item.items.filter(x=>x!==o)){
-     const link=element('a','','Ver '+shops[v.store].name+' · '+BRL(v.price));
+     const link=element('a','',shops[v.store].name+' · '+BRL(v.price)+' · '+v.checkedAt.split('-').reverse().join('/')+(isRecent(v)?'':' · PREÇO ANTIGO'));
+     if(!isRecent(v))link.classList.add('raven-alt-stale');
      link.href=safeUrl(v.url,v.store);link.target='_blank';link.rel=v.affiliate?'noopener noreferrer sponsored':'noopener noreferrer';detail.append(link);
    }
    content.append(detail);
@@ -277,16 +278,16 @@ function home(){
 function catalogPage(){
  const root=$('catalog-grid');if(!root)return;
  const search=$('catalog-search'),type=$('catalog-category'),shop=$('catalog-store'),order=$('catalog-order');
- const cond=$('catalog-condition'),maximum=$('catalog-max-price'),photos=$('catalog-photos-only');
+ const cond=$('catalog-condition'),maximum=$('catalog-max-price'),photos=$('catalog-photos-only'),recent=$('catalog-recent-only');
  const ord=order?.value||'lowest';
  const filtered=filterCatalogOffers(all,{search:search?.value,category:type?.value,
-   store:shop?.value,condition:cond?.value,maxPrice:maximum?.value,photoOnly:photos?.checked},
-   {categoryOf:category,hasPhoto:o=>Boolean(imageFor(o)),labelOf:o=>known.get(o.partId)?.name});
+   store:shop?.value,condition:cond?.value,maxPrice:maximum?.value,photoOnly:photos?.checked,recentOnly:recent?.checked},
+   {categoryOf:category,hasPhoto:o=>Boolean(imageFor(o)),isRecent,labelOf:o=>known.get(o.partId)?.name});
  const array=grouped(filtered);
  array.sort((a,b)=>ord==='highest'?b.best.price-a.best.price:ord==='recent'?b.best.checkedAt.localeCompare(a.best.checkedAt):a.best.price-b.best.price);
- const count=$('catalog-count');if(count)count.textContent=array.length+' modelos · '+filtered.length+' anúncios cadastrados ('+filtered.filter(x=>!isRecent(x)).length+' com preço antigo)';
+ const count=$('catalog-count');if(count)count.textContent=array.length+' modelos · '+filtered.length+' anúncios nos filtros ('+filtered.filter(isRecent).length+' recentes, '+filtered.filter(x=>!isRecent(x)).length+' com preço antigo)';
  root.replaceChildren(...array.slice(0,visibleLimit).map(productCard));
- if(!array.length)root.append(element('div','no-offers','Nenhuma oferta corresponde aos filtros. Tente outra categoria ou pesquise pelo modelo.'));
+ if(!array.length)root.append(element('div','no-offers',recent?.checked?'Nenhuma oferta recente corresponde aos filtros. Desmarque “Somente preços conferidos nos últimos 14 dias” para ver anúncios antigos.':'Nenhuma oferta corresponde aos filtros. Tente outra categoria ou pesquise pelo modelo.'));
  const more=$('catalog-more');if(more){more.hidden=array.length<=visibleLimit;more.textContent='Mostrar mais modelos ('+Math.max(0,array.length-visibleLimit)+')';}
 }
 async function start(){
@@ -296,11 +297,20 @@ async function start(){
    if(!response.ok)throw Error('Falha HTTP '+response.status);
    const data=await response.json();
    all=publicOffers(data.offers).filter(valid);
+   const status=$('catalog-trust-status');
+   if(status){
+     const shown=all.filter(o=>!['pc','kit'].includes(category(o)));
+     const fresh=shown.filter(isRecent).length,old=shown.length-fresh;
+     const date=typeof data.updatedAt==='string'&&/^\d{4}-\d{2}-\d{2}$/.test(data.updatedAt)
+       ? data.updatedAt.split('-').reverse().join('/'):'não informada';
+     status.textContent='Data indicada no catálogo: '+date+' · '+fresh+' anúncio(s) com preço consultado nos últimos 14 dias · '+old+' com preço antigo. Os valores não são verificados em tempo real; confirme preço, disponibilidade e frete na loja.';
+     status.classList.toggle('warning',fresh===0||old>fresh);
+   }
    groups=grouped(all.filter(o=>!['pc','kit'].includes(category(o))));
    categorySymbols();
    home();
    const search=$('catalog-search'),type=$('catalog-category'),shop=$('catalog-store'),order=$('catalog-order'),more=$('catalog-more');
-   const cond=$('catalog-condition'),maximum=$('catalog-max-price'),photos=$('catalog-photos-only'),clear=$('catalog-clear');
+   const cond=$('catalog-condition'),maximum=$('catalog-max-price'),photos=$('catalog-photos-only'),recent=$('catalog-recent-only'),clear=$('catalog-clear');
    const params=new URLSearchParams(location.search);
    if(search){search.value=params.get('q')||'';search.addEventListener('input',()=>{visibleLimit=24;catalogPage();});}
    if(type){const c=params.get('categoria');if(c&&Object.hasOwn(labels,c))type.value=c;type.addEventListener('change',()=>{visibleLimit=24;catalogPage();});}
@@ -308,9 +318,10 @@ async function start(){
    if(cond)cond.addEventListener('change',()=>{visibleLimit=24;catalogPage();});
    if(maximum)maximum.addEventListener('input',()=>{visibleLimit=24;catalogPage();});
    if(photos)photos.addEventListener('change',()=>{visibleLimit=24;catalogPage();});
+   if(recent)recent.addEventListener('change',()=>{visibleLimit=24;catalogPage();});
    if(clear)clear.addEventListener('click',()=>{
      if(search)search.value='';if(type)type.value='all';if(shop)shop.value='all';
-     if(cond)cond.value='all';if(maximum)maximum.value='';if(photos)photos.checked=false;
+     if(cond)cond.value='all';if(maximum)maximum.value='';if(photos)photos.checked=false;if(recent)recent.checked=false;
      if(order)order.value='lowest';visibleLimit=24;catalogPage();
      history.replaceState(null,'',location.pathname+location.hash);
    });
