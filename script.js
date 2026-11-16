@@ -3,6 +3,7 @@ import {buildHealth} from './build-health.mjs';
 import {ravenInitAccount,ravenGetAccount,ravenOpenAccount,ravenAccountConfigured,ravenListBuilds,ravenSaveBuild,ravenDeleteBuild} from './raven-account.js';
 import {catalog} from './catalog.js';
 import {publicOffers} from './offer-policy.mjs';
+import {extendBuilderCatalog} from './builder-published-parts.mjs';
 const groups=[
  {id:'case',name:'Gabinete',icon:'▣',desc:'Escolha a estrutura e o visual da sua máquina.',options:[{id:'case1',name:'Raven Noir M-ATX',desc:'Preto fosco · vidro lateral · micro-ATX',price:320,form:'mATX',gpuMaxMm:300},{id:'case2',name:'Raven Obsidian ATX',desc:'Preto fosco · vidro lateral · ATX',price:490,form:'ATX',gpuMaxMm:360}]},
  {id:'board',name:'Placa-mãe',icon:'▦',desc:'A base que conecta todos os componentes.',options:[{id:'b550',name:'B550M AM4 DDR4',desc:'Micro-ATX · soquete AM4 · DDR4',price:650,socket:'AM4',memory:'DDR4',form:'mATX',biosNote:'Verifique a versão da BIOS para a CPU escolhida.'},{id:'b450',name:'B450M AM4 DDR4',desc:'Micro-ATX · soquete AM4 · DDR4',price:480,socket:'AM4',memory:'DDR4',form:'mATX',biosNote:'Verifique a versão da BIOS para a CPU escolhida.'},{id:'b650',name:'B650M AM5 DDR5',desc:'Micro-ATX · soquete AM5 · DDR5',price:900,socket:'AM5',memory:'DDR5',form:'mATX'},{id:'b650atx',name:'B650 ATX AM5 DDR5',desc:'ATX · soquete AM5 · DDR5 · mais espaço',price:1150,socket:'AM5',memory:'DDR5',form:'ATX'}]},
@@ -12,7 +13,7 @@ const groups=[
  {id:'ssd',name:'Armazenamento',icon:'▱',desc:'Velocidade para sistema, aplicativos e jogos.',options:[{id:'500',name:'SSD NVMe 500 GB',desc:'M.2 · PCIe · armazenamento rápido',price:250},{id:'1000',name:'SSD NVMe 1 TB',desc:'M.2 · PCIe · mais espaço para jogos',price:410}]},
  {id:'psu',name:'Fonte de alimentação',icon:'◈',desc:'Escolha uma fonte de qualidade e potência adequada.',options:[{id:'550',name:'Fonte 550 W 80 Plus Bronze',desc:'Potência nominal · qualidade do modelo deve ser verificada',price:320,watts:550},{id:'650',name:'Fonte 650 W 80 Plus Bronze',desc:'Potência nominal · margem para upgrades',price:430,watts:650},{id:'750',name:'Fonte 750 W 80 Plus Gold',desc:'Potência nominal · folga para GPU topo',price:600,watts:750}]}];
 groups.push({id:'cooler',name:'Cooler do processador',icon:'❄',desc:'Escolha a refrigeração e confira o encaixe no socket.',options:[]});
-groups.forEach(g=>{g.options=catalog[g.id]});const RK={ITX:1,mATX:2,ATX:3};let ravenOffers=[];let ravenOffersLoaded=false;const $=id=>document.getElementById(id),fmt=n=>n.toLocaleString('pt-BR',{style:'currency',currency:'BRL',maximumFractionDigits:0});let chosen={};let current=0;let viewer=null;let exploded=false;
+groups.forEach(g=>{g.options=catalog[g.id]});const RK={ITX:1,mATX:2,ATX:3};let ravenOffers=[];let ravenOffersLoaded=false;const $=id=>document.getElementById(id),fmt=n=>n.toLocaleString('pt-BR',{style:'currency',currency:'BRL',minimumFractionDigits:2,maximumFractionDigits:2});let chosen={};let current=0;let viewer=null;let exploded=false;
 try{chosen=JSON.parse(localStorage.getItem('raven-pc-builder-v1')||'{}');if(!chosen||typeof chosen!=='object'||Array.isArray(chosen))chosen={};}catch{chosen={};}
 try{const m=location.hash.match(/b=([^&]*)/);if(m){const ids=decodeURIComponent(m[1]).split(',');groups.forEach((g,i)=>{const o=g.options.find(x=>x.id===ids[i]);if(o)chosen[g.id]=o.id})}}catch{}
 for(const g of groups)if(!g.options.some(o=>o.id===chosen[g.id]))delete chosen[g.id];
@@ -137,7 +138,33 @@ function renderCompare(target){
  if(a?.ids){const A=summaryFor(a.ids),B=summaryFor(chosen),table=document.createElement('div');table.className='compare-grid';for(const [label,x,y] of [['Componentes',A.count+' / 8',B.count+' / 8'],['Subtotal das ofertas'+(A.quoted<8||B.quoted<8?' (parcial; sem todas as peças)':''),A.quoted?fmt(A.total):'Sem cotação',B.quoted?fmt(B.total):'Sem cotação'],['Diferença de subtotais','—',A.quoted===B.quoted?fmt(B.total-A.total):'Não comparável']]){for(const t of [label,x,y]){const c=document.createElement('span');c.textContent=t;table.append(c)}}panel.append(table);const details=document.createElement('div');details.className='compare-differences';for(const g of groups){const pa=g.options.find(p=>p.id===a.ids[g.id]),pb=optionFor(g);if(pa?.id!==pb?.id){const line=document.createElement('p');line.textContent=g.name+': '+(pa?.name||'—')+' → '+(pb?.name||'—');details.append(line)}}if(!details.childElementCount)details.textContent='As duas montagens têm os mesmos componentes.';panel.append(details)}else{const empty=document.createElement('p');empty.textContent='Nenhuma montagem A salva ainda.';panel.append(empty)}target.append(panel)
 }
 
-function render(){const g=groups[current],nav=$('steps');nav.replaceChildren();groups.forEach((item,i)=>{const b=document.createElement('button');b.className='step'+(i===current?' active':'')+(chosen[item.id]?' done':'');b.innerHTML=`<span class="step-num">${chosen[item.id]?'✓':String(i+1).padStart(2,'0')}</span><span>${item.name}</span>`;b.onclick=()=>{current=i;render()};nav.append(b)});$('step-number').textContent=String(current+1).padStart(2,'0');$('category').textContent=g.name;$('category-desc').textContent=g.desc;$('category-icon').textContent=g.icon;const box=$('options');if(lastCat===current)lastY=box.scrollTop;else lastY=0;lastCat=current;box.replaceChildren();listFor(g).forEach(o=>{const b=document.createElement('div');b.setAttribute('role','button');b.tabIndex=0;const tg=bad(g,o)?'Incompatível':over(g,o)?'Acima do orçamento':'';b.className='option'+(chosen[g.id]===o.id?' selected':'')+(tg?' dim':'');if(tg)b.dataset.tag=tg;const top=document.createElement('div');top.className='option-top';const n=document.createElement('span');n.className='option-name';n.textContent=o.name;const quote=ravenBestOffer(o.id);
+function ravenGoStep(i){
+ if(i!==current){ui.q='';$('q').value='';lastCat=-1;}
+ current=Math.max(0,Math.min(groups.length-1,i));render();
+}
+function ravenSaveSelection(){
+ localStorage.setItem('raven-pc-builder-v1',JSON.stringify(chosen));
+ history.replaceState(null,'',shareHash());render();viewer?.update(chosen);
+}
+function ravenStepOffers(group){
+ return group.options.filter(o=>!o.conceptual&&Boolean(ravenBestOffer(o.id)));
+}
+function ravenCheapestCompatible(group){
+ return ravenStepOffers(group).filter(o=>!bad(group,o)).sort((a,b)=>ravenBestOffer(a.id).price-ravenBestOffer(b.id).price)[0]||null;
+}
+function render(){const g=groups[current],nav=$('steps');nav.replaceChildren();groups.forEach((item,i)=>{const b=document.createElement('button');b.className='step'+(i===current?' active':'')+(chosen[item.id]?' done':'');b.innerHTML=`<span class="step-num">${chosen[item.id]?'✓':String(i+1).padStart(2,'0')}</span><span>${item.name}</span>`;
+ const count=document.createElement('small');count.className='raven-step-count';
+ count.textContent=ravenOffersLoaded?ravenStepOffers(item).length+' modelos':'...';
+ b.append(count);b.onclick=()=>ravenGoStep(i);nav.append(b)});$('step-number').textContent=String(current+1).padStart(2,'0');$('category').textContent=g.name;$('category-desc').textContent=g.desc;$('category-icon').textContent=g.icon;const label=$('raven-step-status');if(label){
+ const total=ravenStepOffers(g).length,compatible=ravenStepOffers(g).filter(o=>!bad(g,o)).length;
+ label.textContent=ravenOffersLoaded
+  ? total+' referência(s) com oferta recente · '+compatible+' sem conflito detectado · preço consultado, não em tempo real'
+  : 'Carregando ofertas publicadas...';
+}
+ const pickBest=$('raven-pick-cheapest'),clearOne=$('raven-clear-step');
+ if(pickBest){pickBest.disabled=!ravenCheapestCompatible(g);pickBest.title='Seleciona a oferta mais barata entre as referências sem conflitos detectados';}
+ if(clearOne){clearOne.disabled=!chosen[g.id];}
+ const box=$('options');if(lastCat===current)lastY=box.scrollTop;else lastY=0;lastCat=current;box.replaceChildren();listFor(g).forEach(o=>{const b=document.createElement('div');b.setAttribute('role','button');b.tabIndex=0;const tg=bad(g,o)?'Incompatível':over(g,o)?'Acima do orçamento':'';b.className='option'+(chosen[g.id]===o.id?' selected':'')+(tg?' dim':'');if(tg)b.dataset.tag=tg;const top=document.createElement('div');top.className='option-top';const n=document.createElement('span');n.className='option-name';n.textContent=o.name;const quote=ravenBestOffer(o.id);
  const p=document.createElement('span');p.className='option-price';p.textContent=quote?fmt(quote.price):'Sem oferta';top.append(n,p);const d=document.createElement('div');d.className='option-desc';d.textContent=o.desc+(quote?' · '+(RAVEN_STORES[quote.store]?.name||quote.store)+' · conferido '+quote.checkedAt:' · Sem anúncio publicado');
  const main=document.createElement('div');main.className='raven-option-main';
  const imageBox=document.createElement('div');imageBox.className='raven-option-thumb';
@@ -145,10 +172,49 @@ function render(){const g=groups[current],nav=$('steps');nav.replaceChildren();g
  if(photo){const img=document.createElement('img');img.src=photo;img.loading='lazy';img.alt='Foto cadastrada do anúncio de '+o.name;img.referrerPolicy='no-referrer';img.addEventListener('error',()=>imageBox.replaceChildren(document.createTextNode('▣')));imageBox.append(img);}
  else {imageBox.textContent='▣';imageBox.setAttribute('aria-label','Foto ainda não cadastrada');}
  const copy=document.createElement('div');copy.className='raven-option-copy';copy.append(top,d);main.append(imageBox,copy);b.append(main);
+ if(o.titleDerived){
+  const caution=document.createElement('small');caution.className='raven-seller-facts';
+  caution.textContent='Especificações extraídas do título do vendedor; confira o modelo e a compatibilidade.';
+  b.append(caution);
+ }
+ const comparisons=ravenOffers.filter(item=>item.partId===o.id&&ravenFresh(item)&&Number.isFinite(item.price)).sort((a,z)=>a.price-z.price);
+ if(comparisons.length>1){
+  const compare=document.createElement('details');compare.className='raven-part-comparison';
+  const summary=document.createElement('summary');summary.textContent='Comparar '+comparisons.length+' anúncios desta referência';
+  compare.append(summary);
+  const caution=document.createElement('small');caution.textContent='A mesma referência pode reunir vendedores, marcas e versões diferentes. Confira o SKU.';
+  compare.append(caution);
+  for(const offer of comparisons.slice(0,8)){
+   const link=document.createElement('a');link.href=offer.url;link.target='_blank';
+   link.rel=offer.affiliate?'noopener noreferrer sponsored':'noopener noreferrer';
+   link.textContent=(RAVEN_STORES[offer.store]?.name||offer.store)+' · '+fmt(offer.price)+' · '+offer.checkedAt+
+    (offer.condition==='used'?' · usado':offer.condition==='refurbished'?' · recondicionado':'');
+   link.addEventListener('click',e=>e.stopPropagation());compare.append(link);
+  }
+  compare.addEventListener('click',e=>e.stopPropagation());b.append(compare);
+ }
  if(quote){const a=document.createElement('a');a.className='raven-option-offer';a.href=quote.url;a.target='_blank';a.rel=quote.affiliate?'noopener noreferrer sponsored':'noopener noreferrer';a.textContent='Ver oferta na loja ↗';a.onclick=e=>e.stopPropagation();b.append(a);}const inspectBtn=document.createElement('button');inspectBtn.type='button';inspectBtn.className='raven-inspect-option';inspectBtn.textContent='◉ Visualizar em 3D';inspectBtn.setAttribute('aria-label','Inspecionar '+o.name+' em 3D');inspectBtn.onclick=(ev)=>{ev.preventDefault();ev.stopPropagation();chosen[g.id]=o.id;localStorage.setItem('raven-pc-builder-v1',JSON.stringify(chosen));history.replaceState(null,'',shareHash());render();viewer?.update(chosen);if(viewer?.inspect){viewer.inspect(g.id,o.name);$('scene').scrollIntoView({behavior:'smooth',block:'center'});}else alert('Visualizador 3D ainda está carregando.');};b.append(inspectBtn);b.onclick=()=>{chosen[g.id]=o.id;localStorage.setItem('raven-pc-builder-v1',JSON.stringify(chosen));history.replaceState(null,'',shareHash());render();if(viewer)viewer.update(chosen)};b.onkeydown=e=>{if(e.target===b&&(e.key==='Enter'||e.key===' ')){e.preventDefault();b.click()}};box.append(b)});
- if(!box.childElementCount){const empty=document.createElement('div');empty.className='raven-no-published-parts';const p=document.createElement('p');p.textContent=ravenOffersLoaded?'Nenhuma oferta publicada e recente para esta categoria. Não exibimos preços inventados.':'Carregando anúncios publicados...';const a=document.createElement('a');a.href='loja.html?categoria='+encodeURIComponent(g.id);a.textContent='Ver ofertas na loja ↗';empty.append(p,a);box.append(empty);}
+ if(!box.childElementCount){const empty=document.createElement('div');empty.className='raven-no-published-parts';const p=document.createElement('p');p.textContent=!ravenOffersLoaded?'Carregando anúncios publicados...':
+  ravenStepOffers(g).length
+   ? 'Existem ofertas nesta categoria, mas os filtros atuais esconderam os resultados. Limpe a busca ou desative “Só compatíveis”.'
+   : 'Não há oferta recente elegível nesta etapa. Produtos antigos ou pendentes não recebem preços inventados.';const a=document.createElement('a');a.href='loja.html?categoria='+encodeURIComponent(g.id);a.textContent='Ver ofertas na loja ↗';empty.append(p);
+ if(ravenStepOffers(g).length){
+  const clearFilters=document.createElement('button');clearFilters.type='button';clearFilters.className='ghost';
+  clearFilters.textContent='Limpar filtros desta etapa';
+  clearFilters.onclick=()=>{ui.q='';$('q').value='';ui.hide=false;$('hide').checked=false;render();};
+  empty.append(clearFilters);
+ }
+ empty.append(a);box.append(empty);}
  const problems=issues(),compat=$('compat');compat.className='compat '+(problems.length?'bad':'good');compat.replaceChildren();const strong=document.createElement('strong');strong.textContent=problems.length?'⚠ Atenção à compatibilidade':'◌ Sem conflito confirmado';const desc=document.createElement('p');desc.textContent=problems.length?problems.join(' '):'Nenhum conflito confirmado nas regras cadastradas. Isso NÃO garante compatibilidade: confira a seção Não verificado.';compat.append(strong,desc);$('back').disabled=current===0;$('next').textContent=current===groups.length-1?'Revisar montagem ↗':'Próxima etapa →';$('count').textContent=Object.keys(chosen).length+'/8';const selected=groups.map(group=>optionFor(group)).filter(Boolean);const quoteSummary=ravenSelectedPrices();$('price').textContent=quoteSummary.quoted?fmt(quoteSummary.total):'Sem cotação';const completeness=$('build-completeness');if(completeness){completeness.textContent=selected.length===8&&quoteSummary.quoted===8?'8/8 peças com anúncio · subtotal de ofertas cadastradas; confira frete e pagamento.':selected.length+'/8 peças selecionadas · '+quoteSummary.quoted+' com preço publicado · não é um PC completo com preço confirmado.';completeness.className=selected.length===8?'raven52-complete':'raven52-incomplete';}$('summary-items').textContent=(evaluateBuild().errors.length?'⚠ NÃO COMPRAR: corrija os conflitos. · ':'')+(selected.length?selected.map(o=>o.name).join(' · '):'Nenhuma peça selecionada ainda.');const pl=$('platform');if(pl){const cp=optionFor(groups[2]);pl.textContent=cp?cp.socket:'—'}budgetNote();renderDiagnostics();}
-$('back').onclick=()=>{current=Math.max(0,current-1);render()};$('next').onclick=()=>{if(current<groups.length-1)current++;else current=0;render()};$('reset').onclick=()=>{if(!confirm('Limpar todas as peças selecionadas?'))return;chosen={};localStorage.removeItem('raven-pc-builder-v1');history.replaceState(null,'',location.pathname);current=0;render();viewer?.update(chosen)};$('copy').onclick=async()=>{const lines=['RAVEN PC BUILDER — Configuração demonstrativa',...groups.map(g=>g.name+': '+(optionFor(g)?.name||'Não selecionado')),(groups.every(g=>optionFor(g))?'Subtotal de anúncios: ':'Subtotal cotado (faltam peças): ')+$('price').textContent,'Consumo estimado: '+evaluateBuild().estimatedWatts+' W','Conflitos: '+(evaluateBuild().errors.join('; ')||'Nenhum confirmado'), 'Pendências: '+evaluateBuild().unknown.join('; '),'Aviso: conferir compatibilidade completa e preços antes de comprar.','Link da build: '+location.origin+location.pathname+shareHash()];try{await navigator.clipboard.writeText(lines.join('\n'));$('copy').textContent='✓ Copiado';setTimeout(()=>$('copy').textContent='Copiar configuração ↗',1600)}catch{alert(lines.join('\n'))}};$('explode').onclick=()=>{exploded=!exploded;$('explode').textContent=exploded?'⇲ Montar peças':'⇱ Explodir peças';viewer?.explode(exploded)};$('camera').onclick=()=>viewer?.reset();
+$('back').onclick=()=>ravenGoStep(current-1);
+$('next').onclick=()=>ravenGoStep(current<groups.length-1?current+1:0);
+$('raven-pick-cheapest')?.addEventListener('click',()=>{
+ const selected=ravenCheapestCompatible(groups[current]);if(!selected)return;
+ chosen[groups[current].id]=selected.id;ravenSaveSelection();
+});
+$('raven-clear-step')?.addEventListener('click',()=>{
+ delete chosen[groups[current].id];ravenSaveSelection();
+});$('reset').onclick=()=>{if(!confirm('Limpar todas as peças selecionadas?'))return;chosen={};localStorage.removeItem('raven-pc-builder-v1');history.replaceState(null,'',location.pathname);current=0;render();viewer?.update(chosen)};$('copy').onclick=async()=>{const lines=['RAVEN PC BUILDER — Configuração demonstrativa',...groups.map(g=>g.name+': '+(optionFor(g)?.name||'Não selecionado')),(groups.every(g=>optionFor(g))?'Subtotal de anúncios: ':'Subtotal cotado (faltam peças): ')+$('price').textContent,'Consumo estimado: '+evaluateBuild().estimatedWatts+' W','Conflitos: '+(evaluateBuild().errors.join('; ')||'Nenhum confirmado'), 'Pendências: '+evaluateBuild().unknown.join('; '),'Aviso: conferir compatibilidade completa e preços antes de comprar.','Link da build: '+location.origin+location.pathname+shareHash()];try{await navigator.clipboard.writeText(lines.join('\n'));$('copy').textContent='✓ Copiado';setTimeout(()=>$('copy').textContent='Copiar configuração ↗',1600)}catch{alert(lines.join('\n'))}};$('explode').onclick=()=>{exploded=!exploded;$('explode').textContent=exploded?'⇲ Montar peças':'⇱ Explodir peças';viewer?.explode(exploded)};$('camera').onclick=()=>viewer?.reset();
 function applyPreset(ids){chosen={};groups.forEach((g,i)=>{const id=ids[i];if(id&&g.options.some(x=>x.id===id))chosen[g.id]=id});localStorage.setItem('raven-pc-builder-v1',JSON.stringify(chosen));history.replaceState(null,'',shareHash());current=0;render();viewer?.update(chosen);$('scene').scrollIntoView({behavior:'smooth',block:'center'})}
 ravenRenderMarketPresets();
 const sw=$('swatches');if(sw)['#c2ff4d','#4dd2ff','#ff4dc4','#ffa94d'].forEach(c=>{const b=document.createElement('button');b.style.background=c;b.title='Cor de destaque';b.onclick=()=>{document.documentElement.style.setProperty('--accent',c);viewer?.accent(c)};sw.append(b)});
@@ -720,7 +786,17 @@ function ravenRenderGallery(){
 }
 for(const id of ['offerGallerySearch','offerGalleryCategory','offerGalleryStore','offerGalleryRecent'])document.getElementById(id)?.addEventListener(id==='offerGallerySearch'?'input':'change',ravenRenderGallery);
 
-async function ravenLoadOffers(){try{const r=await fetch('./offers.json',{cache:'no-store'});if(!r.ok)throw Error('HTTP '+r.status);const data=await r.json();ravenOffers=publicOffers(data.offers).filter(ravenVerifiedOffer);ravenHistory=Array.isArray(data.history)?data.history.filter(h=>ravenVerifiedOffer({...h,url:h.url||'https://'+(RAVEN_STORES[h.store]?.domain||'invalid')})):[];}catch(e){ravenOffers=[];console.warn('Ofertas indisponíveis:',e);}ravenOffersLoaded=true;ravenRenderMarketPresets();render();ravenRenderMarket();ravenRenderGallery();}
+async function ravenLoadOffers(){try{const r=await fetch('./offers.json',{cache:'no-store'});if(!r.ok)throw Error('HTTP '+r.status);const data=await r.json();ravenOffers=publicOffers(data.offers).filter(ravenVerifiedOffer);
+ extendBuilderCatalog(catalog,ravenOffers,{isRecent:ravenFresh});
+ // Restaurar IDs de ofertas publicadas salvas antes do carregamento da página.
+ let saved={};try{saved=JSON.parse(localStorage.getItem('raven-pc-builder-v1')||'{}')||{}}catch{}
+ const hash=location.hash.match(/b=([^&]*)/);
+ let shared=[];try{if(hash)shared=decodeURIComponent(hash[1]).split(',')}catch{shared=[];}
+ for(const [i,group] of groups.entries()){
+  const id=shared.length?shared[i]:saved[group.id];
+  if(id&&group.options.some(x=>x.id===id))chosen[group.id]=id;
+ }
+ ravenHistory=Array.isArray(data.history)?data.history.filter(h=>ravenVerifiedOffer({...h,url:h.url||'https://'+(RAVEN_STORES[h.store]?.domain||'invalid')})):[];}catch(e){ravenOffers=[];console.warn('Ofertas indisponíveis:',e);}ravenOffersLoaded=true;ravenRenderMarketPresets();render();ravenRenderMarket();ravenRenderGallery();}
 document.getElementById('onlyOffers')?.addEventListener('change',ravenRenderMarket);
 document.getElementById('marketRefresh')?.addEventListener('click',ravenLoadOffers);
 // A lista de ofertas acompanha a seleção sem alterar a lógica 3D existente.

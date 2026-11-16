@@ -13,8 +13,8 @@ export function buildHealth(parts={},report={}){
     cpu.socket===board.socket?cpu.socket+' nos dois componentes; confirme revisão e BIOS.':'Sockets diferentes: '+cpu.socket+' e '+board.socket+'.');
  }else add('Socket do processador','unknown','Escolha CPU e placa-mãe com socket documentado.');
  if(board&&ram&&board.memory&&ram.memory){
-  add('Memória RAM',board.memory===ram.memory?'match':'error',
-   board.memory===ram.memory?'Ambos usam '+ram.memory+'; valide QVL e controladora da CPU.':'Memórias incompatíveis: '+board.memory+' e '+ram.memory+'.');
+  add('Memória RAM',board.memory!==ram.memory?'error':ram.titleDerived?'warning':'match',
+   board.memory!==ram.memory?'Memórias incompatíveis: '+board.memory+' e '+ram.memory+'.':ram.titleDerived?'O título do anúncio declara '+ram.memory+'. Confirme tipo físico, QVL e controladora da CPU.':'Ambos usam '+ram.memory+'; valide QVL e controladora da CPU.');
  }else add('Memória RAM','unknown','Confirme a geração DDR, slots e limites suportados.');
  if(chassis&&board&&forms[chassis.form]&&forms[board.form]){
   add('Gabinete e placa-mãe',forms[board.form]<=forms[chassis.form]?'match':'error',
@@ -30,8 +30,8 @@ export function buildHealth(parts={},report={}){
  const watts=Number(report?.estimatedWatts);
  const recommended=cpu&&gpu&&Number.isFinite(watts)&&watts>0?Math.ceil(watts*1.4/50)*50:null;
  if(recommended!==null&&psu&&Number.isFinite(psu.watts)&&psu.watts>0){
-  add('Fonte e potência',psu.watts<recommended?'warning':'match',
-    'Estimativa ilustrativa: '+watts+' W; margem sugerida '+recommended+' W; fonte cadastrada '+psu.watts+' W. Verifique conectores e qualidade.');
+  add('Fonte e potência',psu.watts<recommended||psu.titleDerived?'warning':'match',
+    'Estimativa ilustrativa: '+watts+' W; margem sugerida '+recommended+' W; fonte '+psu.watts+' W '+(psu.titleDerived?'declarada apenas no anúncio':'cadastrada')+'. Verifique potência real, conectores e qualidade.');
  }else add('Fonte e potência','unknown','Escolha CPU, GPU e uma fonte com potência nominal documentada.');
  if(cpu&&cooler&&Array.isArray(cooler.sockets)&&cpu.socket){
   add('Cooler e fixação',cooler.sockets.includes(cpu.socket)?'match':'error',
