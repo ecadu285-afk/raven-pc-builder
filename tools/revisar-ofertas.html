@@ -27,13 +27,15 @@ label input,label select,label textarea{margin-top:6px}
 @media(max-width:850px){.grid{grid-template-columns:1fr}body{padding:14px}.fields{grid-template-columns:1fr}}
 </style></head><body>
 <header><div><h1>RAVEN · Revisão de ofertas</h1><p>Organize e aprove anúncios antes de exportar o catálogo.</p></div><a href="../inicio.html" style="color:#8bdec0">Voltar ao site</a></header>
-<div class="notice"><strong>Ferramenta local, sem autenticação.</strong> Esta página não altera o GitHub nem o Supabase. Não a anuncie como painel administrativo online. Dados importados ficam somente nesta aba; exporte o arquivo para preservar alterações.</div>
+<div class="notice"><strong>Raven 6.8 · ferramenta local, sem autenticação.</strong> Esta página não altera o GitHub nem o Supabase. Não a anuncie como painel administrativo online. Dados importados ficam somente nesta aba; exporte o arquivo para preservar alterações.</div>
 <div class="toolbar">
 <button id="load">Carregar offers.json atual</button>
 <label class="file-label" for="import">Importar JSON do robô</label><input id="import" type="file" accept=".json,application/json">
+<button id="preview" type="button">Prévia e validação</button>
 <button id="export" class="primary">Exportar catálogo revisado</button>
 </div>
 <div id="status" class="status" role="status"></div>
+<details id="changeBlock" class="panel" hidden><summary><strong>Relatório de alterações importadas</strong></summary><p>Todos os anúncios novos ou alterados ficam pendentes. Este relatório não é publicação.</p><pre id="changeLog" style="white-space:pre-wrap;word-break:break-word;font-size:12px"></pre></details>
 <div class="grid">
 <section class="panel"><h2>Ofertas</h2><input id="search" type="search" placeholder="Buscar modelo, loja ou ID"><div id="stats"></div><div id="items"></div></section>
 <section class="panel"><h2>Editar anúncio</h2><p id="selection">Selecione um registro.</p>
@@ -59,7 +61,7 @@ label input,label select,label textarea{margin-top:6px}
 <script type="module">
 import {auditOffer,qualityReport} from '../offer-policy.mjs';
 import {stageBotOffers} from '../offer-import65.mjs';
-const $=id=>document.getElementById(id);let data={offers:[],history:[]};let index=-1;
+const $=id=>document.getElementById(id);let data={offers:[],history:[]};let index=-1;let lastStage=null;
 const fields=['title','modelName','partId','price','category','store','condition','checkedAt','url','imageUrl','affiliateStatus','reviewStatus','reviewNote'];
 const message=t=>{$('status').textContent=t;};
 const norm=t=>String(t||'').normalize('NFD').replace(/[\u0300-\u036f]/g,'').toLowerCase();
@@ -89,13 +91,37 @@ function validate(){const o=data.offers[index];const r=auditOffer(o);$('validati
 $('form').onsubmit=e=>{e.preventDefault();if(index<0)return;data.offers[index]={...formData(),reviewStatus:'pending'};message('Edição salva como pendente. Aprove após a revisão.');render();select(index);};
 $('hold').onclick=()=>{if(index<0)return;data.offers[index]={...formData(),reviewStatus:'hold'};message('Oferta suspensa.');render();select(index);};
 $('approve').onclick=()=>{if(index<0)return;const o={...formData(),reviewStatus:'approved'};const r=auditOffer(o);if(!r.displayable){message('Não aprovado: '+r.errors.join('; '));return;}data.offers[index]=o;message('Oferta aprovada nas regras automáticas. Confira manualmente o anúncio externo.');render();select(index);};
-$('load').onclick=async()=>{try{const r=await fetch('../offers.json',{cache:'no-store'});if(!r.ok)throw Error('HTTP '+r.status);const incoming=await r.json();if(!Array.isArray(incoming.offers))throw Error('Formato não reconhecido');data={...incoming,offers:incoming.offers.map(o=>({...o}))};index=-1;$('form').hidden=true;render();message('Catálogo carregado.');}catch(e){message('Erro: '+e.message);}};
+$('load').onclick=async()=>{try{const r=await fetch('../offers.json',{cache:'no-store'});if(!r.ok)throw Error('HTTP '+r.status);const incoming=await r.json();if(!Array.isArray(incoming.offers))throw Error('Formato não reconhecido');data={...incoming,offers:incoming.offers.map(o=>({...o}))};lastStage=null;$('changeBlock').hidden=true;index=-1;$('form').hidden=true;render();message('Catálogo carregado.');}catch(e){message('Erro: '+e.message);}};
 $('import').onchange=async e=>{const file=e.target.files?.[0];if(!file)return;
- try{const incoming=JSON.parse(await file.text());const staged=stageBotOffers(data,incoming);
- data=staged.document;index=-1;$('form').hidden=true;render();
+ try{if(file.size>5000000)throw Error('Arquivo maior que 5 MB. Divida a exportação para revisão.');
+ const incoming=JSON.parse(await file.text());const staged=stageBotOffers(data,incoming);
+ data=staged.document;lastStage=staged;index=-1;$('form').hidden=true;render();
+ const changes=staged.changes.slice(0,200).map(c=>c.kind.toUpperCase()+' · '+c.store+' · '+c.partId+
+   ' · '+(c.oldPrice===undefined?'R$ '+c.price:'R$ '+c.oldPrice+' → R$ '+c.price)+' · consulta '+c.checkedAt);
+ $('changeBlock').hidden=false;
+ $('changeLog').textContent=(changes.length?changes.join('\n'):'Nenhuma alteração nesta importação.')+
+ (staged.changes.length>200?'\n... e '+(staged.changes.length-200)+' alterações adicionais':'')+
+ (staged.notices.length?'\n\nAVISOS:\n'+staged.notices.join('\n'):'');
  message('Market Bot 5.x: '+staged.inserted+' novos, '+staged.updated+' alterados, '+staged.unchanged+' iguais e '+staged.rejected+' inválidos. Novos e alterados aguardam revisão.');
  }catch(err){message('Importação rejeitada: '+err.message);}e.target.value='';};
-$('export').onclick=()=>{if(!Array.isArray(data.offers)||!data.offers.length){message('Carregue um catálogo antes de exportar.');return;}const blob=new Blob([JSON.stringify(data,null,2)+'\n'],{type:'application/json'});const url=URL.createObjectURL(blob);const a=document.createElement('a');a.href=url;a.download='offers.json';a.click();setTimeout(()=>URL.revokeObjectURL(url),1000);message('Arquivo exportado. Revise antes de publicar no GitHub.');};
+$('preview').onclick=()=>{
+ const report=qualityReport(data.offers);
+ const categories={};for(const o of data.offers){const k=o.category||'sem categoria';categories[k]=(categories[k]||0)+1}
+ const blocked=report.issues.filter(x=>!x.displayable).slice(0,12).map(x=>'#'+(x.index+1)+' '+x.partId+': '+x.errors.join('; '));
+ message('PRÉVIA LOCAL (não publica): '+report.total+' anúncios; '+report.published+' elegíveis, '+report.blocked+' bloqueados, '+report.withoutImage+' sem foto.\n'+
+  'Categorias: '+Object.entries(categories).map(([k,n])=>k+' '+n).join(', ')+
+  (blocked.length?'\nPrimeiros bloqueios:\n'+blocked.join('\n'):'')+
+  '\nNa exportação, pendentes continuam bloqueados para visitantes. Faça a publicação apenas por sua conta GitHub.');
+};
+$('export').onclick=()=>{
+ if(!Array.isArray(data.offers)||!data.offers.length){message('Carregue um catálogo antes de exportar.');return;}
+ const report=qualityReport(data.offers);
+ if(!report.published){message('Nenhum anúncio elegível: revise erros antes de exportar.');return;}
+ const document={...data,schemaVersion:3,updatedAt:new Date().toISOString().slice(0,10)};
+ const blob=new Blob([JSON.stringify(document,null,2)+'\n'],{type:'application/json'});const url=URL.createObjectURL(blob);
+ const a=document.createElement('a');a.href=url;a.download='offers.json';a.click();setTimeout(()=>URL.revokeObjectURL(url),1000);
+ message('Exportação local: '+report.published+' elegíveis e '+report.blocked+' bloqueados. Pendentes não aparecerão no site. Faça commit do offers.json revisado no GitHub; a publicação não é automática.');
+};
 $('search').oninput=render;
 render();
 </script></body></html>
