@@ -13,7 +13,7 @@ const groups=[
  {id:'ssd',name:'Armazenamento',icon:'▱',desc:'Velocidade para sistema, aplicativos e jogos.',options:[{id:'500',name:'SSD NVMe 500 GB',desc:'M.2 · PCIe · armazenamento rápido',price:250},{id:'1000',name:'SSD NVMe 1 TB',desc:'M.2 · PCIe · mais espaço para jogos',price:410}]},
  {id:'psu',name:'Fonte de alimentação',icon:'◈',desc:'Escolha uma fonte de qualidade e potência adequada.',options:[{id:'550',name:'Fonte 550 W 80 Plus Bronze',desc:'Potência nominal · qualidade do modelo deve ser verificada',price:320,watts:550},{id:'650',name:'Fonte 650 W 80 Plus Bronze',desc:'Potência nominal · margem para upgrades',price:430,watts:650},{id:'750',name:'Fonte 750 W 80 Plus Gold',desc:'Potência nominal · folga para GPU topo',price:600,watts:750}]}];
 groups.push({id:'cooler',name:'Cooler do processador',icon:'❄',desc:'Escolha a refrigeração e confira o encaixe no socket.',options:[]});
-groups.forEach(g=>{g.options=catalog[g.id]});const RK={ITX:1,mATX:2,ATX:3};let ravenOffers=[];let ravenOffersLoaded=false;const $=id=>document.getElementById(id),fmt=n=>n.toLocaleString('pt-BR',{style:'currency',currency:'BRL',maximumFractionDigits:0});let chosen={};let current=0;let viewer=null;let exploded=false;
+groups.forEach(g=>{g.options=catalog[g.id]});const RK={ITX:1,mATX:2,ATX:3};let ravenOffers=[];let ravenOffersLoaded=false;const $=id=>document.getElementById(id),fmt=n=>n.toLocaleString('pt-BR',{style:'currency',currency:'BRL',minimumFractionDigits:2,maximumFractionDigits:2});let chosen={};let current=0;let viewer=null;let exploded=false;
 try{chosen=JSON.parse(localStorage.getItem('raven-pc-builder-v1')||'{}');if(!chosen||typeof chosen!=='object'||Array.isArray(chosen))chosen={};}catch{chosen={};}
 try{const m=location.hash.match(/b=([^&]*)/);if(m){const ids=decodeURIComponent(m[1]).split(',');groups.forEach((g,i)=>{const o=g.options.find(x=>x.id===ids[i]);if(o)chosen[g.id]=o.id})}}catch{}
 for(const g of groups)if(!g.options.some(o=>o.id===chosen[g.id]))delete chosen[g.id];
@@ -154,7 +154,7 @@ function ravenCheapestCompatible(group){
 }
 function render(){const g=groups[current],nav=$('steps');nav.replaceChildren();groups.forEach((item,i)=>{const b=document.createElement('button');b.className='step'+(i===current?' active':'')+(chosen[item.id]?' done':'');b.innerHTML=`<span class="step-num">${chosen[item.id]?'✓':String(i+1).padStart(2,'0')}</span><span>${item.name}</span>`;
  const count=document.createElement('small');count.className='raven-step-count';
- count.textContent=ravenOffersLoaded?ravenStepOffers(item).length+' ofertas':'...';
+ count.textContent=ravenOffersLoaded?ravenStepOffers(item).length+' modelos':'...';
  b.append(count);b.onclick=()=>ravenGoStep(i);nav.append(b)});$('step-number').textContent=String(current+1).padStart(2,'0');$('category').textContent=g.name;$('category-desc').textContent=g.desc;$('category-icon').textContent=g.icon;const label=$('raven-step-status');if(label){
  const total=ravenStepOffers(g).length,compatible=ravenStepOffers(g).filter(o=>!bad(g,o)).length;
  label.textContent=ravenOffersLoaded
@@ -791,7 +791,7 @@ async function ravenLoadOffers(){try{const r=await fetch('./offers.json',{cache:
  // Restaurar IDs de ofertas publicadas salvas antes do carregamento da página.
  let saved={};try{saved=JSON.parse(localStorage.getItem('raven-pc-builder-v1')||'{}')||{}}catch{}
  const hash=location.hash.match(/b=([^&]*)/);
- const shared=hash?decodeURIComponent(hash[1]).split(','):[];
+ let shared=[];try{if(hash)shared=decodeURIComponent(hash[1]).split(',')}catch{shared=[];}
  for(const [i,group] of groups.entries()){
   const id=shared.length?shared[i]:saved[group.id];
   if(id&&group.options.some(x=>x.id===id))chosen[group.id]=id;
