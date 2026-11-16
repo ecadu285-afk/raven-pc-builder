@@ -28,6 +28,15 @@ function safeUrl(link,shop){
  try{const u=new URL(link);return u.protocol==='https:'&&!u.username&&!u.password&&!u.port&&shops[shop].domains.some(d=>u.hostname===d||u.hostname.endsWith('.'+d))?u.href:null}catch{return null}
 }
 function valid(o){return o&&Number.isFinite(o.price)&&o.price>0&&o.partId&&safeUrl(o.url,o.store)&&/^\d{4}-\d\d-\d\d$/.test(o.checkedAt||'');}
+const MAX_OFFER_AGE_DAYS=14;
+function offerAgeDays(checkedAt){
+ const date=new Date(String(checkedAt||'')+'T12:00:00Z');
+ if(!Number.isFinite(date.getTime()))return Infinity;
+ const now=new Date(),today=new Date(Date.UTC(now.getFullYear(),now.getMonth(),now.getDate(),12));
+ return Math.floor((today.getTime()-date.getTime())/86400000);
+}
+function isRecent(o){const days=offerAgeDays(o.checkedAt);return days>=0&&days<=MAX_OFFER_AGE_DAYS;}
+
 function identity(o){
  const ref=known.get(o.partId);
  const model=o.modelName||ref?.name||o.partId||o.title;
@@ -40,7 +49,7 @@ function grouped(offers){
    map.get(groupId).push(offer);
  }
  return [...map.values()].map(items=>{
-   items.sort((a,b)=>a.price-b.price);
+   items.sort((a,b)=>Number(isRecent(b))-Number(isRecent(a))||a.price-b.price);
    const seen=new Set(),primary=[],others=[];
    for(const item of items){(seen.has(item.store)?others:primary).push(item);seen.add(item.store);}
    const best=items[0];
@@ -105,7 +114,11 @@ function productCard(item){
  const title=element('h3','',item.model);
  const store=element('div','offer-store',(item.primary.length>1?item.primary.length+' lojas · ':'')+'Menor oferta: '+shops[o.store].name+(o.condition==='used'?' · Usado':''));
  const price=element('div','offer-price',BRL(o.price));
- price.append(element('small','','Preço registrado em '+o.checkedAt.split('-').reverse().join('/')));
+ price.append(element('small','',isRecent(o)
+    ? 'Preço conferido em '+o.checkedAt.split('-').reverse().join('/')
+    : 'PREÇO ANTIGO · última conferência '+o.checkedAt.split('-').reverse().join('/')+'. Consulte o anúncio antes de comprar.'));
+ if(!isRecent(o)){article.classList.add('raven-stale-offer');article.setAttribute('data-price-status','desatualizado');}
+
  const key=item.id.slice(0,180);
  const save=element('button','market-action','♡ Salvar');
  const cart=element('button','market-action','+ Carrinho');
@@ -128,7 +141,7 @@ function productCard(item){
  cart.addEventListener('click',()=>change('cart',cart));
  review.addEventListener('click',()=>openMarketReviews(item));
  marketActions.append(save,cart,review);
- const a=element('a','offer-link','Ver oferta');a.href=safeUrl(o.url,o.store);a.target='_blank';a.rel=o.affiliate?'noopener noreferrer sponsored':'noopener noreferrer';
+ const a=element('a','offer-link',isRecent(o)?'Ver oferta':'Conferir preço na loja');a.href=safeUrl(o.url,o.store);a.target='_blank';a.rel=o.affiliate?'noopener noreferrer sponsored':'noopener noreferrer';
  content.append(title,store,price,marketActions,a);
  if(item.primary.length>1||item.others.length){
    const detail=element('details','offer-alternatives');
@@ -263,7 +276,7 @@ function catalogPage(){
  const filtered=all.filter(o=>!['pc','kit'].includes(category(o))&&(c==='all'||category(o)===c)&&(s==='all'||o.store===s)&&(!q||normalize([o.title,o.modelName,o.partId,known.get(o.partId)?.name].join(' ')).includes(q)));
  const array=grouped(filtered);
  array.sort((a,b)=>ord==='highest'?b.best.price-a.best.price:ord==='recent'?b.best.checkedAt.localeCompare(a.best.checkedAt):a.best.price-b.best.price);
- const count=$('catalog-count');if(count)count.textContent=array.length+' modelos · '+filtered.length+' anúncios cadastrados';
+ const count=$('catalog-count');if(count)count.textContent=array.length+' modelos · '+filtered.length+' anúncios cadastrados ('+filtered.filter(x=>!isRecent(x)).length+' com preço antigo)';
  root.replaceChildren(...array.slice(0,visibleLimit).map(productCard));
  if(!array.length)root.append(element('div','no-offers','Nenhuma oferta corresponde aos filtros. Tente outra categoria ou pesquise pelo modelo.'));
  const more=$('catalog-more');if(more){more.hidden=array.length<=visibleLimit;more.textContent='Mostrar mais modelos ('+Math.max(0,array.length-visibleLimit)+')';}
