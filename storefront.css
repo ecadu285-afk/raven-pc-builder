@@ -69,3 +69,13 @@ main{min-height:55vh}
 .offer-visual:has(img) .offer-glyph{display:none}
 @media(max-width:430px){.cat-symbol{width:84px;height:74px}.cat-card{min-height:145px}.offer-visual{height:155px}.offer-visual img{padding:9px 9px 18px}}
 @media(prefers-reduced-motion:reduce){.offer-visual img{transition:none!important}.offer-card:hover .offer-visual img{transform:none!important}}
+
+/* Raven 7.0 — fichas de referência confiáveis em home, catálogo e conta */
+.offer-technical{margin:12px 0 9px;padding:9px 12px;border:1px solid rgba(130,160,145,.45);border-radius:11px;background:rgba(22,33,31,.76);color:#f3f8f5}
+.offer-technical summary{cursor:pointer;font-size:.82rem;font-weight:750}
+.offer-facts{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:8px;margin:12px 0}
+.offer-fact{min-width:0;border-bottom:1px solid rgba(162,188,171,.22);padding:5px 0;font-size:.78rem}
+.offer-fact dt{color:#c0cfbe}.offer-fact dd{margin:2px 0 0;font-weight:750;color:#ecf5e9}
+.offer-spec-disclaimer{display:block;font-size:.72rem;line-height:1.45;color:#c0cfbe;margin-top:9px}
+.offer-comparison-warning{font-size:.74rem;line-height:1.55;color:#edc997;padding:4px 0}
+@media(max-width:450px){.offer-facts{grid-template-columns:1fr}}
