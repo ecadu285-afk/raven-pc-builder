@@ -1259,22 +1259,6 @@
       "modelName": "Intel Core i3-4170"
     },
     {
-      "partId": "i3-3240",
-      "store": "shopee",
-      "price": 5990,
-      "checkedAt": "2026-11-14",
-      "url": "https://s.shopee.com.br/50adK7jewV",
-      "condition": "new",
-      "affiliate": true,
-      "title": "Processador Intel Core i3 i3-3240 3.4GHz 2 núcleos c/ Gráficos HD 4000",
-      "imageUrl": "https://cf.shopee.com.br/file/br-11134207-820l7-ml7352sln66e75",
-      "priceCondition": "pix",
-      "category": "cpu",
-      "modelName": "Intel Core i3-3240",
-      "reviewStatus": "hold",
-      "reviewNote": "Revisar preço, categoria, modelo e anúncio antes de publicar novamente"
-    },
-    {
       "partId": "5500",
       "store": "amazon",
       "price": 489.97,
