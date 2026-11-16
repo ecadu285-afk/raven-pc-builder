@@ -125,3 +125,19 @@
 .raven-health-power{padding:11px 14px;border-radius:10px;background:#1d3325;border:1px solid #447e58}
 .raven-health-disclaimer{opacity:.85}
 @media(max-width:760px){.raven-health-list{grid-template-columns:1fr}.builder-health{padding:14px}}
+
+
+/* Raven 7.1 — contagem das etapas e comparação de anúncios cadastrados */
+.raven-step-count{font-size:10px;opacity:.8;font-weight:700;margin-left:auto;white-space:nowrap}
+.raven-builder-list-actions{display:flex;align-items:center;justify-content:space-between;gap:12px;flex-wrap:wrap;margin:9px 0 13px}
+.raven-builder-list-actions p{margin:0;color:#c5d5d0;font-size:11px;line-height:1.4;flex:1;min-width:170px}
+.raven-builder-shortcuts{display:flex;gap:8px;flex-wrap:wrap}
+.raven-builder-shortcuts button{font-size:11px;min-height:36px;padding:7px 11px;border-radius:9px;white-space:normal}
+.raven-builder-shortcuts button:disabled{opacity:.45;cursor:not-allowed}
+.raven-seller-facts{display:block;font-size:10px;color:#e8c991;padding:6px 9px;line-height:1.45}
+.raven-part-comparison{border:1px solid rgba(139,166,146,.34);padding:9px 11px;margin:7px 0;background:#1b2430;border-radius:9px}
+.raven-part-comparison summary{font-size:11px;font-weight:750;cursor:pointer;color:#bdebd7}
+.raven-part-comparison small{display:block;font-size:10px;color:#cdd3d0;margin:8px 0;line-height:1.45}
+.raven-part-comparison a{display:block;margin:5px 0;border-radius:6px;padding:6px 9px;font-size:11px;color:#d5eec6;text-decoration:underline;text-underline-offset:3px}
+.raven-part-comparison a:hover{background:rgba(146,198,157,.12)}
+@media(max-width:700px){.raven-builder-list-actions{align-items:stretch}.raven-builder-shortcuts{width:100%}.raven-builder-shortcuts button{flex:1;min-width:110px}.raven-step-count{font-size:9px}}
