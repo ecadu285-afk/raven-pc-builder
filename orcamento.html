@@ -8,7 +8,7 @@
 <footer>© 2026 Raven Creatives Studios · Ferramenta educativa de planejamento · <a href="afiliados.html">Transparência comercial</a> · <a href="servicos.html">Serviços</a></footer><script type="module">import {recommendBudget,BUILD_GROUPS} from './budget-engine.js';
 import {publicOffers} from './offer-policy.mjs';
 const $=id=>document.getElementById(id),BRL=n=>Number(n||0).toLocaleString('pt-BR',{style:'currency',currency:'BRL'});
-const retail={amazon:'Amazon',mercadolivre:'Mercado Livre',shopee:'Shopee'};
+const retail={amazon:'Amazon',mercadolivre:'Mercado Livre',shopee:'Shopee',kabum:'KaBuM!',terabyte:'TerabyteShop'};
 let offers=[],loaded=false;
 function el(tag,cls,txt){const e=document.createElement(tag);if(cls)e.className=cls;if(txt!==undefined)e.textContent=txt;return e}
 function labelValue(parent,key,value){const d=el('div','metric'),a=el('small','',key),b=el('strong','',value);d.append(b,a);parent.append(d)}

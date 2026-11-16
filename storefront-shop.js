@@ -5,6 +5,7 @@ import {
   ravenMarketReviewDelete, ravenMarketOpenAccount
 } from './raven-market.js';
 import {publicOffers} from './offer-policy.mjs';
+import {filterCatalogOffers} from './catalog-filters.mjs';
 
 const known=new Map(Object.entries(catalog).flatMap(([category,items])=>items.map(item=>[item.id,{...item,category}])));
 const labels={cpu:'Processadores',board:'Placas-mãe',gpu:'Placas de vídeo',ram:'Memórias RAM',ssd:'SSDs',hdd:'HDs',psu:'Fontes',case:'Gabinetes',cooler:'Coolers',other:'Outras peças'};
@@ -12,7 +13,9 @@ const glyphs={cpu:'CPU',board:'MB',gpu:'GPU',ram:'RAM',ssd:'SSD',hdd:'HD',psu:'P
 const shops={
  shopee:{name:'Shopee',domains:['shopee.com.br','shopee.com','shope.ee']},
  mercadolivre:{name:'Mercado Livre',domains:['mercadolivre.com.br','mercadolivre.com','meli.la']},
- amazon:{name:'Amazon',domains:['amazon.com.br','amazon.com','amzn.to','link.amazon']}
+ amazon:{name:'Amazon',domains:['amazon.com.br','amazon.com','amzn.to','link.amazon']},
+ kabum:{name:'KaBuM!',domains:['kabum.com.br']},
+ terabyte:{name:'TerabyteShop',domains:['terabyteshop.com.br']}
 };
 const $=id=>document.getElementById(id);
 const BRL=value=>Number(value).toLocaleString('pt-BR',{style:'currency',currency:'BRL'});
@@ -68,7 +71,7 @@ function imageFor(offer){
   const hosts=['shopee.com.br','shopee.com','shopeecdn.com','shopeeusercontent.com',
    'amazon.com.br','amazon.com','media-amazon.com','ssl-images-amazon.com',
    'mlstatic.com','mercadolivre.com.br','mercadolibre.com',
-   'wikimedia.org'];
+   'kabum.com.br','terabyteshop.com.br','wikimedia.org'];
   return hosts.some(h=>url.hostname===h||url.hostname.endsWith('.'+h))?url.href:null;
  }catch{return null}
 }
@@ -274,8 +277,11 @@ function home(){
 function catalogPage(){
  const root=$('catalog-grid');if(!root)return;
  const search=$('catalog-search'),type=$('catalog-category'),shop=$('catalog-store'),order=$('catalog-order');
- const q=normalize(search?.value||''),c=type?.value||'all',s=shop?.value||'all',ord=order?.value||'lowest';
- const filtered=all.filter(o=>!['pc','kit'].includes(category(o))&&(c==='all'||category(o)===c)&&(s==='all'||o.store===s)&&(!q||normalize([o.title,o.modelName,o.partId,known.get(o.partId)?.name].join(' ')).includes(q)));
+ const cond=$('catalog-condition'),maximum=$('catalog-max-price'),photos=$('catalog-photos-only');
+ const ord=order?.value||'lowest';
+ const filtered=filterCatalogOffers(all,{search:search?.value,category:type?.value,
+   store:shop?.value,condition:cond?.value,maxPrice:maximum?.value,photoOnly:photos?.checked},
+   {categoryOf:category,hasPhoto:o=>Boolean(imageFor(o)),labelOf:o=>known.get(o.partId)?.name});
  const array=grouped(filtered);
  array.sort((a,b)=>ord==='highest'?b.best.price-a.best.price:ord==='recent'?b.best.checkedAt.localeCompare(a.best.checkedAt):a.best.price-b.best.price);
  const count=$('catalog-count');if(count)count.textContent=array.length+' modelos · '+filtered.length+' anúncios cadastrados ('+filtered.filter(x=>!isRecent(x)).length+' com preço antigo)';
@@ -294,10 +300,20 @@ async function start(){
    categorySymbols();
    home();
    const search=$('catalog-search'),type=$('catalog-category'),shop=$('catalog-store'),order=$('catalog-order'),more=$('catalog-more');
+   const cond=$('catalog-condition'),maximum=$('catalog-max-price'),photos=$('catalog-photos-only'),clear=$('catalog-clear');
    const params=new URLSearchParams(location.search);
    if(search){search.value=params.get('q')||'';search.addEventListener('input',()=>{visibleLimit=24;catalogPage();});}
    if(type){const c=params.get('categoria');if(c&&Object.hasOwn(labels,c))type.value=c;type.addEventListener('change',()=>{visibleLimit=24;catalogPage();});}
    if(shop)shop.addEventListener('change',()=>{visibleLimit=24;catalogPage();});
+   if(cond)cond.addEventListener('change',()=>{visibleLimit=24;catalogPage();});
+   if(maximum)maximum.addEventListener('input',()=>{visibleLimit=24;catalogPage();});
+   if(photos)photos.addEventListener('change',()=>{visibleLimit=24;catalogPage();});
+   if(clear)clear.addEventListener('click',()=>{
+     if(search)search.value='';if(type)type.value='all';if(shop)shop.value='all';
+     if(cond)cond.value='all';if(maximum)maximum.value='';if(photos)photos.checked=false;
+     if(order)order.value='lowest';visibleLimit=24;catalogPage();
+     history.replaceState(null,'',location.pathname+location.hash);
+   });
    if(order)order.addEventListener('change',catalogPage);
    if(more)more.addEventListener('click',()=>{visibleLimit+=24;catalogPage();});
    catalogPage();

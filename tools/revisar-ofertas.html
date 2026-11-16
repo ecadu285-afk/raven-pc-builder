@@ -58,6 +58,7 @@ label input,label select,label textarea{margin-top:6px}
 </div>
 <script type="module">
 import {auditOffer,qualityReport} from '../offer-policy.mjs';
+import {stageBotOffers} from '../offer-import65.mjs';
 const $=id=>document.getElementById(id);let data={offers:[],history:[]};let index=-1;
 const fields=['title','modelName','partId','price','category','store','condition','checkedAt','url','imageUrl','affiliateStatus','reviewStatus','reviewNote'];
 const message=t=>{$('status').textContent=t;};
@@ -89,7 +90,11 @@ $('form').onsubmit=e=>{e.preventDefault();if(index<0)return;data.offers[index]={
 $('hold').onclick=()=>{if(index<0)return;data.offers[index]={...formData(),reviewStatus:'hold'};message('Oferta suspensa.');render();select(index);};
 $('approve').onclick=()=>{if(index<0)return;const o={...formData(),reviewStatus:'approved'};const r=auditOffer(o);if(!r.displayable){message('Não aprovado: '+r.errors.join('; '));return;}data.offers[index]=o;message('Oferta aprovada nas regras automáticas. Confira manualmente o anúncio externo.');render();select(index);};
 $('load').onclick=async()=>{try{const r=await fetch('../offers.json',{cache:'no-store'});if(!r.ok)throw Error('HTTP '+r.status);const incoming=await r.json();if(!Array.isArray(incoming.offers))throw Error('Formato não reconhecido');data={...incoming,offers:incoming.offers.map(o=>({...o}))};index=-1;$('form').hidden=true;render();message('Catálogo carregado.');}catch(e){message('Erro: '+e.message);}};
-$('import').onchange=async e=>{const file=e.target.files?.[0];if(!file)return;try{const incoming=JSON.parse(await file.text());const rows=Array.isArray(incoming)?incoming:Array.isArray(incoming.offers)?incoming.offers:null;if(!rows)throw Error('JSON precisa conter offers[]');let added=0,changed=0;const map=new Map(data.offers.map((o,i)=>[key(o),i]));for(const row of rows){if(!row||typeof row!=='object')continue;const k=key(row);if(!row.partId||!row.store||!row.url)continue;const oldIndex=map.get(k);if(oldIndex===undefined){map.set(k,data.offers.length);data.offers.push({...row,reviewStatus:'pending'});added++;}else{const original=data.offers[oldIndex];const next={...original,...row};if(JSON.stringify({...original,reviewStatus:null,reviewNote:null})!==JSON.stringify({...next,reviewStatus:null,reviewNote:null})){data.offers[oldIndex]={...next,reviewStatus:'pending'};changed++;}}}index=-1;$('form').hidden=true;render();message('Importação: '+added+' novos e '+changed+' alterados, todos pendentes.');}catch(err){message('Importação rejeitada: '+err.message);}e.target.value='';};
+$('import').onchange=async e=>{const file=e.target.files?.[0];if(!file)return;
+ try{const incoming=JSON.parse(await file.text());const staged=stageBotOffers(data,incoming);
+ data=staged.document;index=-1;$('form').hidden=true;render();
+ message('Market Bot 5.x: '+staged.inserted+' novos, '+staged.updated+' alterados, '+staged.unchanged+' iguais e '+staged.rejected+' inválidos. Novos e alterados aguardam revisão.');
+ }catch(err){message('Importação rejeitada: '+err.message);}e.target.value='';};
 $('export').onclick=()=>{if(!Array.isArray(data.offers)||!data.offers.length){message('Carregue um catálogo antes de exportar.');return;}const blob=new Blob([JSON.stringify(data,null,2)+'\n'],{type:'application/json'});const url=URL.createObjectURL(blob);const a=document.createElement('a');a.href=url;a.download='offers.json';a.click();setTimeout(()=>URL.revokeObjectURL(url),1000);message('Arquivo exportado. Revise antes de publicar no GitHub.');};
 $('search').oninput=render;
 render();

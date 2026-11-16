@@ -3,7 +3,7 @@
 <meta name="theme-color" content="#18132f">
 <meta name="description" content="Encontre componentes para seu PC: placas de vídeo, processadores, placas-mãe, RAM, SSD, HD, fontes e gabinetes. Compare ofertas de lojas parceiras.">
 <title>Peças e componentes | RAVEN PC BUILDER</title>
-<link rel="stylesheet" href="storefront.css?v=71"><link rel="stylesheet" href="catalog-simple.css?v=82"><link rel="stylesheet" href="raven-market.css?v=2"><link rel="stylesheet" href="raven-account.css?v=1"><link rel="stylesheet" href="raven-market-premium.css?v=2">
+<link rel="stylesheet" href="storefront.css?v=71"><link rel="stylesheet" href="catalog-simple.css?v=82"><link rel="stylesheet" href="raven-market.css?v=2"><link rel="stylesheet" href="raven-account.css?v=1"><link rel="stylesheet" href="raven-market-premium.css?v=2"><link rel="stylesheet" href="catalog-modern65.css?v=1">
 <meta property="og:site_name" content="Raven PC Builder"><meta property="og:type" content="website"><meta name="robots" content="index,follow"></head><body class="catalog-v8">
 <header class="site-header market-header">
 <div class="shell market-header-main">
@@ -41,8 +41,14 @@
 <option value="psu">Fontes</option>
 <option value="case">Gabinetes</option>
 <option value="hdd">HDs</option></select></label>
-<label>Loja<select id="catalog-store"><option value="all">Todas as lojas</option><option value="shopee">Shopee</option><option value="mercadolivre">Mercado Livre</option><option value="amazon">Amazon</option></select></label>
+<label>Loja<select id="catalog-store"><option value="all">Todas as lojas</option><option value="shopee">Shopee</option><option value="mercadolivre">Mercado Livre</option><option value="amazon">Amazon</option><option value="kabum">KaBuM!</option><option value="terabyte">TerabyteShop</option></select></label>
 <label>Ordenar<select id="catalog-order"><option value="lowest">Menor preço</option><option value="highest">Maior preço</option><option value="recent">Mais recentes</option></select></label>
+</div>
+<div class="catalog-extra-filters" aria-label="Filtros avançados">
+<label>Condição<select id="catalog-condition"><option value="all">Novo ou usado</option><option value="new">Novo</option><option value="used">Usado</option><option value="refurbished">Recondicionado</option></select></label>
+<label>Preço máximo (R$)<input id="catalog-max-price" type="number" inputmode="decimal" min="1" max="1000000" step="10" placeholder="Sem limite"></label>
+<label class="catalog-photo-only"><input type="checkbox" id="catalog-photos-only"> Somente anúncios com foto cadastrada</label>
+<button type="button" id="catalog-clear" class="catalog-clear">Limpar filtros</button>
 </div></section>
 <section class="catalog-quick" aria-labelledby="quick-title"><h2 id="quick-title">Categorias</h2><div class="categories"><a class="cat-card" href="produtos.html?categoria=gpu#catalogo"><span class="cat-symbol" aria-hidden="true">GPU</span><strong>Placas de vídeo</strong></a>
 <a class="cat-card" href="produtos.html?categoria=cpu#catalogo"><span class="cat-symbol" aria-hidden="true">CPU</span><strong>Processadores</strong></a>
@@ -60,6 +66,6 @@
 <div class="disclaimer"><strong>Antes de comprar:</strong> confirme modelo, preço, frete, garantia e compatibilidade na loja. A Raven não realiza a venda diretamente; alguns anúncios possuem links de afiliado. Miniaturas 3D não representam o modelo exato.</div>
 </section></main>
 <footer class="simple-footer"><div class="shell"><p>© 2026 Raven Creatives Studios · Catálogo de anúncios publicados</p><nav aria-label="Informações"><a href="afiliados.html">Transparência</a><a href="servicos.html">Sobre a Raven</a><a href="inicio.html">Início</a></nav></div></footer>
-<script type="module" src="storefront-shop.js?v=93"></script>
+<script type="module" src="storefront-shop.js?v=65"></script>
 <script type="module" src="raven-location.js?v=1"></script>
 </body></html>

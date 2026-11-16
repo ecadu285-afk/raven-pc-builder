@@ -1,0 +1,11 @@
+/* RAVEN 6.4: filtros extras em desktop e celular, sem imagens falsas. */
+.catalog-extra-filters{display:flex;gap:12px;align-items:end;flex-wrap:wrap;margin-top:12px;padding:15px;border:1px solid rgba(153,204,165,.3);border-radius:14px;background:rgba(22,36,29,.78)}
+.catalog-extra-filters label{display:grid;gap:7px;font-size:13px;color:#dbebdd;min-width:160px}
+.catalog-extra-filters select,.catalog-extra-filters input[type=number]{height:43px;border:1px solid #60836b;border-radius:9px;padding:9px 12px;background:#111c15;color:#f4fff4;max-width:100%}
+.catalog-extra-filters .catalog-photo-only{display:flex;align-items:center;gap:9px;min-width:200px;flex:1;padding-bottom:10px}
+.catalog-photo-only input{width:18px;height:18px;accent-color:#9eed80}
+.catalog-clear{border:1px solid #60836b;border-radius:9px;background:#253d2c;color:#ebffeb;padding:11px 16px;min-height:43px;cursor:pointer}
+.catalog-clear:hover{background:#35583c}
+.catalog-clear:focus-visible,.catalog-extra-filters input:focus-visible,.catalog-extra-filters select:focus-visible{outline:3px solid #b7efa1;outline-offset:2px}
+@media(max-width:680px){.catalog-extra-filters{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));align-items:end}.catalog-extra-filters label{min-width:0}.catalog-extra-filters .catalog-photo-only{grid-column:1/-1;min-width:0}.catalog-clear{grid-column:1/-1}}
+@media(max-width:370px){.catalog-extra-filters{grid-template-columns:1fr}}
