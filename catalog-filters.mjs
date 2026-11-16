@@ -9,6 +9,7 @@ export function filterCatalogOffers(offers,filters={},options={}){
  if(!Array.isArray(offers))return [];
  const categoryOf=options.categoryOf||((x)=>x.category);
  const hasPhoto=options.hasPhoto||((x)=>Boolean(x.imageUrl));
+ const isRecent=typeof options.isRecent==='function'?options.isRecent:()=>false;
  const labelOf=options.labelOf||((x)=>x.modelName??x.title);
  const terms=foldTerm(filters.search).split(' ').filter(Boolean);
  const category=String(filters.category||'all'),store=String(filters.store||'all'),condition=String(filters.condition||'all');
@@ -22,6 +23,7 @@ export function filterCatalogOffers(offers,filters={},options={}){
   if(condition!=='all'&&(o.condition||'unknown')!==condition)return false;
   if(max!==null&&o.price>max)return false;
   if(filters.photoOnly===true&&!hasPhoto(o))return false;
+  if(filters.recentOnly===true&&!isRecent(o))return false;
   const hay=foldTerm([o.title,o.modelName,o.partId,labelOf(o),o.store,o.category].join(' '));
   return terms.every(t=>hay.includes(t));
  });
