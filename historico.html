@@ -73,6 +73,8 @@ async function init(){
   for(const o of offers){if(!ids.has(o.partId))ids.set(o.partId,{partId:o.partId,name:o.modelName||o.title||o.partId})}
   models=[...ids.values()].sort((a,b)=>a.name.localeCompare(b.name,'pt-BR'));
   selectModels();
+  const requested=new URLSearchParams(location.search).get('produto');
+  if(requested&&models.some(m=>m.partId===requested)){$('part').value=requested;draw();}
   $('catalogStatus').append(labelItem('Anúncios elegíveis',health.eligible),labelItem('Preços recentes',health.recent),labelItem('Sem foto cadastrada',health.withoutPhoto));
   $('status').textContent='Catálogo carregado · '+models.length+' modelos com anúncios elegíveis. Histórico: '+history.length+' registro(s) anteriores armazenados.';
  }catch(e){$('status').textContent='Erro ao abrir o histórico: '+e.message}
