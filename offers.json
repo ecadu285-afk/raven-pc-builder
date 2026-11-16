@@ -1172,7 +1172,9 @@
       "imageUrl": "",
       "priceCondition": "",
       "category": "board",
-      "modelName": "Gigabyte GA-H61M-S2PV"
+      "modelName": "Gigabyte GA-H61M-S2PV",
+      "reviewStatus": "hold",
+      "reviewNote": "Modelo anunciado GA-H61M-S2PV difere da descrição GA-H61M-DS2 no link; confirmar SKU antes de republicar."
     },
     {
       "partId": "i5-3570k",
