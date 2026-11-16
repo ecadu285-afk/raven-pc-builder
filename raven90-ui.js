@@ -4,6 +4,7 @@
   const nav=document.querySelector('.market-nav-strip nav, .raven-nav-links');
   if(nav&&nav.querySelectorAll('a').length>=5&&!nav.dataset.raven90Menu){
     nav.dataset.raven90Menu='yes';
+    document.body.classList.add('raven90-menu-ready');
     if(!nav.id)nav.id='raven90-primary-nav';
     const b=document.createElement('button');b.type='button';b.className='raven90-menu-toggle';
     b.textContent='Menu de navegação';b.setAttribute('aria-controls',nav.id);b.setAttribute('aria-expanded','false');
@@ -15,7 +16,7 @@
     window.addEventListener('resize',()=>{if(innerWidth>850)close()});
   }
   document.addEventListener('click',e=>{
-   const link=e.target.closest('a[rel~="sponsored"]');if(!link)return;
+   const link=e.target instanceof Element?e.target.closest('a[rel~="sponsored"]'):null;if(!link)return;
    // Evento transitório útil para métricas futuras. Não coleta dados pessoais nem trafega pela rede.
    document.dispatchEvent(new CustomEvent('raven:offer-click',{detail:{source:'external-affiliate',host:(()=>{try{return new URL(link.href).hostname}catch{return ''}})()}}));
   });
