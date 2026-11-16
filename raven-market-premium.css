@@ -61,3 +61,8 @@
  .catalog-v8 .offer-visual{height:150px}
  .catalog-v8 .offer-info{padding:11px}
 }
+
+/* Aviso para ofertas cuja verificação já passou de 14 dias. */
+.raven-stale-offer{border-color:#ddba6a!important;background:linear-gradient(180deg,#fff9ed,#fff)!important}
+.raven-stale-offer .offer-price small{color:#9c5709;font-weight:850;line-height:1.5}
+.raven-stale-offer .offer-link{background:#f2d08f!important;color:#5c3908!important}
