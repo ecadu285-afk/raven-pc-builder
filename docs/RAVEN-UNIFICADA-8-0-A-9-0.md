@@ -11,7 +11,7 @@ Este pacote propõe melhorias incrementais ao código 7.9 sem reescrever o monta
 5. Validade: idade do preço integra a priorização da vitrine; data não é alterada sem consultar a loja.
 6. Qualidade de anúncios: recomenda revisão de condição e marca, sem inventar reputação de vendedor.
 7. Início: escolha de destaques por diversidade, completude e preço recente, não só menor preço.
-8. Montador: atalhos de orçamento / catálogo e continuidade do 3D existente.
+8. Montador: atalhos por peça selecionada para o catálogo e continuidade do 3D existente. O link não prova que há uma oferta correspondente.
 9. Compatibilidade: aproveita build-health e compatibility; mantém alertas de campos faltantes, BIOS e fonte.
 10. Orçamento guiado: novos atalhos de valor e objetivo preenchem o motor atual.
 11. Valores parciais: avisos explícitos para frete, estoque e itens não cotados.
