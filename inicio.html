@@ -7,7 +7,13 @@
 <title>Raven PC Builder | Monte, aprenda e encontre suas peças</title>
 <link rel="stylesheet" href="storefront.css?v=79">
 <link rel="stylesheet" href="home-simple.css?v=9"><link rel="stylesheet" href="raven-market.css?v=2"><link rel="stylesheet" href="raven-account.css?v=1"><link rel="stylesheet" href="raven-home-pro.css?v=2"><link rel="stylesheet" href="raven-entry.css?v=1">
-<meta property="og:site_name" content="Raven PC Builder"><meta property="og:type" content="website"><meta name="robots" content="index,follow"></head>
+<meta property="og:site_name" content="Raven PC Builder"><meta property="og:type" content="website"><meta name="robots" content="index,follow"><link rel="canonical" href="https://ecadu285-afk.github.io/raven-pc-builder/inicio.html">
+<meta property="og:title" content="Raven PC Builder | Monte, aprenda e encontre suas peças">
+<meta property="og:description" content="Monte seu PC em 3D, aprenda o básico, encontre peças e descubra upgrades. Tudo em um só lugar, sem complicação.">
+<meta property="og:url" content="https://ecadu285-afk.github.io/raven-pc-builder/inicio.html">
+<meta name="twitter:card" content="summary">
+<link rel="stylesheet" href="raven90-ui.css?v=1">
+</head>
 <body class="home-v8 raven-home-pro">
 <a href="#conteudo" class="skip-link" style="position:absolute;left:-9999px;top:0" onfocus="this.style.left='12px';this.style.zIndex='1000';this.style.background='white'" onblur="this.style.left='-9999px'">Pular para o conteúdo</a>
 <header class="site-header market-header">
@@ -49,6 +55,15 @@
 </div>
 </div>
 </section>
+<section class="raven90-start" aria-labelledby="raven90-start-title"><div class="raven90-start-inner">
+<h2 id="raven90-start-title">Qual PC você quer montar?</h2><p>Comece pelo objetivo e orçamento. As sugestões usam preços cadastrados, não valores em tempo real.</p>
+<div class="raven90-start-options">
+<a href="orcamento.html?valor=2000&amp;uso=general">Estudos e trabalho — R$ 2.000<small>Peças para tarefas diárias e produtividade</small></a>
+<a href="orcamento.html?valor=3000&amp;uso=games">Jogos — R$ 3.000<small>Opções dentro do orçamento informado</small></a>
+<a href="orcamento.html?valor=4500&amp;uso=creative">Edição e criação — R$ 4.500<small>Planejamento para edição e design</small></a>
+</div><p class="raven90-verification">Prefere escolher tudo? <a href="index.html">Monte manualmente em 3D</a> ou <a href="assistente.html">consulte o Assistente Beta</a>. Confira frete, estoque e compatibilidade na loja.</p>
+</div></section>
+
 <section class="shell raven-shop-categories" aria-labelledby="shop-categories-title">
 <div class="raven-section-head"><div><p class="raven-overline">ENCONTRE SUA PRÓXIMA PEÇA</p><h2 id="shop-categories-title">Compre por categoria</h2></div><a href="produtos.html">Catálogo completo ›</a></div>
 <div class="raven-category-grid">
@@ -87,7 +102,16 @@
 <p>Raven PC Builder — projeto da Raven Creatives Studios. Os preços e anúncios são de lojas externas; confirme valores, frete e compatibilidade antes de comprar. Alguns links podem gerar comissão.</p>
 <nav aria-label="Informações do projeto"><a href="servicos.html">Sobre o projeto</a><a href="afiliados.html">Afiliados</a><a href="privacidade.html">Privacidade</a><a href="creditos-imagens.html">Créditos</a></nav>
 </div></footer>
-<script type="module">if(window.matchMedia('(min-width: 751px)').matches){import('./hero-3d.js?v=8').catch(()=>{});}</script>
+<script type="module">
+const hero=document.querySelector('[data-raven-hero3d]');
+if(hero&&window.matchMedia('(min-width: 751px)').matches&&!window.matchMedia('(prefers-reduced-motion: reduce)').matches){
+ const load=()=>import('./hero-3d.js?v=9').catch(()=>{});
+ if('IntersectionObserver' in window){
+  const observer=new IntersectionObserver(entries=>{if(entries.some(e=>e.isIntersecting)){observer.disconnect();load();}},{rootMargin:'140px'});
+  observer.observe(hero);
+ }else load();
+}
+</script>
 <script type="module" src="storefront-shop.js?v=109"></script>
 <script type="module" src="raven-entry.js?v=1"></script>
 <script type="module" src="raven-location.js?v=1"></script>
@@ -126,5 +150,6 @@
 </div>
 </section>
 </div></div>
+<script defer src="raven90-ui.js?v=1"></script>
 </body>
 </html>

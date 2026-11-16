@@ -2,7 +2,13 @@
 <html lang="pt-BR"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
 <meta name="description" content="Consulte preços cadastrados e alterações históricas realmente registradas no Raven PC Builder, com datas e lojas.">
 <meta name="theme-color" content="#171321"><title>Histórico de preços | Raven PC Builder 7.9</title>
-<link rel="stylesheet" href="raven79.css?v=1"></head><body>
+<link rel="stylesheet" href="raven79.css?v=1"><link rel="canonical" href="https://ecadu285-afk.github.io/raven-pc-builder/historico.html">
+<meta property="og:title" content="Histórico de preços | Raven PC Builder 7.9">
+<meta property="og:description" content="Consulte preços cadastrados e alterações históricas realmente registradas no Raven PC Builder, com datas e lojas.">
+<meta property="og:url" content="https://ecadu285-afk.github.io/raven-pc-builder/historico.html">
+<meta name="twitter:card" content="summary">
+<link rel="stylesheet" href="raven90-ui.css?v=1">
+</head><body>
 <header class="raven-top"><div class="raven-wrap raven-nav">
 <a class="raven-mark" href="inicio.html"><span>R.</span>RAVEN PC BUILDER</a>
 <nav class="raven-nav-links" aria-label="Navegação">
@@ -27,6 +33,7 @@
 import {catalog} from './catalog.js';
 import {publicOffers} from './offer-policy.mjs';
 import {catalogHealth,priceTimeline} from './raven79-intel.mjs';
+import {renderRecordedPriceChart} from './raven90-chart.mjs';
 const $=id=>document.getElementById(id);
 const money=n=>Number(n).toLocaleString('pt-BR',{style:'currency',currency:'BRL'});
 const node=(tag,cls,text)=>{const e=document.createElement(tag);if(cls)e.className=cls;if(text!==undefined)e.textContent=text;return e};
@@ -51,6 +58,7 @@ function draw(){
  labelItem('Lojas representadas',new Set(points.map(p=>p.store)).size));
  const note=node('div','raven-notice',timeline.notice);root.append(note);
  if(!points.length){root.append(node('p','raven-muted','Não há registros de preço para essa seleção de modelo e loja.'));return}
+ const graph=node('div','raven90-chart');if(renderRecordedPriceChart(graph,points))root.append(graph);
  const max=Math.max(...points.map(p=>p.price),1);
  for(const p of points){
   const row=node('div','raven-histogram');
@@ -80,4 +88,5 @@ async function init(){
  }catch(e){$('status').textContent='Erro ao abrir o histórico: '+e.message}
 }
 $('filter').addEventListener('input',selectModels);$('part').addEventListener('change',draw);$('store').addEventListener('change',draw);init();
-</script></body></html>
+</script><script defer src="raven90-ui.js?v=1"></script>
+</body></html>

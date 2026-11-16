@@ -1,6 +1,12 @@
 <!doctype html><html lang="pt-BR"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
 <meta name="theme-color" content="#171321"><meta name="description" content="Assistente Raven Beta ajuda a planejar computadores por orçamento e uso com regras transparentes e anúncios aprovados.">
-<title>Assistente Raven Beta | PC Builder 7.9</title><link rel="stylesheet" href="raven79.css?v=1"></head><body>
+<title>Assistente Raven Beta | PC Builder 7.9</title><link rel="stylesheet" href="raven79.css?v=1"><link rel="canonical" href="https://ecadu285-afk.github.io/raven-pc-builder/assistente.html">
+<meta property="og:title" content="Assistente Raven Beta | PC Builder 7.9">
+<meta property="og:description" content="Assistente Raven Beta ajuda a planejar computadores por orçamento e uso com regras transparentes e anúncios aprovados.">
+<meta property="og:url" content="https://ecadu285-afk.github.io/raven-pc-builder/assistente.html">
+<meta name="twitter:card" content="summary">
+<link rel="stylesheet" href="raven90-ui.css?v=1">
+</head><body>
 <header class="raven-top"><div class="raven-wrap raven-nav"><a class="raven-mark" href="inicio.html"><span>R.</span>RAVEN PC BUILDER</a>
 <nav class="raven-nav-links"><a href="inicio.html">Início</a><a href="produtos.html">Peças</a><a href="index.html">Montador 3D</a><a href="orcamento.html">Orçamento</a><a href="comparar-pcs.html">Comparar PCs</a><a href="historico.html">Histórico</a></nav></div></header>
 <main class="raven-wrap raven-main">
@@ -15,6 +21,8 @@
 <button type="button" data-query="PC para editar vídeos por R$ 4000">PC para edição R$ 4.000</button>
 <button type="button" data-query="Quero um PC barato para estudar com R$ 2000">PC para estudos R$ 2.000</button>
 <button type="button" data-query="Base para upgrades futuros com R$ 4500 AMD">Upgrade AMD R$ 4.500</button>
+<button type="button" data-query="PC para jogos por R$ 3500 com Ryzen e SSD">PC gamer AMD R$ 3.500</button>
+<button type="button" data-query="PC para estudos e trabalho por R$ 2500 Intel">PC Intel R$ 2.500</button>
 </div>
 <p class="raven-status" id="status" role="status">Carregando anúncios aprovados...</p>
 </section>
@@ -69,4 +77,5 @@ async function init(){
  $('status').textContent=offers.length+' anúncios elegíveis carregados. Informe seu orçamento.';
  }catch(e){$('status').textContent='Não foi possível carregar os anúncios. Consulte o planejador após atualizar a página: '+e.message}
 }init();
-</script></body></html>
+</script><script defer src="raven90-ui.js?v=1"></script>
+</body></html>
