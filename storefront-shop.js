@@ -47,8 +47,8 @@ function identity(o){
  const model=o.modelName||ref?.name||o.partId||o.title;
  const kind=category(o);
  const announced=String(o.title||o.modelName||'');
- const capacity=['gpu','ram','ssd','hdd'].includes(kind)?(announced.match(/\b(2|3|4|6|8|10|12|16|20|24|32|48|64|128|240|256|480|500|512|1000|1024|2000|2048)\s*(GB|TB)\b/i)||[]):[];
- return [kind,o.condition==='used'?'used':'new',normalize(model),capacity[0]?normalize(capacity[0]):''].join('|');
+ const capacity=['gpu','ram','ssd','hdd'].includes(kind)?(announced.match(/\b(\d{1,4})\s*(GB|TB)\b/i)||[]):[];
+ return [kind,o.condition==='used'?'used':o.condition==='refurbished'?'refurbished':'new',normalize(model),capacity[0]?normalize(capacity[0]):''].join('|');
 }
 function grouped(offers){
  const map=new Map();
