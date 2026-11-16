@@ -11,3 +11,9 @@ private/
 *.log
 relatorio-ofertas.json
 __pycache__/
+
+# Relatorios gerados localmente pela Raven 9.0
+raven90-revisao-fotos.csv
+raven90-relatorio-qualidade.json
+raven90-relatorio-sincronizacao.json
+offers-para-revisao.json

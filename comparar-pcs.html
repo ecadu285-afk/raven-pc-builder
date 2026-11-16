@@ -1,10 +1,16 @@
 <!doctype html><html lang="pt-BR"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
 <meta name="theme-color" content="#171321"><meta name="description" content="Compare até três montagens de PCs usando links do Montador 3D Raven e preços cadastrados recentemente.">
-<title>Comparador de PCs | Raven 7.9</title><link rel="stylesheet" href="raven79.css?v=1"></head><body>
+<title>Comparador de PCs | Raven 7.9</title><link rel="stylesheet" href="raven79.css?v=1"><link rel="canonical" href="https://ecadu285-afk.github.io/raven-pc-builder/comparar-pcs.html">
+<meta property="og:title" content="Comparador de PCs | Raven 7.9">
+<meta property="og:description" content="Compare até três montagens de PCs usando links do Montador 3D Raven e preços cadastrados recentemente.">
+<meta property="og:url" content="https://ecadu285-afk.github.io/raven-pc-builder/comparar-pcs.html">
+<meta name="twitter:card" content="summary">
+<link rel="stylesheet" href="raven90-ui.css?v=1">
+</head><body>
 <header class="raven-top"><div class="raven-wrap raven-nav"><a class="raven-mark" href="inicio.html"><span>R.</span>RAVEN PC BUILDER</a>
 <nav class="raven-nav-links"><a href="inicio.html">Início</a><a href="index.html">Montador 3D</a><a href="orcamento.html">Orçamento</a><a href="produtos.html">Peças</a><a href="historico.html">Histórico</a><a href="assistente.html">Assistente</a></nav></div></header>
 <main class="raven-wrap raven-main">
-<div class="raven-hero"><div class="raven-eyebrow">RAVEN 7.6 · ESCOLHA MAIS INFORMADA</div><h1>Compare até <em>3 computadores.</em></h1>
+<div class="raven-hero"><p class="raven-notice safe">Importe a configuração atual com “Usar PC deste navegador” ou cole links de montagens salvas. <a href="index.html">Abrir Montador 3D</a>. Valores parciais excluem frete e peças sem cotação.</p><div class="raven-eyebrow">RAVEN 7.6 · ESCOLHA MAIS INFORMADA</div><h1>Compare até <em>3 computadores.</em></h1>
 <p>Cole links gerados pelo Montador 3D. Compare peças, orçamento, anúncios recentes e alertas técnicos lado a lado. Seus links permanecem neste navegador.</p></div>
 <div class="raven-notice">Este comparador não mede FPS nem certifica compatibilidade. Preços são subtotais de anúncios aprovados e recentes; peças ausentes não entram no subtotal.</div>
 <section class="raven-panel"><h2>Suas configurações</h2>
@@ -79,4 +85,5 @@ async function init(){
   $('compare').disabled=false;$('status').textContent='Catálogo carregado. Cole pelo menos dois links do Montador.';
  }catch(e){$('status').textContent='Falha ao carregar ofertas: '+e.message}
 }init();
-</script></body></html>
+</script><script defer src="raven90-ui.js?v=1"></script>
+</body></html>

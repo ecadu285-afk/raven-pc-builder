@@ -1,6 +1,6 @@
 <!doctype html>
 <html lang="pt-BR"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
-<title>Raven | Revisão local de ofertas</title>
+<title>Raven | Revisão local de ofertas</title><meta name="robots" content="noindex,nofollow">
 <style>
 :root{color-scheme:dark;font-family:system-ui,Arial;background:#11151c;color:#ebf0f5}
 *{box-sizing:border-box}body{max-width:1400px;margin:auto;padding:24px}
@@ -34,6 +34,8 @@ label input,label select,label textarea{margin-top:6px}
 <button id="preview" type="button">Prévia e validação</button>
 <button id="audit79" type="button">Auditoria do Market Bot 7.5</button>
 <button id="report79" type="button">Exportar relatório de qualidade</button>
+<button id="photos90" type="button">Exportar lista de fotos faltantes (CSV)</button>
+<button id="quality90" type="button">Resumo de dados 9.0</button>
 <button id="export" class="primary">Exportar catálogo revisado</button>
 </div>
 <div id="status" class="status" role="status"></div>
@@ -65,6 +67,7 @@ import {auditOffer,qualityReport} from '../offer-policy.mjs';
 import {stageBotOffers} from '../offer-import65.mjs';
 import {catalog} from '../catalog.js';
 import {marketQualitySummary} from '../raven79-intel.mjs';
+import {offerQuality} from '../raven90-quality.mjs';
 const $=id=>document.getElementById(id);let data={offers:[],history:[]};let index=-1;let lastStage=null;
 const fields=['title','modelName','partId','price','category','store','condition','checkedAt','url','imageUrl','affiliateStatus','reviewStatus','reviewNote'];
 const message=t=>{$('status').textContent=t;};
@@ -133,6 +136,21 @@ $('audit79').onclick=()=>{
    '\nFotos e especificações continuam sujeitas à conferência do modelo exato.');
  }catch(e){message(e.message)}
 };
+$('quality90').onclick=()=>{
+ const rows=data.offers.map(x=>offerQuality(x));
+ message('Raven 9.0 · '+rows.length+' ofertas · '+rows.filter(q=>q.needsPhoto).length+' sem foto · '+rows.filter(q=>q.needsModel).length+' com modelo incompleto · '+rows.filter(q=>q.state==='suspensa').length+' suspensas. A pontuação avalia dados, não comprova preço, vendedor ou comissão.');
+};
+$('photos90').onclick=()=>{
+ if(!data.offers.length){message('Carregue um catálogo antes de gerar a lista de fotos.');return}
+ const keys=['partId','store','title','modelName','imageUrl','reviewStatus','observacao'];
+ const cell=v=>{let value=String(v??'').replace(/\r?\n/g,' ');if(/^[=+\-@]/.test(value))value="'"+value;return '"'+value.replace(/"/g,'""')+'"';};
+ const rows=data.offers.filter(o=>!o.imageUrl).map(o=>({partId:o.partId,store:o.store,title:o.title,modelName:o.modelName,imageUrl:'',reviewStatus:o.reviewStatus||'',observacao:'Foto do modelo exato e autorização pendentes'}));
+ const csv='\ufeff'+[keys.join(';'),...rows.map(o=>keys.map(k=>cell(o[k])).join(';'))].join('\n')+'\n';
+ const blob=new Blob([csv],{type:'text/csv;charset=utf-8'}),url=URL.createObjectURL(blob);
+ const a=document.createElement('a');a.href=url;a.download='raven90-fotos-pendentes.csv';a.click();setTimeout(()=>URL.revokeObjectURL(url),1000);
+ message(rows.length+' ofertas sem foto exportadas, sem publicar ou inventar imagens.');
+};
+
 $('report79').onclick=()=>{
  try{
   const r=cleanQualityReport();
