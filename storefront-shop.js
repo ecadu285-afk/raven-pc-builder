@@ -6,6 +6,7 @@ import {
 } from './raven-market.js';
 import {publicOffers} from './offer-policy.mjs';
 import {filterCatalogOffers} from './catalog-filters.mjs';
+import {productFacts,productFactsDescription} from './product-details.mjs';
 
 const known=new Map(Object.entries(catalog).flatMap(([category,items])=>items.map(item=>[item.id,{...item,category}])));
 const labels={cpu:'Processadores',board:'Placas-mãe',gpu:'Placas de vídeo',ram:'Memórias RAM',ssd:'SSDs',hdd:'HDs',psu:'Fontes',case:'Gabinetes',cooler:'Coolers',other:'Outras peças'};
@@ -44,7 +45,10 @@ function isRecent(o){const days=offerAgeDays(o.checkedAt);return days>=0&&days<=
 function identity(o){
  const ref=known.get(o.partId);
  const model=o.modelName||ref?.name||o.partId||o.title;
- return [category(o),o.condition==='used'?'used':'new',normalize(model)].join('|');
+ const kind=category(o);
+ const announced=String(o.title||o.modelName||'');
+ const capacity=['gpu','ram','ssd','hdd'].includes(kind)?(announced.match(/\b(\d{1,4})\s*(GB|TB)\b/i)||[]):[];
+ return [kind,o.condition==='used'?'used':o.condition==='refurbished'?'refurbished':'new',normalize(model),capacity[0]?normalize(capacity[0]):''].join('|');
 }
 function grouped(offers){
  const map=new Map();
@@ -78,6 +82,8 @@ function imageFor(offer){
 function photoForGroup(item){
  // Fotos somente de anúncios do MESMO grupo de modelo e condição.
  for(const offer of item.items){
+   // Não reutilize foto de outra referência como se fosse do produto mais barato.
+   if(offer.partId!==item.best.partId)continue;
    if(item.type==='cpu' && /\b(?:pc\s*gamer|computador\s*completo)\b/i.test(offer.title||''))continue;
    const url=imageFor(offer);
    if(url)return {url,offer};
@@ -147,9 +153,26 @@ function productCard(item){
  marketActions.append(save,cart,review);
  const a=element('a','offer-link',isRecent(o)?'Ver oferta':'Conferir preço na loja');a.href=safeUrl(o.url,o.store);a.target='_blank';a.rel=o.affiliate?'noopener noreferrer sponsored':'noopener noreferrer';
  const note=element('p','offer-trust-note',o.affiliateStatus==='confirmed'?'Link comissionado, conforme programa da loja.':'Comissão não confirmada · preço e estoque a conferir');
- content.append(title,store,price,note,marketActions,a);
+ content.append(title,store,price,note);
+ const detailFacts=productFacts(o,known.get(o.partId));
+ const technical=element('details','offer-technical');
+ const technicalSummary=element('summary','',detailFacts.length?'Ficha técnica disponível ('+detailFacts.length+' dados)':'Detalhes e identificação');
+ technical.append(technicalSummary);
+ if(detailFacts.length){
+  const list=element('dl','offer-facts');
+  detailFacts.forEach(f=>{const entry=element('div','offer-fact');
+   entry.append(element('dt','',f.label),element('dd','',f.value+(f.source==='título do anúncio'?' · informado no anúncio':'')));
+   list.append(entry);
+  });
+  technical.append(list);
+  technical.append(element('small','offer-spec-disclaimer','Informações da referência cadastrada ou do título do vendedor. Confirme o código exato e a ficha oficial antes da compra.'));
+ }else{
+  technical.append(element('p','offer-spec-disclaimer','Não há ficha técnica confiável para esta referência. Confira as especificações diretamente no anúncio.'));
+ }
+ content.append(technical,marketActions,a);
  if(item.primary.length>1||item.others.length){
    const detail=element('details','offer-alternatives');
+   detail.append(element('p','offer-comparison-warning','Compare capacidade, revisão, marca e condição. Anúncios agrupados podem não ter exatamente o mesmo SKU.'));
    detail.append(element('summary','',(item.primary.length+item.others.length-1)+' outra(s) oferta(s) para comparar'));
    for(const v of item.items.filter(x=>x!==o)){
      const link=element('a','',shops[v.store].name+' · '+BRL(v.price)+' · '+v.checkedAt.split('-').reverse().join('/')+(isRecent(v)?'':' · PREÇO ANTIGO'));

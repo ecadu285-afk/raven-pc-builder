@@ -61,3 +61,14 @@
 
 /* Raven 6.2: avisos de confiança de ofertas */
 .offer-trust-note{font-size:.76rem;line-height:1.42;opacity:.83;margin:2px 0 7px}
+
+
+/* Raven 6.7 — ficha técnica e comparação para modelo conhecido */
+.offer-technical{margin:12px 0 9px;padding:9px 12px;border:1px solid rgba(130,160,145,.5);border-radius:11px;background:rgba(22,33,31,.76);color:#f3f8f5}
+.offer-technical summary{cursor:pointer;font-size:.82rem;font-weight:750;list-style:revert}
+.offer-facts{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:8px;margin:12px 0}
+.offer-fact{min-width:0;border-bottom:1px solid rgba(162,188,171,.22);padding:5px 0;font-size:.78rem}
+.offer-fact dt{color:#c0cfbe}.offer-fact dd{margin:2px 0 0;font-weight:750;color:#ecf5e9}
+.offer-spec-disclaimer{display:block;font-size:.72rem;line-height:1.45;color:#c0cfbe;margin-top:9px}
+.offer-comparison-warning{font-size:.74rem;line-height:1.55;color:#9c6c3f;padding:4px 0}
+@media(max-width:450px){.offer-facts{grid-template-columns:1fr}}
