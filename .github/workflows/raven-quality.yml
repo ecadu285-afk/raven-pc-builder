@@ -32,6 +32,8 @@ jobs:
         run: node tools/offer-import65.test.mjs
       - name: Testar integrações Raven 6.7–7.0
         run: node tools/raven70.test.mjs
+      - name: Testar RAM SSD HD e fontes no Montador 7.1
+        run: node tools/builder-published-parts.test.mjs
       - name: Verificar ofertas publicadas
         run: node tools/audit-offers.mjs --strict
       - name: Verificar links internos e sintaxe
