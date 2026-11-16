@@ -33,7 +33,7 @@ export function stageBotOffers(current,bot,{now=new Date()}={}){
   const existing=byModel.get(key)||[];
   existing.push(i);byModel.set(key,existing);
  });
- const output={document,inserted:0,updated:0,unchanged:0,rejected:0,notices:[]};
+ const output={document,inserted:0,updated:0,unchanged:0,rejected:0,notices:[],changes:[]};
  const seen=new Set();
  for(const raw of list){
   const row=incoming(raw,now);
@@ -52,7 +52,7 @@ export function stageBotOffers(current,bot,{now=new Date()}={}){
    const position=document.offers.length-1;
    exact.set(key,position);
    byModel.set(modelKey,[...(byModel.get(modelKey)||[]),position]);
-   output.inserted++;continue;
+   output.inserted++;output.changes.push({kind:'novo',store:row.store,partId:row.partId,price:row.price,checkedAt:row.checkedAt});continue;
   }
   const previous=document.offers[i];
   if(row.checkedAt<(previous.checkedAt||'')){
@@ -64,7 +64,7 @@ export function stageBotOffers(current,bot,{now=new Date()}={}){
   if(previous.price!==row.price)document.history.push({partId:previous.partId,store:previous.store,price:previous.price,checkedAt:previous.checkedAt,url:previous.url});
   document.offers[i]={...previous,...row,reviewStatus:'pending',affiliateStatus:'pending',reviewNote:'Alterada pelo robô; confirmar novamente na loja'};
   exact.delete(offerIdentity(previous));exact.set(key,i);
-  output.updated++;
+  output.updated++;output.changes.push({kind:'alterado',store:row.store,partId:row.partId,oldPrice:previous.price,price:row.price,checkedAt:row.checkedAt});
  }
  document.schemaVersion=Math.max(3,Number(document.schemaVersion)||3);
  document.history=document.history.slice(-2000);
