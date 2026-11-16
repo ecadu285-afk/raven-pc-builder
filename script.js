@@ -1,4 +1,5 @@
 import {evaluateCompatibility,memoryConflicts} from './compatibility.js';
+import {buildHealth} from './build-health.mjs';
 import {ravenInitAccount,ravenGetAccount,ravenOpenAccount,ravenAccountConfigured,ravenListBuilds,ravenSaveBuild,ravenDeleteBuild} from './raven-account.js';
 import {catalog} from './catalog.js';
 import {publicOffers} from './offer-policy.mjs';
@@ -68,6 +69,25 @@ function evaluateBuild(){
 }
 function issues(){return evaluateBuild().errors;}
 function renderDiagnostics(){const d=evaluateBuild(),target=$('diagnostics');if(!target)return;target.replaceChildren();
+ const healthRoot=$('raven-health-list');
+ if(healthRoot){
+  healthRoot.replaceChildren();
+  const parts=Object.fromEntries(groups.map(g=>[g.id,optionFor(g)]));
+  const h=buildHealth(parts,d);
+  const sum=$('raven-health-summary');
+  if(sum)sum.textContent='Checklist técnico · '+h.checks.filter(x=>x.status==='match').length+' verificações coincidem com a referência · '+h.checks.filter(x=>x.status==='unknown').length+' não verificadas · '+h.checks.filter(x=>x.status==='error').length+' conflitos diretos';
+  for(const item of h.checks){
+   const row=document.createElement('li');row.className='health-'+item.status;
+   const name=document.createElement('strong');name.textContent=({match:'Campos compatíveis',error:'Conflito',warning:'Revisar',unknown:'Não verificado'})[item.status]+' · '+item.name;
+   const detail=document.createElement('span');detail.textContent=item.detail;
+   row.append(name,detail);healthRoot.append(row);
+  }
+  const power=$('raven-health-power');
+  if(power)power.textContent=h.recommendedWatts
+   ? 'Consumo ilustrativo '+h.estimatedWatts+' W · margem conservadora '+h.recommendedWatts+' W. Não substitui as especificações da fonte e GPU.'
+   : 'Selecione CPU, vídeo e fonte para estimar uma margem de potência. Valores do catálogo podem ser aproximados.';
+ }
+
  const heading=document.createElement('div');heading.className='diag-head';heading.innerHTML='<div><span class="eyebrow">ANÁLISE DE HARDWARE</span><h3>Diagnóstico da montagem</h3></div>';
  const status=document.createElement('span');status.className='diag-status '+(d.errors.length?'danger':d.complete?'ok':'pending');status.textContent=d.errors.length?'INCOMPATÍVEL':!d.complete?'INCOMPLETA':d.unknown.length?'NÃO VERIFICADO':d.warnings.length?'ATENÇÃO':'SEM CONFLITOS NAS REGRAS';heading.append(status);target.append(heading);
  const metrics=document.createElement('div');metrics.className='diag-metrics';const total=ravenSelectedPrices().total;for(const [label,value] of [['Peças escolhidas',Object.keys(chosen).length+' / 8'],['Subtotal de ofertas',ravenSelectedPrices().quoted?fmt(ravenSelectedPrices().total):'Sem cotação'],['Consumo estimado',d.estimatedWatts?d.estimatedWatts+' W':'—'],['Conflitos / avisos',d.errors.length+' / '+d.warnings.length],['Não verificados',String(d.unknown.length)]]){const item=document.createElement('div');item.className='diag-metric';const a=document.createElement('small');a.textContent=label;const b=document.createElement('strong');b.textContent=value;item.append(a,b);metrics.append(item)}target.append(metrics);perf(target);
