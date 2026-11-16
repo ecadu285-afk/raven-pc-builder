@@ -95,9 +95,17 @@ function profileScore(parts,purpose){
  const gpuScore=Number(gpu?.tier)||(gpu?.id==='igpu'?0.8:1);
  const bonus=(ram?.gb>=16?5:ram?.gb>=8?3:0)+(/\bSSD\b/i.test(storage?.name||'')?5:0);
  if(purpose==='games'){
-  // Um PC gamer desbalanceado, com CPU extrema e GPU de entrada, não é bom custo-benefício.
+  // Ranking relativo de componentes cadastrados; NÃO estimativa de FPS ou benchmark.
   return Math.min(cpuScore,gpuScore)*37+gpuScore*14+Math.min(cpuScore,3)*5+bonus-Math.max(0,cpuScore-gpuScore-1.2)*14;
  }
+ if(purpose==='creative'){
+  return Math.min(cpuScore,6)*28+Math.min(gpuScore,5)*11+(ram?.gb>=32?20:ram?.gb>=16?10:0)+bonus;
+ }
+ if(purpose==='upgrade'){
+  const modern=/^(AM5|LGA1700|LGA1851)$/.test(cpu?.socket||'')?22:0;
+  return modern+Math.min(cpuScore,5)*21+Math.min(gpuScore,3)*10+bonus+(ram?.gb>=16?6:0);
+ }
+ if(purpose==='economy')return Math.min(cpuScore,3)*17+Math.min(gpuScore,2)*8+bonus+(cpu?.igpu?12:0);
  return Math.min(cpuScore,4)*18+Math.min(gpuScore,2)*8+bonus+(cpu?.igpu?3:0);
 }
 const partsPrices=selection=>Object.values(selection).reduce((sum,x)=>sum+(x?.offer?.price||0),0);
@@ -118,7 +126,7 @@ function selectedVersion(pool,{budget=1000,brand='all',purpose='general',storage
    const cost=partsPrices(candidate.selected),complete=!!candidate.selected.cooler || candidate.coolerIncluded;
    const {valid,unknown,warnings}=validBudgetParts(candidate.parts);
    if(!valid)return;
-   const score=profileScore(candidate.parts,purpose)+(complete?8:0)-Math.max(0,warnings.length-1)*0.2;
+   const score=profileScore(candidate.parts,purpose)+(complete?8:0)-Math.max(0,warnings.length-1)*0.2-(purpose==='economy'?cost/40:0);
    const record={...candidate,cost,complete,score,unknown,warnings,
      missing:complete?[]:['Cooler sem anúncio confirmado — não está incluído no subtotal']};
    const within=cost<=budget;
