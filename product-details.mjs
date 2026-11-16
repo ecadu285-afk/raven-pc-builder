@@ -3,7 +3,7 @@
  */
 const allowed=(value)=>typeof value==='string'&&value.trim()?value.trim():null;
 export function productFacts(offer={},reference=null){
- const p=reference&&reference.id===offer.partId?reference:null;
+ const p=reference&&reference.id===offer.partId&&reference.conceptual!==true?reference:null;
  const type=offer.category||p?.category||'other';
  const result=[];
  const add=(label,value,source='catálogo')=>{if(value!==null&&value!==undefined&&value!=='')result.push({label,value:String(value),source})};
