@@ -1,0 +1,82 @@
+<!doctype html><html lang="pt-BR"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<meta name="theme-color" content="#171321"><meta name="description" content="Compare até três montagens de PCs usando links do Montador 3D Raven e preços cadastrados recentemente.">
+<title>Comparador de PCs | Raven 7.9</title><link rel="stylesheet" href="raven79.css?v=1"></head><body>
+<header class="raven-top"><div class="raven-wrap raven-nav"><a class="raven-mark" href="inicio.html"><span>R.</span>RAVEN PC BUILDER</a>
+<nav class="raven-nav-links"><a href="inicio.html">Início</a><a href="index.html">Montador 3D</a><a href="orcamento.html">Orçamento</a><a href="produtos.html">Peças</a><a href="historico.html">Histórico</a><a href="assistente.html">Assistente</a></nav></div></header>
+<main class="raven-wrap raven-main">
+<div class="raven-hero"><div class="raven-eyebrow">RAVEN 7.6 · ESCOLHA MAIS INFORMADA</div><h1>Compare até <em>3 computadores.</em></h1>
+<p>Cole links gerados pelo Montador 3D. Compare peças, orçamento, anúncios recentes e alertas técnicos lado a lado. Seus links permanecem neste navegador.</p></div>
+<div class="raven-notice">Este comparador não mede FPS nem certifica compatibilidade. Preços são subtotais de anúncios aprovados e recentes; peças ausentes não entram no subtotal.</div>
+<section class="raven-panel"><h2>Suas configurações</h2>
+<div class="raven-comparison" id="inputs">
+<div class="raven-card"><h3>PC A</h3><label for="build-a" class="raven-muted">Link do Montador</label><textarea id="build-a" class="raven-field" placeholder="https://.../index.html#b=..."></textarea><button id="local-a" class="raven-btn secondary" type="button">Usar PC deste navegador</button></div>
+<div class="raven-card"><h3>PC B</h3><label for="build-b" class="raven-muted">Link do Montador</label><textarea id="build-b" class="raven-field" placeholder="https://.../index.html#b=..."></textarea><button id="local-b" class="raven-btn secondary" type="button">Usar PC deste navegador</button></div>
+<div class="raven-card"><h3>PC C</h3><label for="build-c" class="raven-muted">Link do Montador (opcional)</label><textarea id="build-c" class="raven-field" placeholder="https://.../index.html#b=..."></textarea><button id="local-c" class="raven-btn secondary" type="button">Usar PC deste navegador</button></div></div>
+<div class="raven-controls" style="margin-top:17px"><button id="compare" class="raven-btn" type="button" disabled>Comparar configurações</button><button id="clear" class="raven-btn secondary" type="button">Limpar</button></div>
+<p class="raven-status" id="status" role="status" aria-live="polite">Carregando catálogo...</p></section>
+<section class="raven-panel"><h2>Resultado</h2><div id="summary" class="raven-cards"></div><div id="report" class="raven-table-scroll" aria-live="polite"></div>
+<p class="raven-foot">Só há preço quando existe oferta publicada com consulta realizada nos últimos 14 dias. Produtos usados e novos podem ter diferenças relevantes. Verifique os anúncios antes de comprar.</p></section></main>
+<footer class="raven-footer"><div class="raven-wrap">Raven Creatives Studios · Comparação educativa de hardware · <a href="afiliados.html">Transparência comercial</a></div></footer>
+<script type="module">
+import {catalog} from './catalog.js';
+import {builderCatalog,parseBuildLink,buildLink,compareBuild,BUILD_ORDER,BUILD_LABELS} from './raven79-compare.mjs';
+const $=id=>document.getElementById(id),BRL=n=>Number(n).toLocaleString('pt-BR',{style:'currency',currency:'BRL'});
+const el=(tag,cls,txt)=>{const e=document.createElement(tag);if(cls)e.className=cls;if(txt!==undefined)e.textContent=txt;return e};
+let offers=[],localCatalog=null;
+function localBuild(){
+ let ids;try{ids=JSON.parse(localStorage.getItem('raven-pc-builder-v1')||'{}')}catch{ids={}}
+ const host=new URL('index.html',location.href);host.hash=buildLink(ids).split('#')[1]?'#'+buildLink(ids).split('#')[1]:'';
+ return host.href;
+}
+for(const name of ['a','b','c'])$('local-'+name).addEventListener('click',()=>{
+ try{$('build-'+name).value=localBuild();$('status').textContent='Montagem local inserida no PC '+name.toUpperCase()+'. Clique em Comparar.';}
+ catch(e){$('status').textContent=e.message}
+});
+function renderCard(report,index){
+ const item=el('div','raven-card');
+ item.append(el('h3','', 'PC '+String.fromCharCode(65+index)));
+ item.append(el('p','','Peças reconhecidas: '+report.filled+'/8 · cotações: '+report.quoted+'/8'));
+ item.append(el('h3','',BRL(report.total)));
+ item.append(el('small','','Subtotal parcial. Frete e itens não cotados excluídos.'));
+ if(report.assessment.errors.length)item.append(el('p','raven-notice','Conflitos: '+report.assessment.errors.join('; ')));
+ else item.append(el('p','raven-muted',report.assessment.unknown.length+' pendências técnicas ainda não verificadas.'));
+ if(report.unknownIds.length)item.append(el('p','raven-notice','IDs não reconhecidos: '+report.unknownIds.join(', ')));
+ return item;
+}
+function renderComparison(reports){
+ $('summary').replaceChildren(...reports.map(renderCard));
+ const table=el('table','raven-table');
+ const tr=el('tr');tr.append(el('th','','Componente'));reports.forEach((r,i)=>tr.append(el('th','','PC '+String.fromCharCode(65+i))));
+ const thead=el('thead');thead.append(tr);table.append(thead);
+ const tbody=el('tbody');
+ for(const category of BUILD_ORDER){
+  const row=el('tr');row.append(el('th','',BUILD_LABELS[category]));
+  for(const r of reports){
+   const td=el('td'),p=r.parts[category],offer=r.quotes[category];
+   td.append(el('strong','',p?.name||'Não selecionado / não reconhecido'));
+   if(offer)td.append(el('small','',BRL(offer.price)+' · '+offer.store+' · '+offer.checkedAt));
+   else td.append(el('small','','Sem cotação recente para esta peça'));
+   row.append(td);
+  }tbody.append(row);
+ }
+ const subtotal=el('tr');subtotal.append(el('th','','Subtotal cotado'));
+ for(const r of reports)subtotal.append(el('td','',BRL(r.total)+' ('+r.quoted+'/8 itens)'));tbody.append(subtotal);
+ table.append(tbody);$('report').replaceChildren(table);
+}
+$('compare').addEventListener('click',()=>{
+ try{
+  const raw=['a','b','c'].map(n=>$('build-'+n).value.trim()).filter(Boolean);
+  if(raw.length<2)throw Error('Informe pelo menos duas montagens para comparar.');
+  const reports=raw.map(x=>compareBuild(parseBuildLink(x),localCatalog,offers));
+  renderComparison(reports);$('status').textContent=reports.length+' configurações comparadas. Confira os alertas de cada PC.';
+ }catch(e){$('status').textContent='Não foi possível comparar: '+e.message}
+});
+$('clear').addEventListener('click',()=>{for(const name of ['a','b','c'])$('build-'+name).value='';$('report').replaceChildren();$('summary').replaceChildren();$('status').textContent='Cole dois links para começar.'});
+async function init(){
+ try{
+  const r=await fetch('./offers.json',{cache:'no-store'});if(!r.ok)throw Error('HTTP '+r.status);
+  const data=await r.json();offers=data.offers;localCatalog=builderCatalog(catalog,offers);
+  $('compare').disabled=false;$('status').textContent='Catálogo carregado. Cole pelo menos dois links do Montador.';
+ }catch(e){$('status').textContent='Falha ao carregar ofertas: '+e.message}
+}init();
+</script></body></html>
