@@ -1,6 +1,6 @@
 {
   "schemaVersion": 3,
-  "updatedAt": "2026-11-15",
+  "updatedAt": "2026-11-17",
   "offers": [
     {
       "partId": "5500",
@@ -1343,6 +1343,20 @@
       "priceCondition": "",
       "category": "board",
       "modelName": "B75M DDR3"
+    },
+    {
+      "partId": "custom41-gpu-ffe777560ab54c8fd0",
+      "store": "shopee",
+      "price": 868.5,
+      "checkedAt": "2026-11-15",
+      "url": "https://s.shopee.com.br/8Kr6qsSMi8",
+      "condition": "new",
+      "affiliate": true,
+      "title": "Placa de Vídeo AMD Radeon RX 590 8GB GDDR5 Soyo 256 Bits Dual Fan PCIe 3.0 HDMI DisplayPort DVI",
+      "imageUrl": "",
+      "priceCondition": "",
+      "category": "gpu",
+      "modelName": "RX 590 8GB"
     }
   ],
   "history": [
