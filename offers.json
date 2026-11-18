@@ -10,7 +10,8 @@
       "url": "https://meli.la/2WQuAER",
       "condition": "new",
       "affiliate": true,
-      "title": "Processador AMD Ryzen 5 5500"
+      "title": "Processador AMD Ryzen 5 5500",
+      "category": "cpu"
     },
     {
       "partId": "c-eco-m",
@@ -20,7 +21,8 @@
       "url": "https://meli.la/1rwCzx4",
       "condition": "new",
       "affiliate": true,
-      "title": "Gabinete Micro Atx Bpc-n114matx M255 Hdd Ssd Preto"
+      "title": "Gabinete Micro Atx Bpc-n114matx M255 Hdd Ssd Preto",
+      "category": "case"
     },
     {
       "partId": "gtx750",
@@ -30,7 +32,8 @@
       "url": "https://meli.la/2k6oarS",
       "condition": "new",
       "affiliate": true,
-      "title": "GTX 750 4GB"
+      "title": "GTX 750 4GB",
+      "category": "gpu"
     },
     {
       "partId": "a520m",
@@ -40,7 +43,8 @@
       "url": "https://meli.la/1eCJqgm",
       "condition": "new",
       "affiliate": true,
-      "title": "Placa mãe Gigabyte Ultra Durable A520M K V2"
+      "title": "Placa mãe Gigabyte Ultra Durable A520M K V2",
+      "category": "board"
     },
     {
       "partId": "r5-3400g",
@@ -50,7 +54,8 @@
       "url": "https://meli.la/2452Qg8",
       "condition": "new",
       "affiliate": true,
-      "title": "Amd ryzen 5 3400g"
+      "title": "Amd ryzen 5 3400g",
+      "category": "cpu"
     },
     {
       "partId": "5600g",
@@ -60,7 +65,8 @@
       "url": "https://meli.la/16R8UrX",
       "condition": "new",
       "affiliate": true,
-      "title": "AMD Ryzen 5 5600G"
+      "title": "AMD Ryzen 5 5600G",
+      "category": "cpu"
     },
     {
       "partId": "5700x",
@@ -70,7 +76,8 @@
       "url": "https://meli.la/2ggsA2p",
       "condition": "new",
       "affiliate": true,
-      "title": "AMD Ryzen 7 5700X"
+      "title": "AMD Ryzen 7 5700X",
+      "category": "cpu"
     },
     {
       "partId": "7600",
@@ -80,7 +87,8 @@
       "url": "https://meli.la/2FiTXtV",
       "condition": "new",
       "affiliate": true,
-      "title": "AMD Ryzen 5 7600"
+      "title": "AMD Ryzen 5 7600",
+      "category": "cpu"
     },
     {
       "partId": "5600x",
@@ -90,7 +98,8 @@
       "url": "https://meli.la/1GziJ9v",
       "condition": "new",
       "affiliate": true,
-      "title": "AMD Ryzen 5 5600X"
+      "title": "AMD Ryzen 5 5600X",
+      "category": "cpu"
     },
     {
       "partId": "5500",

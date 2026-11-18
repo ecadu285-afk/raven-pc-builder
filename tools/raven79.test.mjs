@@ -9,10 +9,10 @@ import {understandHardwareRequest,assistantExplanation} from '../raven79-assista
 const now=new Date('2026-11-16T12:00:00Z');
 const document=JSON.parse(readFileSync(new URL('../offers.json',import.meta.url),'utf8'));
 const offers=publicOffers(document.offers,now);
-assert.equal(document.offers.length,101);
+assert.ok(document.offers.length>=100,'O catálogo não deve perder ofertas ao crescer');
 assert.ok(offers.length>80,'catálogo real continua publicável');
 const health=catalogHealth(document.offers,catalog,now);
-assert.equal(health.total,101);
+assert.equal(health.total,document.offers.length);
 assert.equal(health.eligible,offers.length);
 assert.ok(health.withoutPhoto>0);
 assert.ok(health.recent<=health.eligible);
