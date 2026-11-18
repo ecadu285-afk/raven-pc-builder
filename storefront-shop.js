@@ -12,8 +12,8 @@ import {evidenceFor} from './raven79-intel.mjs';
 import {offerQuality,rankFeaturedGroups} from './raven90-quality.mjs';
 
 const known=new Map(Object.entries(catalog).flatMap(([category,items])=>items.map(item=>[item.id,{...item,category}])));
-const labels={cpu:'Processadores',board:'Placas-mãe',gpu:'Placas de vídeo',ram:'Memórias RAM',ssd:'SSDs',hdd:'HDs',psu:'Fontes',case:'Gabinetes',cooler:'Coolers',other:'Outras peças'};
-const glyphs={cpu:'CPU',board:'MB',gpu:'GPU',ram:'RAM',ssd:'SSD',hdd:'HD',psu:'PSU',case:'PC',cooler:'FAN',other:'PC'};
+const labels={cpu:'Processadores',board:'Placas-mãe',gpu:'Placas de vídeo',ram:'Memórias RAM',ssd:'SSDs',hdd:'HDs',psu:'Fontes',case:'Gabinetes',cooler:'Coolers',other:'Outras peças',keyboard:'Teclados',headset:'Fones e headsets',mouse:'Mouses',chair:'Cadeiras',mousepad:'Mousepads',monitor:'Monitores',fan:'Fans e ventoinhas',powerstrip:'Filtros de linha',laptop:'Notebooks',phone:'Celulares',desk:'Mesas'};
+const glyphs={cpu:'CPU',board:'MB',gpu:'GPU',ram:'RAM',ssd:'SSD',hdd:'HD',psu:'PSU',case:'PC',cooler:'FAN',other:'PC',keyboard:'TEC',headset:'FONE',mouse:'MOU',chair:'CAD',mousepad:'PAD',monitor:'MON',fan:'FAN',powerstrip:'FILT',laptop:'NOTE',phone:'CEL',desk:'MESA'};
 const shops={
  shopee:{name:'Shopee',domains:['shopee.com.br','shopee.com','shope.ee']},
  mercadolivre:{name:'Mercado Livre',domains:['mercadolivre.com.br','mercadolivre.com','meli.la']},
