@@ -9,7 +9,7 @@ export const TRUSTED_SHOPS = Object.freeze({
   terabyte: ['terabyteshop.com.br']
 });
 export const OFFER_MAX_AGE_DAYS = 45;
-const CATEGORIES = new Set(['cpu','board','gpu','ram','ssd','hdd','psu','case','cooler','pc','kit','other']);
+const CATEGORIES = new Set(['cpu','board','gpu','ram','ssd','hdd','psu','case','cooler','pc','kit','other','keyboard','headset','mouse','chair','mousepad','monitor','fan','powerstrip','laptop','phone','desk']);
 const clean = x => String(x ?? '').normalize('NFD').replace(/[\u0300-\u036f]/g,'').toLowerCase();
 export function trustedOfferUrl(url, store) {
   if (typeof url !== 'string' || !TRUSTED_SHOPS[store]) return null;
