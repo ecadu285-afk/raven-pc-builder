@@ -1,6 +1,6 @@
 {
   "schemaVersion": 3,
-  "updatedAt": "2026-11-17",
+  "updatedAt": "2026-11-18",
   "offers": [
     {
       "partId": "5500",
@@ -462,7 +462,7 @@
       "condition": "new",
       "affiliate": true,
       "title": "AMD Ryzen 3 3200G",
-      "imageUrl": "",
+      "imageUrl": "https://cf.shopee.com.br/file/sg-11134201-8258t-muxgirrut05e5b",
       "priceCondition": "",
       "category": "cpu",
       "modelName": "AMD Ryzen 3 3200G"
