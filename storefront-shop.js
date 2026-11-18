@@ -6,6 +6,7 @@ import {
 } from './raven-market.js';
 import {publicOffers} from './offer-policy.mjs';
 import {filterCatalogOffers} from './catalog-filters.mjs';
+import {catalogDisplayEntries} from './catalog-display.mjs';
 import {productFacts,productFactsDescription} from './product-details.mjs';
 import {evidenceFor} from './raven79-intel.mjs';
 import {offerQuality,rankFeaturedGroups} from './raven90-quality.mjs';
@@ -314,16 +315,20 @@ function catalogPage(){
  const root=$('catalog-grid');if(!root)return;
  const search=$('catalog-search'),type=$('catalog-category'),shop=$('catalog-store'),order=$('catalog-order');
  const cond=$('catalog-condition'),maximum=$('catalog-max-price'),photos=$('catalog-photos-only'),recent=$('catalog-recent-only');
+ const mode=$('catalog-view-mode')?.value||'offers';
  const ord=order?.value||'lowest';
  const filtered=filterCatalogOffers(all,{search:search?.value,category:type?.value,
    store:shop?.value,condition:cond?.value,maxPrice:maximum?.value,photoOnly:photos?.checked,recentOnly:recent?.checked},
    {categoryOf:category,hasPhoto:o=>Boolean(imageFor(o)),isRecent,labelOf:o=>known.get(o.partId)?.name});
- const array=grouped(filtered);
+ const array=catalogDisplayEntries(filtered,mode,grouped);
  array.sort((a,b)=>ord==='highest'?b.best.price-a.best.price:ord==='recent'?b.best.checkedAt.localeCompare(a.best.checkedAt):a.best.price-b.best.price);
- const count=$('catalog-count');if(count)count.textContent=array.length+' modelos · '+filtered.length+' anúncios nos filtros ('+filtered.filter(isRecent).length+' recentes, '+filtered.filter(x=>!isRecent(x)).length+' com preço antigo)';
+ const modelCount=grouped(filtered).length;
+ const count=$('catalog-count');
+ if(count)count.textContent=filtered.length+' oferta(s) elegível(is) em '+modelCount+' modelo(s) · mostrando '+Math.min(visibleLimit,array.length)+' de '+array.length+(mode==='offers'?' anúncios individuais':' modelos agrupados')+'. ('+filtered.filter(isRecent).length+' preços recentes; '+filtered.filter(x=>!isRecent(x)).length+' antigos). Anúncios suspensos não são exibidos.';
  root.replaceChildren(...array.slice(0,visibleLimit).map(productCard));
  if(!array.length)root.append(element('div','no-offers',recent?.checked?'Nenhuma oferta recente corresponde aos filtros. Desmarque “Somente preços conferidos nos últimos 14 dias” para ver anúncios antigos.':'Nenhuma oferta corresponde aos filtros. Tente outra categoria ou pesquise pelo modelo.'));
- const more=$('catalog-more');if(more){more.hidden=array.length<=visibleLimit;more.textContent='Mostrar mais modelos ('+Math.max(0,array.length-visibleLimit)+')';}
+ const more=$('catalog-more');if(more){more.hidden=array.length<=visibleLimit;more.textContent='Mostrar mais '+(mode==='offers'?'anúncios':'modelos')+' ('+Math.max(0,array.length-visibleLimit)+')';}
+ const showAll=$('catalog-show-all');if(showAll)showAll.hidden=array.length<=visibleLimit;
 }
 async function start(){
  const root=$('home-deals')||$('catalog-grid')||$('market-saved-products');if(!root)return;
@@ -346,10 +351,12 @@ async function start(){
    home();
    const search=$('catalog-search'),type=$('catalog-category'),shop=$('catalog-store'),order=$('catalog-order'),more=$('catalog-more');
    const cond=$('catalog-condition'),maximum=$('catalog-max-price'),photos=$('catalog-photos-only'),recent=$('catalog-recent-only'),clear=$('catalog-clear');
+   const mode=$('catalog-view-mode'),showAll=$('catalog-show-all');
    const params=new URLSearchParams(location.search);
    if(search){search.value=params.get('q')||'';search.addEventListener('input',()=>{visibleLimit=24;catalogPage();});}
    if(type){const c=params.get('categoria');if(c&&Object.hasOwn(labels,c))type.value=c;type.addEventListener('change',()=>{visibleLimit=24;catalogPage();});}
    if(shop)shop.addEventListener('change',()=>{visibleLimit=24;catalogPage();});
+   if(mode)mode.addEventListener('change',()=>{visibleLimit=24;catalogPage();});
    if(cond)cond.addEventListener('change',()=>{visibleLimit=24;catalogPage();});
    if(maximum)maximum.addEventListener('input',()=>{visibleLimit=24;catalogPage();});
    if(photos)photos.addEventListener('change',()=>{visibleLimit=24;catalogPage();});
@@ -357,11 +364,12 @@ async function start(){
    if(clear)clear.addEventListener('click',()=>{
      if(search)search.value='';if(type)type.value='all';if(shop)shop.value='all';
      if(cond)cond.value='all';if(maximum)maximum.value='';if(photos)photos.checked=false;if(recent)recent.checked=false;
-     if(order)order.value='lowest';visibleLimit=24;catalogPage();
+     if(order)order.value='lowest';if(mode)mode.value='offers';visibleLimit=24;catalogPage();
      history.replaceState(null,'',location.pathname+location.hash);
    });
    if(order)order.addEventListener('change',catalogPage);
    if(more)more.addEventListener('click',()=>{visibleLimit+=24;catalogPage();});
+   if(showAll)showAll.addEventListener('click',()=>{visibleLimit=all.length;catalogPage();});
    catalogPage();
    renderUserCollections();
  }catch(err){root.replaceChildren(element('div','no-offers','Não foi possível carregar ofertas. Tente atualizar a página.'));const line=$('catalog-count');if(line)line.textContent='Falha ao carregar arquivo de ofertas.';}

@@ -46,9 +46,10 @@
 <option value="ssd">SSDs</option>
 <option value="psu">Fontes</option>
 <option value="case">Gabinetes</option>
-<option value="hdd">HDs</option></select></label>
+<option value="hdd">HDs</option><option value="cooler">Coolers</option><option value="other">Outros / a conferir</option></select></label>
 <label>Loja<select id="catalog-store"><option value="all">Todas as lojas</option><option value="shopee">Shopee</option><option value="mercadolivre">Mercado Livre</option><option value="amazon">Amazon</option><option value="kabum">KaBuM!</option><option value="terabyte">TerabyteShop</option></select></label>
 <label>Ordenar<select id="catalog-order"><option value="lowest">Menor preço</option><option value="highest">Maior preço</option><option value="recent">Mais recentes</option></select></label>
+<label>Visualização<select id="catalog-view-mode"><option value="offers">Todos os anúncios, separados por loja</option><option value="models">Agrupar por modelo</option></select></label>
 </div>
 <div class="catalog-extra-filters" aria-label="Filtros avançados">
 <label>Condição<select id="catalog-condition"><option value="all">Novo ou usado</option><option value="new">Novo</option><option value="used">Usado</option><option value="refurbished">Recondicionado</option></select></label>
@@ -70,11 +71,12 @@
 <p id="catalog-trust-status" class="catalog-trust-status" role="status">Consultando a data e validade do catálogo...</p>
 <p id="catalog-count" role="status" class="countline">Carregando ofertas...</p>
 <div class="cards" id="catalog-grid"><div class="no-offers">Carregando os produtos publicados...</div></div>
-<button id="catalog-more" type="button" class="load-more" hidden>Ver mais produtos</button>
+<button id="catalog-more" type="button" class="load-more" hidden>Mostrar mais anúncios</button>
+<button id="catalog-show-all" type="button" class="load-more" hidden>Mostrar todos os anúncios deste filtro</button>
 <div class="disclaimer"><strong>Antes de comprar:</strong> confirme modelo, preço, frete, garantia e compatibilidade na loja. A Raven não realiza a venda diretamente; alguns anúncios possuem links de afiliado. Miniaturas 3D não representam o modelo exato.</div>
 </section></main>
 <footer class="simple-footer"><div class="shell"><p>© 2026 Raven Creatives Studios · Catálogo de anúncios publicados</p><nav aria-label="Informações"><a href="afiliados.html">Transparência</a><a href="servicos.html">Sobre a Raven</a><a href="inicio.html">Início</a></nav></div></footer>
-<script type="module" src="storefront-shop.js?v=109"></script>
+<script type="module" src="storefront-shop.js?v=110"></script>
 <script type="module" src="raven-location.js?v=1"></script>
 <script defer src="raven90-ui.js?v=1"></script>
 </body></html>
