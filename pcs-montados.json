@@ -1,0 +1,126 @@
+{
+  "schemaVersion": 1,
+  "updatedAt": "2026-11-18",
+  "computers": [
+    {
+      "id": "f3b44c06-2822-43d7-98b2-eda51b9825a5",
+      "title": "Computador Gamer completo  Intel Core i7, 16GB, SSD 512GB, Monitor 23",
+      "store": "shopee",
+      "url": "https://s.shopee.com.br/2LZsYNbHaF",
+      "price": 1887.01,
+      "checkedAt": "2026-11-15",
+      "condition": "new",
+      "purpose": "geral",
+      "specs": {
+        "cpu": "I7 3770",
+        "ram": "16GB",
+        "storage": "SSD",
+        "gpu": "INTEGRADO",
+        "motherboard": "H61",
+        "psu": "500W"
+      },
+      "notes": "COMPLETO COM MONITOR E TECLADO E FONE E MOUSE",
+      "affiliate": true
+    },
+    {
+      "id": "a9de952b-9eba-4419-8b58-e1ff5f9d802f",
+      "title": "PC GAMER I7 16 GB RAM SSD 480 GB 500W MONITOR 19 POL",
+      "store": "mercadolivre",
+      "url": "https://meli.la/1DaT4dK",
+      "price": 1957.5,
+      "checkedAt": "2026-11-15",
+      "condition": "new",
+      "purpose": "geral",
+      "specs": {
+        "cpu": "I7 3770",
+        "ram": "16GB",
+        "storage": "SSD",
+        "gpu": "INTEGRADO",
+        "motherboard": "H61",
+        "psu": "500W"
+      },
+      "notes": "VEM COM MONITOR E TECLADO, MOUSE E FONE",
+      "affiliate": true
+    },
+    {
+      "id": "1f0f22f1-d3f4-4ee1-8bfe-d6458a7b1290",
+      "title": "PC GAMER i5 8GB RAM 120GB SSD",
+      "store": "shopee",
+      "url": "https://s.shopee.com.br/1BNv80ZOLe",
+      "price": 671.51,
+      "checkedAt": "2026-11-15",
+      "condition": "new",
+      "purpose": "geral",
+      "specs": {
+        "cpu": "i5 3470",
+        "ram": "8GB",
+        "storage": "SSD",
+        "gpu": "INTEGRADO",
+        "motherboard": "H61",
+        "psu": "200W"
+      },
+      "notes": "",
+      "affiliate": true
+    },
+    {
+      "id": "4e71cfa6-b5ee-4bb6-b324-6c6c27b94057",
+      "title": "PC GAMER i5 16GB RAM 400GB SSD",
+      "store": "shopee",
+      "url": "https://s.shopee.com.br/5q9kgKWt9B",
+      "price": 1123.88,
+      "checkedAt": "2026-11-15",
+      "condition": "new",
+      "purpose": "geral",
+      "specs": {
+        "cpu": "i5 3470",
+        "ram": "16GB",
+        "storage": "SSD",
+        "gpu": "INTEGRADO",
+        "motherboard": "H61",
+        "psu": "200W"
+      },
+      "notes": "",
+      "affiliate": true
+    },
+    {
+      "id": "e7521672-1b96-4d7f-8d7b-cebfeabeab01",
+      "title": "PC GAMER i5 16GB RAM 240 SSD",
+      "store": "shopee",
+      "url": "https://s.shopee.com.br/9pftRJIZ4r",
+      "price": 1254.98,
+      "checkedAt": "2026-11-15",
+      "condition": "new",
+      "purpose": "geral",
+      "specs": {
+        "cpu": "i5 3470",
+        "ram": "16GB",
+        "storage": "SSD",
+        "gpu": "INTEGRADO",
+        "motherboard": "H61",
+        "psu": "500W"
+      },
+      "notes": "",
+      "affiliate": true
+    },
+    {
+      "id": "bff5ea9d-89f3-442f-966e-44b9003dcb25",
+      "title": "Pc Home Office Core I5 3470, 16 Gb Ddr3, Ssd 240 Gb, Fonte Bivolt",
+      "store": "amazon",
+      "url": "https://link.amazon/B0jcNexvT",
+      "price": 785.64,
+      "checkedAt": "2026-11-13",
+      "condition": "new",
+      "purpose": "geral",
+      "specs": {
+        "cpu": "Intel I5 3470",
+        "ram": "16GB DDR3 (2X8)",
+        "storage": "SST 240GB SATA",
+        "gpu": "INTEGRADA",
+        "motherboard": "Placa Mãe Inel H61",
+        "psu": "Fonte Nominal 200w"
+      },
+      "notes": "",
+      "affiliate": true
+    }
+  ]
+}
