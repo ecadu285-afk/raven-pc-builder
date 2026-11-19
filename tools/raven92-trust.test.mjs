@@ -13,4 +13,8 @@ for(const f of ['inicio.html','produtos.html','comparar-ofertas.html']){assert.m
 assert.match(read('afiliados.html'),/Programa de Associados da Amazon/);
 assert.match(read('afiliados.html'),/TerabyteShop/);
 assert.match(read('categorias.html'),/Departamentos e categorias/);
-console.log('PASS: Raven 9.2');
+
+const style=read('raven92.css');
+assert.ok(style.includes('.market-header .market-nav-strip nav.shell{\n    overflow:visible!important;'),'Dropdown não pode ser recortado no desktop');
+assert.ok(style.includes('.market-header .market-nav-strip nav.raven90-mobile-open{\n    overflow-x:hidden;'),'Menu móvel mantém submenu no fluxo');
+console.log('PASS: Raven 9.2, incluindo dropdown Explorar');
