@@ -40,6 +40,8 @@ jobs:
         run: node tools/raven90.test.mjs
       - name: Testar visibilidade de anúncios por categoria e por loja
         run: node tools/catalog-display.test.mjs
+      - name: Testar Raven 9.1 (fotos, departamentos, comparador, robô)
+        run: node tools/raven91.test.mjs
       - name: Verificar ofertas publicadas
         run: node tools/audit-offers.mjs --strict
       - name: Verificar links internos e sintaxe
