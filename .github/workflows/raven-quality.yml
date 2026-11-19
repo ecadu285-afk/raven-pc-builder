@@ -48,6 +48,8 @@ jobs:
         run: node tools/raven92-ui.test.mjs
       - name: Auditoria local de anúncios 9.2
         run: node tools/monitor-ofertas92.mjs
+      - name: Testes de transparência e preços da Raven
+        run: node tools/raven92-trust.test.mjs
       - name: Verificar ofertas publicadas
         run: node tools/audit-offers.mjs --strict
       - name: Verificar links internos e sintaxe
