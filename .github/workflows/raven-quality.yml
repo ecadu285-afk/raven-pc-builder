@@ -44,6 +44,8 @@ jobs:
         run: node tools/raven91.test.mjs
       - name: Testar Raven 9.2 — catálogo e operação
         run: node tools/raven92.test.mjs
+      - name: Verificar páginas e JavaScript inline da Raven 9.2
+        run: node tools/raven92-ui.test.mjs
       - name: Auditoria local de anúncios 9.2
         run: node tools/monitor-ofertas92.mjs
       - name: Verificar ofertas publicadas
