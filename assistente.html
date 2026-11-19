@@ -84,7 +84,8 @@ $('form').addEventListener('submit',e=>{
  const text=$('query').value.trim();if(!text||text.length>500)return;
  addMessage('user',text);$('query').value='';
  const request=understandHardwareRequest(text);
- if(request.budget===null){
+ const explicitModel=/(?:ryzen\s*[3579]\s*\d{4,5}|(?:rtx|gtx|rx)\s*\d{3,4}|\bi[3579][- ]?\d{4,5})/i.test(text)&&!/(?:r\$|or[çc]amento|até\s*r\$|ate\s*r\$)/i.test(text);
+ if(request.budget===null||explicitModel){
   const lookup=catalogAnswer(text,offers,referenceById);
   addMessage('assistant',lookup.text);
   if(lookup.items.length)buildProductLinks(lookup.items);
