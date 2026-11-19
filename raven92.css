@@ -1,0 +1,79 @@
+/* Raven PC Builder 9.2 — camada acessível e responsiva, sem substituir estilos existentes. */
+.raven92-page{padding-top:22px;padding-bottom:54px;max-width:1280px}
+.raven92-page h1,.raven92-page h2,.raven92-page h3{color:#2c2341;line-height:1.22}
+.raven92-page h1{font-size:clamp(27px,4vw,39px)}
+.raven92-muted{color:#6c647c;font-size:13px;line-height:1.65}
+.raven92-breadcrumb{font-size:12px;color:#625574;padding:8px 0 21px}
+.raven92-breadcrumb a{color:#55358d}
+.raven92-product-head{display:grid;grid-template-columns:minmax(200px,380px) 1fr;gap:26px;background:#fff;padding:25px;border-radius:19px;border:1px solid #e7e0ef}
+.raven92-product-head[hidden],.raven92-review-form[hidden]{display:none}
+.raven92-product-photo{border:1px solid #e7e1f2;border-radius:15px;min-height:270px;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:10px;background:#fff;overflow:hidden}
+.raven92-product-photo img{width:100%;height:260px;object-fit:contain;padding:18px}
+.raven92-product-photo strong{font-size:27px;color:#775cb4}
+.raven92-product-photo small{font-size:11px;color:#675b78}
+.raven92-product-main h1{margin:14px 0}
+.raven92-notice{font-size:12px;color:#795822;background:#fff5e1;border-left:3px solid #c89b3d;padding:12px;line-height:1.5}
+.raven92-actions{display:flex;flex-wrap:wrap;gap:9px;margin:20px 0}
+.raven92-button,.raven92-review-form button{display:inline-flex;justify-content:center;align-items:center;min-height:43px;text-align:center;text-decoration:none;cursor:pointer;border:1px solid #34215c;border-radius:9px;background:#432979;color:#fff;padding:10px 15px;font:800 12px system-ui}
+.raven92-button.secondary{background:#f3edfc;color:#4b3185;border-color:#dbcaf5}
+.raven92-button:hover{filter:brightness(1.08)}
+.raven92-section{margin-top:25px;background:#fff;border:1px solid #e7e0ef;border-radius:17px;padding:21px}
+.raven92-section h2{font-size:21px;margin:0 0 10px}
+.raven92-section-heading p{font-size:12px;color:#6f657c}
+.raven92-offer-row{display:grid;grid-template-columns:minmax(0,1fr) auto auto;align-items:center;gap:15px;padding:16px 0;border-top:1px solid #eee9f4}
+.raven92-offer-row strong{display:block;font-size:13px}
+.raven92-offer-row small{display:block;font-size:11px;color:#756d80;margin-top:5px}
+.raven92-offer-price{font-size:19px!important;color:#2c2041}
+.raven92-warning{color:#98601c!important}
+.raven92-panel{background:#fff;padding:22px;border:1px solid #e5deee;border-radius:15px;line-height:1.7}
+.raven92-panel h2{font-size:21px}
+.raven92-facts{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:12px;margin:0 0 14px}
+.raven92-facts>div{background:#f8f5fd;border-radius:9px;padding:11px}
+.raven92-facts dt{font-size:11px;color:#756a84}
+.raven92-facts dd{font-size:13px;font-weight:800;margin:4px 0 0;overflow-wrap:anywhere}
+.raven92-reviews{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:11px}
+.raven92-review{border:1px solid #e7dff0;border-radius:12px;padding:15px}
+.raven92-review strong{color:#b16b23}
+.raven92-review p{font-size:13px;line-height:1.55;overflow-wrap:anywhere}
+.raven92-review small{font-size:11px;color:#696077}
+.raven92-review-form{display:grid;gap:12px;max-width:680px;margin:14px 0}
+.raven92-review-form label{font-size:13px;font-weight:650;display:grid;gap:6px}
+.raven92-review-form select,.raven92-review-form textarea{font:inherit;border:1px solid #ccc2d9;border-radius:9px;min-height:42px;padding:9px}
+.raven92-review-form button{justify-self:start}
+.raven92-related{display:flex;gap:10px;flex-wrap:wrap}
+.raven92-related-link{padding:10px 13px;background:#f4effd;color:#52378a;border:1px solid #e5daf7;border-radius:9px;font-size:12px;text-decoration:none;font-weight:750}
+.raven92-hero{background:linear-gradient(115deg,#1c1735,#41285f);padding:clamp(20px,4vw,37px);border-radius:17px;color:#fff;margin:14px 0 20px}
+.raven92-hero h1{color:#fff;margin:10px 0}
+.raven92-hero p{color:#e7dff2;font-size:13px;max-width:790px;line-height:1.6}
+.raven92-hero span{font-size:11px;color:#ffaa75;font-weight:900;letter-spacing:.1em}
+.raven92-back{color:#5b398d;font-size:12px;text-decoration:none}
+.raven92-verify-fields,.raven92-spec-toolbar{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:11px}
+.raven92-verify-fields .raven92-field,.raven92-spec-toolbar label{font-size:12px;font-weight:800;display:grid;gap:6px}
+.raven92-field select,.raven92-spec-toolbar select{width:100%;min-height:42px;border:1px solid #d2c7e2;border-radius:8px;background:#fff;color:#211936;padding:9px;min-width:0}
+.raven92-spec-toolbar{padding:13px;background:#fff;border:1px solid #e8e2ef;border-radius:12px;align-items:end;margin-top:10px}
+.raven92-filter-help{color:#513086;font-size:12px;font-weight:850;text-decoration:none;min-height:42px;display:flex;align-items:center}
+.raven92-filter-note{padding:0 4px;margin:8px 0}
+.raven92-check-results{display:grid;gap:12px;margin:18px 0}
+.raven92-check-results h2{font-size:20px}
+.raven92-result-group{background:#fff;border:1px solid #dbd2e3;border-radius:12px;padding:17px}
+.raven92-result-group h3{margin:0;font-size:15px}
+.raven92-result-group li{font-size:12px;margin-top:7px;line-height:1.5}
+.raven92-errors{border-left:5px solid #bd4d4d}.raven92-warnings{border-left:5px solid #b9892d}
+.raven92-passed{border-left:5px solid #4b946e}.raven92-unknown{border-left:5px solid #8266b5}
+.raven92-dashboard-grid{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:13px}
+.raven92-dashboard-grid article{padding:20px;border:1px solid #e8dfee;background:#fff;border-radius:14px}
+.raven92-dashboard-grid strong{font-size:25px;display:block;color:#281c41}
+.raven92-dashboard-grid span{font-size:11px;color:#6a5e75}
+.raven92-table{width:100%;border-collapse:collapse;font-size:13px}
+.raven92-table th,.raven92-table td{text-align:left;border-bottom:1px solid #ece6f2;padding:11px 8px}
+.raven92-table td{overflow-wrap:anywhere}
+.raven92-photo-queue{display:grid;gap:9px}
+.raven92-photo-queue article{border:1px solid #e7ddea;border-radius:12px;padding:15px;background:#fff}
+.raven92-photo-queue strong{display:block;overflow-wrap:anywhere}
+.raven92-photo-queue small{display:block;color:#6b6279;font-size:11px;margin:5px 0}
+.raven92-photo-queue a{color:#51378a;font-size:12px}
+:where(.raven92-page,.raven92-spec-toolbar) :focus-visible{outline:3px solid #ac78e3;outline-offset:3px}
+@media(max-width:900px){.raven92-verify-fields,.raven92-spec-toolbar{grid-template-columns:repeat(2,minmax(0,1fr))}.raven92-dashboard-grid{grid-template-columns:repeat(2,minmax(0,1fr))}}
+@media(max-width:650px){.raven92-page{padding-inline:14px}.raven92-product-head{grid-template-columns:1fr;padding:15px;gap:14px}.raven92-product-photo{min-height:190px}.raven92-product-photo img{height:200px}.raven92-section{padding:15px}.raven92-offer-row{grid-template-columns:1fr auto;gap:8px}.raven92-offer-row .raven92-button{grid-column:1/-1}.raven92-facts,.raven92-reviews{grid-template-columns:1fr}.raven92-panel{padding:15px}.raven92-hero{padding:20px}.raven92-dashboard-grid{grid-template-columns:1fr 1fr}.raven92-verify-fields,.raven92-spec-toolbar{grid-template-columns:1fr 1fr}}
+@media(max-width:400px){.raven92-dashboard-grid,.raven92-verify-fields,.raven92-spec-toolbar{grid-template-columns:1fr}}
+@media(prefers-reduced-motion:reduce){.raven92-button{transition:none!important}}
