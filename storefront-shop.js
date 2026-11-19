@@ -5,6 +5,7 @@ import {
   ravenMarketReviewDelete, ravenMarketOpenAccount
 } from './raven-market.js';
 import {publicOffers} from './offer-policy.mjs';
+import {publicPriceState} from './price-visibility.mjs';
 import {filterCatalogOffers} from './catalog-filters.mjs';
 import {catalogDisplayEntries} from './catalog-display.mjs';
 import {productFacts,productFactsDescription} from './product-details.mjs';
@@ -61,7 +62,7 @@ function grouped(offers){
    map.get(groupId).push(offer);
  }
  return [...map.values()].map(items=>{
-   items.sort((a,b)=>Number(isRecent(b))-Number(isRecent(a))||a.price-b.price);
+   items.sort((a,b)=>Number(publicPriceState(b).show)-Number(publicPriceState(a).show)||a.price-b.price);
    const seen=new Set(),primary=[],others=[];
    for(const item of items){(seen.has(item.store)?others:primary).push(item);seen.add(item.store);}
    const best=items[0];
@@ -132,14 +133,12 @@ function productCard(item){
  const storeBadge=element('span','raven91-store-badge',shops[o.store]?.name||o.store);
  const title=element('h3','',item.model);
  const quality=offerQuality(o);
- const store=element('div','offer-store',(item.primary.length>1?item.primary.length+' lojas · ':'')+(isRecent(o)?'Menor preço recente: ':'Preço antigo cadastrado em: ')+shops[o.store].name+(o.condition==='used'?' · Usado':''));
- const price=element('div','offer-price',BRL(o.price));
+ const priceState=publicPriceState(o);
+ const store=element('div','offer-store',(item.primary.length>1?item.primary.length+' lojas · ':'')+'Anúncio em '+shops[o.store].name+(o.condition==='used'?' · Usado':''));
+ const price=element('div','offer-price',priceState.show?BRL(o.price):'Consultar preço na loja');
  article.dataset.dataQuality=quality.state;
  article.title='Completude do anúncio: '+quality.reasons.slice(0,3).join('; ');
- price.append(element('small','',isRecent(o)
-    ? 'Preço conferido em '+o.checkedAt.split('-').reverse().join('/')
-    : 'PREÇO ANTIGO · última conferência '+o.checkedAt.split('-').reverse().join('/')+'. Consulte o anúncio antes de comprar.'));
- if(!isRecent(o)){article.classList.add('raven-stale-offer');article.setAttribute('data-price-status','desatualizado');}
+ price.append(element('small','',priceState.label));if(!priceState.show){article.classList.add('raven-stale-offer');article.setAttribute('data-price-status','a-consultar');}
 
  const key=item.id.slice(0,180);
  const save=element('button','market-action','♡ Salvar');
@@ -163,8 +162,8 @@ function productCard(item){
  cart.addEventListener('click',()=>change('cart',cart));
  review.addEventListener('click',()=>openMarketReviews(item));
  marketActions.append(save,cart,review);
- const a=element('a','offer-link',isRecent(o)?'Ver oferta':'Conferir preço na loja');a.href=safeUrl(o.url,o.store);a.target='_blank';a.rel=o.affiliate?'noopener noreferrer sponsored':'noopener noreferrer';
- const note=element('p','offer-trust-note',o.affiliateStatus==='confirmed'?'Link comissionado, conforme programa da loja.':'Comissão não confirmada · preço e estoque a conferir');
+ const a=element('a','offer-link',priceState.show?'Ver oferta na loja':'Consultar preço na loja');a.href=safeUrl(o.url,o.store);a.target='_blank';a.rel=o.affiliate?'noopener noreferrer sponsored':'noopener noreferrer';
+ const note=element('p','offer-trust-note',o.affiliate?'Publicidade · este link pode gerar comissão. Compra na loja parceira.':'Compra na loja parceira.');
  const evidence=evidenceFor(o,catalog);
  const evidenceLine=element('p','offer-model-evidence',evidence.label+' · '+evidence.imageStatus);
  if(evidence.issues.length){
@@ -175,7 +174,7 @@ function productCard(item){
  quality.needsModel?'Identificação incompleta · confira marca, referência e capacidade na loja.':
  quality.needsPhoto?'Foto não cadastrada · confirme o modelo no anúncio.':
  'Dados cadastrados · confirme vendedor, estado e preço na loja.');
- content.append(storeBadge,title,store,price,caution,note,evidenceLine);
+ content.append(storeBadge,title,store,price,caution,evidenceLine);
  const detailFacts=productFacts(o,known.get(o.partId));
  const technical=element('details','offer-technical');
  const technicalSummary=element('summary','',detailFacts.length?'Ficha técnica disponível ('+detailFacts.length+' dados)':'Detalhes e identificação');
@@ -196,14 +195,15 @@ function productCard(item){
  const compareLink=element('a','raven91-card-compare','Comparar lojas');
  compareLink.href='comparar-ofertas.html?produto='+encodeURIComponent(o.partId);
  compareLink.setAttribute('aria-label','Comparar anúncios da referência interna de '+item.model);
- content.append(technical,historyLink,marketActions,compareLink,a);
+ content.append(technical,historyLink,marketActions,compareLink,note,a);
  if(item.primary.length>1||item.others.length){
    const detail=element('details','offer-alternatives');
    detail.append(element('p','offer-comparison-warning','Compare capacidade, revisão, marca e condição. Anúncios agrupados podem não ter exatamente o mesmo SKU.'));
    detail.append(element('summary','',(item.primary.length+item.others.length-1)+' outra(s) oferta(s) para comparar'));
    for(const v of item.items.filter(x=>x!==o)){
-     const link=element('a','',shops[v.store].name+' · '+BRL(v.price)+' · '+v.checkedAt.split('-').reverse().join('/')+(isRecent(v)?'':' · PREÇO ANTIGO'));
-     if(!isRecent(v))link.classList.add('raven-alt-stale');
+     const state=publicPriceState(v);
+     const link=element('a','',shops[v.store].name+' · '+(state.show?BRL(v.price):'Consultar preço na loja')+' · '+v.checkedAt.split('-').reverse().join('/')+(v.affiliate?' · Publicidade':''));
+     if(!state.show)link.classList.add('raven-alt-stale');
      link.href=safeUrl(v.url,v.store);link.target='_blank';link.rel=v.affiliate?'noopener noreferrer sponsored':'noopener noreferrer';detail.append(link);
    }
    content.append(detail);
