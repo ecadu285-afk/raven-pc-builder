@@ -1,4 +1,5 @@
 import {catalog} from './catalog.js';
+import {publicPriceState} from './price-visibility.mjs';
 import {publicOffers,trustedOfferUrl,offerAgeDays} from './offer-policy.mjs';
 import {productFacts} from './product-details.mjs';
 import {safeProductImage,imageEvidence} from './raven91-catalog.mjs';
@@ -14,9 +15,10 @@ let reviewKey='';
 function card(offer){
  const row=make('article','raven92-offer-row');
  const shop=make('div','');shop.append(make('strong','',stores[offer.store]||offer.store),make('small','','Consultado em '+String(offer.checkedAt||'').split('-').reverse().join('/')));
- if(offerAgeDays(offer.checkedAt)>14)shop.append(make('small','raven92-warning','Preço antigo. Confira o anúncio.'));
- const price=make('strong','raven92-offer-price',money(offer.price));
- const link=make('a','raven92-button','Conferir na loja');
+ const priceState=publicPriceState(offer);
+ shop.append(make('small','raven92-muted',priceState.label));
+ const price=make('strong','raven92-offer-price',priceState.show?money(offer.price):'Consultar preço na loja');
+ const link=make('a','raven92-button',offer.affiliate?'Ver na loja · publicidade':'Ver na loja');
  link.href=trustedOfferUrl(offer.url,offer.store);link.target='_blank';link.rel=offer.affiliate?'noopener noreferrer sponsored':'noopener noreferrer';
  row.append(shop,price,link);return row;
 }
@@ -48,7 +50,7 @@ async function init(){
   const all=publicOffers(doc.offers);
   const choices=all.filter(x=>x.partId===id&&!['pc','kit'].includes(x.category));
   if(!choices.length){$('product-status').textContent='Esta referência não possui ofertas publicadas. Confira o catálogo completo.';return;}
-  choices.sort((a,b)=>a.price-b.price);
+  choices.sort((a,b)=>Number(publicPriceState(b).show)-Number(publicPriceState(a).show)||a.price-b.price);
   const best=choices[0],ref=known.get(best.partId),name=best.modelName||ref?.name||best.title||id;
   document.title=name+' | Raven PC Builder';
   const canonical=document.createElement('link');canonical.rel='canonical';
@@ -64,7 +66,7 @@ async function init(){
    photo.append(img,make('small','',imageEvidence(best).label));
   }else photo.append(make('strong','',best.category.toUpperCase()),make('small','','Sem fotografia cadastrada para este anúncio'));
   const info=make('div','raven92-product-main');info.append(make('span','raven91-store-badge',best.category.toUpperCase()),
-   make('h1','',name),make('p','raven92-muted','A partir de '+money(best.price)+' · '+choices.length+' anúncio(s) para consultar'));
+   make('h1','',name),make('p','raven92-muted',(publicPriceState(best).show?'Preço cadastrado a partir de '+money(best.price):'Preços disponíveis nas lojas')+' · '+choices.length+' anúncio(s) para consultar'));
   const audit=identityAudit(best,ref);
   info.append(make('p','raven92-notice',audit.reasons.length?'Identificação requer revisão: '+audit.reasons.join('; '):'Referência coerente nos dados cadastrados. Confirme o SKU real antes da compra.'));
   const actions=make('div','raven92-actions');
