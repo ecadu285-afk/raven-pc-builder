@@ -12,6 +12,8 @@ export function filterCatalogOffers(offers,filters={},options={}){
  const isRecent=typeof options.isRecent==='function'?options.isRecent:()=>false;
  const labelOf=options.labelOf||((x)=>x.modelName??x.title);
  const terms=foldTerm(filters.search).split(' ').filter(Boolean);
+ const score=typeof options.searchScore==='function'?options.searchScore:null;
+ const specs=typeof options.matchesSpecifications==='function'?options.matchesSpecifications:null;
  const category=String(filters.category||'all'),store=String(filters.store||'all'),condition=String(filters.condition||'all');
  const max=validPriceLimit(filters.maxPrice);
  return offers.filter(o=>{
@@ -24,6 +26,8 @@ export function filterCatalogOffers(offers,filters={},options={}){
   if(max!==null&&o.price>max)return false;
   if(filters.photoOnly===true&&!hasPhoto(o))return false;
   if(filters.recentOnly===true&&!isRecent(o))return false;
+  if(specs&&!specs(o,filters))return false;
+  if(score&&terms.length)return score(o,filters.search)>0;
   const hay=foldTerm([o.title,o.modelName,o.partId,labelOf(o),o.store,o.category].join(' '));
   return terms.every(t=>hay.includes(t));
  });
