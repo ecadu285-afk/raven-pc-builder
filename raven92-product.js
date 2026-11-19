@@ -51,6 +51,11 @@ async function init(){
   choices.sort((a,b)=>a.price-b.price);
   const best=choices[0],ref=known.get(best.partId),name=best.modelName||ref?.name||best.title||id;
   document.title=name+' | Raven PC Builder';
+  const canonical=document.createElement('link');canonical.rel='canonical';
+  canonical.href=new URL('produto.html?produto='+encodeURIComponent(id),location.href).href;
+  document.head.append(canonical);
+  const description=document.querySelector('meta[name="description"]');
+  if(description)description.content='Consulte fichas cadastradas e '+choices.length+' anúncio(s) de '+name+' na Raven PC Builder. Valores a confirmar nas lojas.';
   $('product-status').textContent=choices.length+' anúncio(s) aprovado(s) nesta referência. Preços cadastrados, não ao vivo.';
   const wrap=$('product-head'),photo=make('div','raven92-product-photo'),imgUrl=safeProductImage(best);
   if(imgUrl){
