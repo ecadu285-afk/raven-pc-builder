@@ -34,7 +34,7 @@ label input,label select,label textarea{margin-top:6px}
 <button id="preview" type="button">Prévia e validação</button>
 <button id="audit79" type="button">Auditoria do Market Bot 7.5</button>
 <button id="report79" type="button">Exportar relatório de qualidade</button>
-<button id="photos90" type="button">Exportar lista de fotos faltantes (CSV)</button>
+<button id="photos90" type="button">Fila de imagens e autorizações (CSV)</button>
 <button id="quality90" type="button">Resumo de dados 9.0</button>
 <button id="export" class="primary">Exportar catálogo revisado</button>
 </div>
@@ -54,7 +54,12 @@ label input,label select,label textarea{margin-top:6px}
 <label>Condição<select name="condition"><option value="new">Novo</option><option value="used">Usado</option><option value="refurbished">Recondicionado</option></select></label>
 <label>Consulta em<input type="date" name="checkedAt" required></label>
 <label class="full">Link do anúncio<input type="url" name="url" required></label>
-<label class="full">Imagem (URL autorizada)<input type="url" name="imageUrl"></label>
+<label class="full">Foto real (URL de imagem do anúncio exato)<input type="url" name="imageUrl"></label>
+<label class="full">Origem da foto (URL HTTPS do anúncio ou fabricante)<input type="url" name="imageSource" placeholder="https://..."></label>
+<label class="full">Crédito da foto / autorização recebida<input name="imageCredit" placeholder="Ex.: vendedor parceiro — uso autorizado"></label>
+<label>Revisão visual da imagem<select name="imageReviewStatus"><option value="pending">Aguardando revisão</option><option value="verified">Conferida manualmente</option><option value="rejected">Imagem rejeitada</option></select></label>
+<label>Data da conferência da imagem<input type="date" name="imageReviewedAt"></label>
+<label class="full">Permissão de uso para a foto<select name="imageUsagePermission"><option value="false">Não confirmada</option><option value="true">Autorização confirmada manualmente</option></select></label>
 <label>Afiliado<select name="affiliateStatus"><option value="pending">Não comprovado</option><option value="confirmed">Confirmado</option></select></label>
 <label>Status<select name="reviewStatus"><option value="pending">Pendente</option><option value="hold">Suspenso</option><option value="approved">Aprovado</option></select></label>
 <label class="full">Observação de revisão<textarea name="reviewNote" rows="2"></textarea></label>
@@ -68,8 +73,9 @@ import {stageBotOffers} from '../offer-import65.mjs';
 import {catalog} from '../catalog.js';
 import {marketQualitySummary} from '../raven79-intel.mjs';
 import {offerQuality} from '../raven90-quality.mjs';
+import {imageEvidence} from '../raven91-catalog.mjs';
 const $=id=>document.getElementById(id);let data={offers:[],history:[]};let index=-1;let lastStage=null;
-const fields=['title','modelName','partId','price','category','store','condition','checkedAt','url','imageUrl','affiliateStatus','reviewStatus','reviewNote'];
+const fields=['title','modelName','partId','price','category','store','condition','checkedAt','url','imageUrl','imageSource','imageCredit','imageReviewStatus','imageReviewedAt','imageUsagePermission','affiliateStatus','reviewStatus','reviewNote'];
 const message=t=>{$('status').textContent=t;};
 const norm=t=>String(t||'').normalize('NFD').replace(/[\u0300-\u036f]/g,'').toLowerCase();
 const key=o=>String(o.store||'')+'|'+String(o.url||'')+'|'+String(o.partId||'');
@@ -91,13 +97,19 @@ function select(i){
  render();
 }
 function formData(){
- const o={...data.offers[index]};for(const f of fields){const el=$('form').elements.namedItem(f);if(el)o[f]=f==='price'?Number(el.value):el.value.trim();}
- if(!o.reviewStatus)o.reviewStatus='pending';return o;
+ const o={...data.offers[index]};for(const f of fields){const el=$('form').elements.namedItem(f);if(el)o[f]=f==='price'?Number(el.value):f==='imageUsagePermission'?el.value==='true':el.value.trim();}
+ if(!o.reviewStatus)o.reviewStatus='pending';
+ if(o.imageUrl!==(data.offers[index]?.imageUrl||'')){
+   o.imageReviewStatus='pending';o.imageReviewedAt='';o.imageUsagePermission=false;
+ }
+ return o;
 }
-function validate(){const o=data.offers[index];const r=auditOffer(o);$('validation').textContent='Publicável: '+(r.displayable?'SIM (regras automáticas)':'NÃO')+'\n'+r.errors.concat(r.warnings).join('\n');}
+function validate(){const o=data.offers[index];const r=auditOffer(o);const photo=imageEvidence(o);$('validation').textContent='Publicável: '+(r.displayable?'SIM (regras automáticas)':'NÃO')+'\nFoto: '+photo.label+'\n'+r.errors.concat(r.warnings).join('\n');}
 $('form').onsubmit=e=>{e.preventDefault();if(index<0)return;data.offers[index]={...formData(),reviewStatus:'pending'};message('Edição salva como pendente. Aprove após a revisão.');render();select(index);};
 $('hold').onclick=()=>{if(index<0)return;data.offers[index]={...formData(),reviewStatus:'hold'};message('Oferta suspensa.');render();select(index);};
-$('approve').onclick=()=>{if(index<0)return;const o={...formData(),reviewStatus:'approved'};const r=auditOffer(o);if(!r.displayable){message('Não aprovado: '+r.errors.join('; '));return;}data.offers[index]=o;message('Oferta aprovada nas regras automáticas. Confira manualmente o anúncio externo.');render();select(index);};
+$('approve').onclick=()=>{if(index<0)return;const o={...formData(),reviewStatus:'approved'};const r=auditOffer(o);
+ if(o.imageReviewStatus==='verified'&&!imageEvidence(o).reviewed){message('Foto não pode ser marcada como conferida: registre fonte HTTPS, crédito, data da revisão, autorização de uso e uma URL válida do produto.');return;}
+ if(!r.displayable){message('Não aprovado: '+r.errors.join('; '));return;}data.offers[index]=o;message('Oferta aprovada nas regras automáticas. Confira manualmente o anúncio externo.');render();select(index);};
 $('load').onclick=async()=>{try{const r=await fetch('../offers.json',{cache:'no-store'});if(!r.ok)throw Error('HTTP '+r.status);const incoming=await r.json();if(!Array.isArray(incoming.offers))throw Error('Formato não reconhecido');data={...incoming,offers:incoming.offers.map(o=>({...o}))};lastStage=null;$('changeBlock').hidden=true;index=-1;$('form').hidden=true;render();message('Catálogo carregado.');}catch(e){message('Erro: '+e.message);}};
 $('import').onchange=async e=>{const file=e.target.files?.[0];if(!file)return;
  try{if(file.size>5000000)throw Error('Arquivo maior que 5 MB. Divida a exportação para revisão.');
@@ -142,13 +154,13 @@ $('quality90').onclick=()=>{
 };
 $('photos90').onclick=()=>{
  if(!data.offers.length){message('Carregue um catálogo antes de gerar a lista de fotos.');return}
- const keys=['partId','store','title','modelName','imageUrl','reviewStatus','observacao'];
+ const keys=['partId','store','title','modelName','imageUrl','imageSource','imageCredit','imageReviewStatus','reviewStatus','observacao'];
  const cell=v=>{let value=String(v??'').replace(/\r?\n/g,' ');if(/^[=+\-@]/.test(value))value="'"+value;return '"'+value.replace(/"/g,'""')+'"';};
- const rows=data.offers.filter(o=>!o.imageUrl).map(o=>({partId:o.partId,store:o.store,title:o.title,modelName:o.modelName,imageUrl:'',reviewStatus:o.reviewStatus||'',observacao:'Foto do modelo exato e autorização pendentes'}));
+ const rows=data.offers.filter(o=>!imageEvidence(o).reviewed).map(o=>({partId:o.partId,store:o.store,title:o.title,modelName:o.modelName,imageUrl:o.imageUrl||'',imageSource:o.imageSource||'',imageCredit:o.imageCredit||'',imageReviewStatus:o.imageReviewStatus||'pending',reviewStatus:o.reviewStatus||'',observacao:o.imageUrl?'Conferir modelo/SKU e direitos de uso':'Procurar foto real do anúncio exato e autorização'}));
  const csv='\ufeff'+[keys.join(';'),...rows.map(o=>keys.map(k=>cell(o[k])).join(';'))].join('\n')+'\n';
  const blob=new Blob([csv],{type:'text/csv;charset=utf-8'}),url=URL.createObjectURL(blob);
  const a=document.createElement('a');a.href=url;a.download='raven90-fotos-pendentes.csv';a.click();setTimeout(()=>URL.revokeObjectURL(url),1000);
- message(rows.length+' ofertas sem foto exportadas, sem publicar ou inventar imagens.');
+ message(rows.length+' fotos ausentes ou sem conferência registradas na fila. Nenhuma imagem foi inventada ou publicada automaticamente.');
 };
 
 $('report79').onclick=()=>{
