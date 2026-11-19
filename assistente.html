@@ -1,22 +1,24 @@
 <!doctype html><html lang="pt-BR"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
 <meta name="theme-color" content="#171321"><meta name="description" content="Assistente Raven Beta ajuda a planejar computadores por orçamento e uso com regras transparentes e anúncios aprovados.">
-<title>Assistente Raven Beta | PC Builder 7.9</title><link rel="stylesheet" href="raven79.css?v=1"><link rel="canonical" href="https://ecadu285-afk.github.io/raven-pc-builder/assistente.html">
+<title>Assistente Raven Beta | PC Builder 9.2</title><link rel="stylesheet" href="raven79.css?v=1"><link rel="canonical" href="https://ecadu285-afk.github.io/raven-pc-builder/assistente.html">
 <meta property="og:title" content="Assistente Raven Beta | PC Builder 7.9">
 <meta property="og:description" content="Assistente Raven Beta ajuda a planejar computadores por orçamento e uso com regras transparentes e anúncios aprovados.">
 <meta property="og:url" content="https://ecadu285-afk.github.io/raven-pc-builder/assistente.html">
 <meta name="twitter:card" content="summary">
-<link rel="stylesheet" href="raven90-ui.css?v=1">
+<link rel="stylesheet" href="raven90-ui.css?v=1"><link rel="stylesheet" href="raven92.css?v=1">
 </head><body>
 <header class="raven-top"><div class="raven-wrap raven-nav"><a class="raven-mark" href="inicio.html"><span>R.</span>RAVEN PC BUILDER</a>
 <nav class="raven-nav-links"><a href="inicio.html">Início</a><a href="produtos.html">Peças</a><a href="index.html">Montador 3D</a><a href="orcamento.html">Orçamento</a><a href="comparar-pcs.html">Comparar PCs</a><a href="historico.html">Histórico</a></nav></div></header>
 <main class="raven-wrap raven-main">
-<div class="raven-hero"><div class="raven-eyebrow">RAVEN 7.9 · ASSISTENTE INTELIGENTE BETA</div><h1>Converse com a <em>Raven.</em></h1>
+<div class="raven-hero"><div class="raven-eyebrow">RAVEN 9.2 · ASSISTENTE DE HARDWARE BETA</div><h1>Converse com a <em>Raven.</em></h1>
 <p>Diga para que quer seu computador e quanto pode investir. O assistente interpreta o pedido e consulta anúncios aprovados, sem prometer configurações perfeitas.</p></div>
-<div class="raven-notice safe"><strong>Como funciona:</strong> esta primeira versão usa regras locais de classificação e compatibilidade, <strong>não é um modelo de IA generativa</strong>. Nenhuma mensagem é enviada a provedores de IA. As cotações são cadastradas, não consultadas em tempo real.</div>
+<div class="raven-notice safe"><strong>Como funciona:</strong> esta primeira versão usa regras locais de classificação e compatibilidade, <strong>não é um modelo de IA generativa</strong>. Nenhuma mensagem é enviada a provedores de IA. A versão 9.2 também consulta nomes, modelos e preços cadastrados para sugerir fichas dos produtos. As cotações são cadastradas, não consultadas em tempo real.</div>
 <section class="raven-panel" aria-label="Conversa com o assistente">
 <div id="chat" class="raven-chat" aria-live="polite"><div class="raven-msg assistant">Raven Assistente Beta: Qual é seu orçamento e para que vai usar o PC? Exemplo: Quero um PC para jogos até R$ 3.000.</div></div>
 <form id="form"><div class="raven-controls"><label style="flex:1 1 65%">Descreva o PC que você precisa<input id="query" type="text" maxlength="500" required autocomplete="off" placeholder="Ex.: PC para editar vídeos com R$ 4.000"></label><button class="raven-btn" type="submit" id="send" disabled>Consultar ofertas</button></div></form>
 <div class="raven-shortcuts" aria-label="Exemplos">
+<button type="button" data-query="Ryzen 5 5500">Consultar Ryzen 5 5500</button>
+<button type="button" data-query="RX 6600">Consultar RX 6600</button>
 <button type="button" data-query="Quero um PC para jogos até R$ 3000">PC para jogos R$ 3.000</button>
 <button type="button" data-query="PC para editar vídeos por R$ 4000">PC para edição R$ 4.000</button>
 <button type="button" data-query="Quero um PC barato para estudar com R$ 2000">PC para estudos R$ 2.000</button>
@@ -36,10 +38,27 @@
 import {publicOffers} from './offer-policy.mjs';
 import {recommendBudget,BUILD_GROUPS} from './budget-engine.js';
 import {understandHardwareRequest,assistantExplanation} from './raven79-assistant.mjs';
+import {catalog} from './catalog.js';
+import {catalogAnswer} from './raven92-assistant.mjs';
+const referenceById=new Map(Object.entries(catalog).flatMap(([category,items])=>items.map(o=>[o.id,{...o,category}])));
 const $=id=>document.getElementById(id),BRL=n=>Number(n).toLocaleString('pt-BR',{style:'currency',currency:'BRL'});
 const node=(tag,cls,text)=>{const e=document.createElement(tag);if(cls)e.className=cls;if(text!==undefined)e.textContent=text;return e};
 let offers=[];
 function addMessage(type,text){const el=node('div','raven-msg '+type,text);$('chat').append(el);el.scrollIntoView({behavior:'smooth',block:'nearest'});return el}
+function buildProductLinks(items){
+ const wrap=node('div','raven-msg assistant');
+ wrap.append(node('strong','','Referências encontradas no catálogo:'));
+ const list=node('ul');
+ for(const item of items){
+  const li=node('li'),o=item.offer;
+  const a=node('a','',o.modelName||o.title||o.partId);
+  a.href='produto.html?produto='+encodeURIComponent(o.partId);
+  li.append(a,node('span','', ' · '+BRL(o.price)+' cadastrado em '+o.store));
+  if(item.review.reasons.length)li.append(node('small','', ' · confira o modelo antes de comprar'));
+  list.append(li);
+ }
+ wrap.append(list);$('chat').append(wrap);
+}
 function buildList(result,reply){
  const q=result?.chosen;if(!q)return;
  const wrap=node('div','raven-msg assistant');
@@ -65,10 +84,17 @@ $('form').addEventListener('submit',e=>{
  const text=$('query').value.trim();if(!text||text.length>500)return;
  addMessage('user',text);$('query').value='';
  const request=understandHardwareRequest(text);
- const result=request.budget!==null?recommendBudget(offers,{budget:request.budget,brand:request.brand,
-  purpose:request.purpose,storage:request.storage}):null;
- addMessage('assistant',assistantExplanation(request,result));
- buildList(result,request);
+ const explicitModel=/(?:ryzen\s*[3579]\s*\d{4,5}|(?:rtx|gtx|rx)\s*\d{3,4}|\bi[3579][- ]?\d{4,5})/i.test(text)&&!/(?:r\$|or[çc]amento|até\s*r\$|ate\s*r\$)/i.test(text);
+ if(request.budget===null||explicitModel){
+  const lookup=catalogAnswer(text,offers,referenceById);
+  addMessage('assistant',lookup.text);
+  if(lookup.items.length)buildProductLinks(lookup.items);
+ }else{
+  const result=recommendBudget(offers,{budget:request.budget,brand:request.brand,
+   purpose:request.purpose,storage:request.storage});
+  addMessage('assistant',assistantExplanation(request,result));
+  buildList(result,request);
+ }
 });
 document.querySelectorAll('[data-query]').forEach(btn=>btn.addEventListener('click',()=>{$('query').value=btn.dataset.query;$('query').focus()}));
 async function init(){

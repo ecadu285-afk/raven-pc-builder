@@ -1,0 +1,80 @@
+<!doctype html><html lang="pt-BR"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Painel comercial 9.2 | Raven PC Builder</title><meta name="robots" content="noindex,nofollow">
+<link rel="stylesheet" href="../storefront.css?v=79"><link rel="stylesheet" href="../raven92.css?v=1">
+</head><body class="catalog-v8"><main class="shell raven92-page">
+<a class="raven92-back" href="../inicio.html">‹ Voltar ao site</a>
+<header class="raven92-hero"><span>RELATÓRIO LOCAL DE OPERAÇÃO</span><h1>Painel comercial Raven</h1>
+<p>Qualidade do catálogo, presença das lojas, preços e indicadores importados. Não envia dados nem usa contas privadas automaticamente.</p></header>
+<p class="raven92-notice"><strong>Sem autenticação.</strong> Não publique dados confidenciais aqui. O painel não é um analytics global nem demonstra comissões recebidas sem um relatório de pagamentos.</p>
+<section class="raven92-panel"><div class="raven92-actions">
+<button id="load" class="raven92-button">Carregar ofertas cadastradas</button>
+<label>Importar métricas agregadas (JSON) <input type="file" id="import" accept=".json,application/json"></label>
+<button type="button" id="export" class="raven92-button secondary">Exportar relatório</button>
+<a class="raven92-button secondary" href="central-imagens92.html">Central de imagens</a>
+</div><p id="status" role="status">Carregue os dados do catálogo.</p></section>
+<section class="raven92-section"><h2>Indicadores de catálogo</h2><div id="kpis" class="raven92-dashboard-grid"></div></section>
+<section class="raven92-section"><h2>Ofertas por loja e categoria</h2><div id="breakdown"></div></section>
+<section class="raven92-section"><h2>Cliques e comissões</h2><p class="raven92-muted">
+Estes números só aparecem quando você importa um relatório agregado próprio. Não são estimados a partir das ofertas nem calculados a partir de acessos ao site.</p>
+<div id="commercial" class="raven92-dashboard-grid"></div>
+<p class="raven92-muted">JSON opcional: {"clicksByStore":{"shopee":20},"confirmedCommissionsByStore":{"shopee":12.5}}. Valores precisam ser reconciliados com relatórios oficiais.</p>
+</section>
+<section class="raven92-section"><h2>Pendências do catálogo</h2><div id="warnings"></div></section>
+</main>
+<script type="module">
+import {catalog} from '../catalog.js';
+import {publicOffers} from '../offer-policy.mjs';
+import {monitorSnapshot,identityAudit} from '../raven92-core.mjs';
+import {imageEvidence} from '../raven91-catalog.mjs';
+const $=id=>document.getElementById(id);
+const known=new Map(Object.entries(catalog).flatMap(([cat,list])=>list.map(item=>[item.id,{...item,category:cat}])));
+let offers=[],history=[],imported=null,lastSummary=null;
+const el=(tag,text)=>{const e=document.createElement(tag);if(text!==undefined)e.textContent=text;return e};
+const brl=n=>Number(n).toLocaleString('pt-BR',{style:'currency',currency:'BRL'});
+const validMap=raw=>raw&&typeof raw==='object'&&!Array.isArray(raw)?Object.fromEntries(Object.entries(raw).filter(([k,v])=>/^[a-z0-9_-]{1,35}$/i.test(k)&&Number.isFinite(v)&&v>=0)):{};
+function metric(target,value,label){const box=el('article');box.append(el('strong',value),el('span',label));target.append(box)}
+function listTable(group,label){
+ const section=el('section'),heading=el('h3',label),table=el('table'),head=el('thead'),body=el('tbody');
+ table.className='raven92-table';const hr=el('tr');
+ for(const title of ['Grupo','Anúncios'])hr.append(el('th',title));head.append(hr);
+ for(const [name,total] of Object.entries(group).sort((a,b)=>b[1]-a[1])){const row=el('tr');row.append(el('td',name),el('td',String(total)));body.append(row)}
+ table.append(head,body);section.append(heading,table);return section;
+}
+function report(){
+ const eligible=publicOffers(offers),health=monitorSnapshot(offers,new Date(),history);
+ const shops={},categories={};for(const o of eligible){shops[o.store]=(shops[o.store]||0)+1;categories[o.category]=(categories[o.category]||0)+1}
+ const photos=eligible.filter(o=>imageEvidence(o).reviewed).length;
+ const models=eligible.filter(o=>identityAudit(o,known.get(o.partId)).reasons.length).length;
+ lastSummary={generatedAt:new Date().toISOString(),catalog:{total:offers.length,eligible:eligible.length,
+  needsAttention:health.needsAttention,photosReviewed:photos,modelsNeedsReview:models},byStore:shops,byCategory:categories,
+  commercial:imported?{clicksByStore:imported.clicksByStore,confirmedCommissionsByStore:imported.confirmedCommissionsByStore}:null};
+ $('status').textContent=offers.length+' registros carregados · informações comerciais importadas: '+(imported?'sim':'não');
+ const kpi=$('kpis');kpi.replaceChildren();
+ for(const [number,label] of [[offers.length,'Total de registros'],[eligible.length,'Anúncios elegíveis'],
+  [health.needsAttention,'Registros com alerta'],[photos,'Fotos com revisão documentada'],[models,'Modelos a conferir']])metric(kpi,String(number),label);
+ const breakdown=$('breakdown');breakdown.replaceChildren(listTable(shops,'Lojas'),listTable(categories,'Categorias'));
+ const commercial=$('commercial');commercial.replaceChildren();
+ if(imported){metric(commercial,String(Object.values(imported.clicksByStore).reduce((n,x)=>n+x,0)),'Cliques agregados importados');
+ metric(commercial,brl(Object.values(imported.confirmedCommissionsByStore).reduce((n,x)=>n+x,0)),'Comissões confirmadas informadas');}
+ else commercial.append(el('p','Dados de cliques e pagamentos não importados.'));
+ const issues=$('warnings');issues.replaceChildren();
+ const most=health.rows.filter(x=>x.problems.length).slice(0,15);
+ if(!most.length)issues.append(el('p','Nenhum alerta estático encontrado.'));
+ for(const row of most){const p=el('p');p.textContent=row.store+' / '+row.partId+': '+row.problems.join('; ');issues.append(p)}
+ if(health.needsAttention>most.length)issues.append(el('p','E mais '+(health.needsAttention-most.length)+' registro(s) com alertas. Execute a auditoria completa no terminal.'));
+}
+$('load').onclick=async()=>{try{const r=await fetch('../offers.json',{cache:'no-store'});if(!r.ok)throw Error('HTTP '+r.status);
+ const d=await r.json();offers=Array.isArray(d.offers)?d.offers:[];history=Array.isArray(d.history)?d.history:[];report();}
+ catch(e){$('status').textContent=e.message}};
+$('import').onchange=async ev=>{const f=ev.target.files?.[0];if(!f)return;
+ try{if(f.size>250000)throw Error('Arquivo acima de 250 KB');
+ const d=JSON.parse(await f.text());
+ imported={clicksByStore:validMap(d.clicksByStore),confirmedCommissionsByStore:validMap(d.confirmedCommissionsByStore)};
+ if(!offers.length)throw Error('Carregue primeiro o catálogo para exibir o relatório.');
+ report();}catch(e){$('status').textContent=e.message;}ev.target.value='';};
+$('export').onclick=()=>{
+ if(!lastSummary){$('status').textContent='Carregue o catálogo antes de exportar.';return}
+ const url=URL.createObjectURL(new Blob([JSON.stringify(lastSummary,null,2)],{type:'application/json'}));
+ const a=el('a');a.href=url;a.download='raven92-relatorio-comercial-local.json';a.click();setTimeout(()=>URL.revokeObjectURL(url),1000);
+};
+</script></body></html>
