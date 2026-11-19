@@ -22,7 +22,8 @@ export function imageEvidence(offer){
  // "Verificada" é um dado explícito da revisão manual; nunca é inferido do domínio.
  const reviewed=offer?.imageReviewStatus==='verified'&&
    typeof offer?.imageSource==='string'&&offer.imageSource.startsWith('https://')&&
-   typeof offer?.imageReviewedAt==='string'&&/^\d{4}-\d{2}-\d{2}$/.test(offer.imageReviewedAt);
+   typeof offer?.imageReviewedAt==='string'&&/^\d{4}-\d{2}-\d{2}$/.test(offer.imageReviewedAt)&&
+   offer?.imageUsagePermission===true&&typeof offer?.imageCredit==='string'&&offer.imageCredit.trim().length>0;
  return {url,label:reviewed?'Foto conferida pela equipe':'Foto do anúncio · não revisada',reviewed};
 }
 export function countCategories(offers){
