@@ -1,0 +1,41 @@
+<!doctype html>
+<html lang="pt-BR"><head>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<meta name="description" content="Compare anúncios do mesmo produto entre lojas parceiras na Raven PC Builder. Confira modelos e preços nos vendedores.">
+<meta name="theme-color" content="#15152f"><title>Comparar ofertas | Raven PC Builder</title>
+<link rel="stylesheet" href="storefront.css?v=79"><link rel="stylesheet" href="raven-market.css?v=2">
+<link rel="stylesheet" href="raven-home-pro.css?v=2"><link rel="stylesheet" href="raven90-ui.css?v=1">
+<link rel="stylesheet" href="raven91-design.css?v=1">
+</head><body class="catalog-v8 raven91-compare-page">
+<a class="raven91-skip" href="#conteudo">Pular para conteúdo</a>
+<header class="site-header market-header">
+<div class="shell market-header-main">
+<a class="site-logo" href="inicio.html"><span class="logo-mark">R.</span><span class="logo-type">RAVEN PC<small>BUILDER · HARDWARE</small></span></a>
+<form class="market-search" action="produtos.html" method="get" role="search">
+<input type="search" name="q" placeholder="Pesquisar peças e componentes" aria-label="Pesquisar produtos" required><button>Buscar</button></form>
+<nav class="market-top-tools" aria-label="Conta">
+<a href="minha-conta.html">Minha conta</a><a href="minha-conta.html#salvos">Salvos</a><a href="minha-conta.html#carrinho">Minha lista</a></nav>
+</div>
+<div class="market-nav-strip"><nav class="shell" aria-label="Navegação principal">
+<a href="inicio.html">Início</a><a href="produtos.html">Peças</a><a href="comparar-ofertas.html" aria-current="page">Comparar lojas</a><a href="index.html">Montador 3D</a><a href="pcs-montados.html">PCs montados</a><a href="aprender.html">Academy</a><a href="minha-conta.html">Conta</a></nav></div>
+</header>
+<main class="shell raven91-compare-main" id="conteudo">
+<section class="raven91-comparison-hero">
+<span class="raven91-eyebrow">COMPARAÇÃO DE ANÚNCIOS · RAVEN</span>
+<h1>Compare preços de lojas diferentes</h1>
+<p>Exibimos anúncios com a mesma referência interna cadastrada. Antes da compra, confira o fabricante, o SKU, a condição, o frete, o estoque e o preço diretamente na loja.</p>
+</section>
+<section class="raven91-filter-panel" aria-labelledby="filter-title">
+<h2 id="filter-title">Encontrar modelos com mais de uma loja</h2>
+<div class="raven91-compare-controls">
+<label>Pesquisar modelo<input id="compare-query" type="search" placeholder="Ex.: Ryzen 5 5500, 5700X, SSD..." autocomplete="off"></label>
+<label>Categoria<select id="compare-category"><option value="all">Todas as categorias</option><option value="cpu">Processadores</option><option value="gpu">Placas de vídeo</option><option value="board">Placas-mãe</option><option value="ram">Memórias</option><option value="ssd">SSDs</option><option value="hdd">HDs</option><option value="psu">Fontes</option><option value="case">Gabinetes</option></select></label>
+<label>Ordenar<select id="compare-order"><option value="price">Menor preço cadastrado</option><option value="difference">Maior diferença entre anúncios</option><option value="stores">Mais lojas</option></select></label>
+</div>
+<p class="raven91-compare-status" id="compare-status" role="status">Carregando referências...</p>
+</section>
+<div id="compare-list" class="raven91-compare-list"><div class="no-offers">Carregando comparações...</div></div>
+<p class="raven91-compare-disclaimer">A Raven indica ofertas de parceiros e não realiza o pagamento. Os preços exibidos não são em tempo real, as imagens são provenientes dos anúncios e a mesma referência interna não garante identidade de SKU. Links podem gerar comissão.</p>
+</main><footer class="simple-footer"><div class="shell"><p>Raven PC Builder · Raven Creatives Studios · Comparação informativa, não cotação em tempo real.</p><a href="afiliados.html">Transparência de afiliados</a></div></footer>
+<script type="module" src="raven91-compare.js?v=1"></script><script defer src="raven90-ui.js?v=1"></script>
+</body></html>

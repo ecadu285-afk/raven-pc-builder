@@ -62,7 +62,10 @@ export function stageBotOffers(current,bot,{now=new Date()}={}){
   }
   if(!changed(previous,row)){output.unchanged++;continue}
   if(previous.price!==row.price)document.history.push({partId:previous.partId,store:previous.store,price:previous.price,checkedAt:previous.checkedAt,url:previous.url});
-  document.offers[i]={...previous,...row,reviewStatus:'pending',affiliateStatus:'pending',reviewNote:'Alterada pelo robô; confirmar novamente na loja'};
+  const imageChanged=Object.hasOwn(row,'imageUrl')&&row.imageUrl!==previous.imageUrl;
+  document.offers[i]={...previous,...row,reviewStatus:'pending',affiliateStatus:'pending',
+    ...(imageChanged?{imageReviewStatus:'pending',imageReviewedAt:'',imageUsagePermission:false,imageCredit:''}:{}),
+    reviewNote:'Alterada pelo robô; confirmar novamente na loja'};
   exact.delete(offerIdentity(previous));exact.set(key,i);
   output.updated++;output.changes.push({kind:'alterado',store:row.store,partId:row.partId,oldPrice:previous.price,price:row.price,checkedAt:row.checkedAt});
  }
