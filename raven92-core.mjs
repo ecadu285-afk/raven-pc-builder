@@ -111,3 +111,14 @@ export function monitorSnapshot(offers,now=new Date(),history=[]){
  return {total:rows.length,needsAttention:rows.filter(x=>x.problems.length).length,
   withPriceChanges:rows.filter(x=>x.priceChange!==null).length,rows};
 }
+
+/** Compatibilidade de chave com os favoritos/avaliações existentes no catálogo. */
+export function productCollectionKey(offer,reference=null){
+ const ref=reference?.id===offer?.partId?reference:null;
+ const model=offer?.modelName||ref?.name||offer?.partId||offer?.title;
+ const kind=offer?.category||ref?.category||'other';
+ const title=String(offer?.title||offer?.modelName||'');
+ const cap=['gpu','ram','ssd','hdd'].includes(kind)?(title.match(/\b(\d{1,4})\s*(GB|TB)\b/i)||[]):[];
+ return [kind,offer?.condition==='used'?'used':offer?.condition==='refurbished'?'refurbished':'new',
+  foldTerm(model),cap[0]?foldTerm(cap[0]):''].join('|').slice(0,180);
+}
