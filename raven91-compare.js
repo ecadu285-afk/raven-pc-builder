@@ -27,7 +27,7 @@ function draw(){
    const row=node('div','raven91-compare-row'),info=node('div');
    info.append(node('strong','',stores[o.store]||o.store),node('small','',o.title||o.modelName||group.model));
    const meta=node('div','raven91-compare-price');
-   meta.append(node('strong','',money(o.price)),node('small','','Última consulta: '+o.checkedAt.split('-').reverse().join('/')));
+   meta.append(node('strong','',money(o.price)),node('small','', 'Última consulta: '+o.checkedAt.split('-').reverse().join('/')));
    const a=node('a','raven91-compare-open','Ver na loja');a.href=trustedOfferUrl(o.url,o.store);a.target='_blank';a.rel=o.affiliate?'noopener noreferrer sponsored':'noopener noreferrer';
    row.append(info,meta,a);table.append(row);
   }
