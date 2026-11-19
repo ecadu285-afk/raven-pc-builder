@@ -77,7 +77,7 @@ export function smartSearchScore(offer,query,reference=null){
  const expanded=hay+' '+(catAliases[offer.category]||'');
  const raw=foldTerm(query);
  const requested=raw.split(' ').filter(x=>x&&!STOP.has(x));
- if(!requested.every(t=>expanded.includes(t)||tokens.includes(t)&&tokens.some(x=>expanded.includes(x))))return 0;
+ if(!requested.every(t=>expanded.includes(t)||(TOKEN_ALIASES.has(t)&&TOKEN_ALIASES.get(t).split(' ').every(alias=>expanded.includes(alias)))))return 0;
  let score=10;
  if(core.includes(raw))score+=40;
  if(foldTerm(offer.partId)===raw)score+=45;
