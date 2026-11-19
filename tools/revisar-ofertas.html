@@ -35,7 +35,7 @@ label input,label select,label textarea{margin-top:6px}
 <button id="audit79" type="button">Auditoria do Market Bot 7.5</button>
 <button id="report79" type="button">Exportar relatório de qualidade</button>
 <button id="photos90" type="button">Fila de imagens e autorizações (CSV)</button>
-<button id="quality90" type="button">Resumo de dados 9.0</button>
+<button id="quality90" type="button">Resumo de dados 9.0</button><button id="model92" type="button">Auditar modelos 9.2</button><button id="monitor92" type="button">Auditar preços e links 9.2</button><a class="file-label" href="central-imagens92.html">Central de fotos 9.2</a><a class="file-label" href="painel-comercial92.html">Painel comercial local</a>
 <button id="export" class="primary">Exportar catálogo revisado</button>
 </div>
 <div id="status" class="status" role="status"></div>
@@ -74,6 +74,7 @@ import {catalog} from '../catalog.js';
 import {marketQualitySummary} from '../raven79-intel.mjs';
 import {offerQuality} from '../raven90-quality.mjs';
 import {imageEvidence} from '../raven91-catalog.mjs';
+import {identityAudit,monitorSnapshot} from '../raven92-core.mjs';
 const $=id=>document.getElementById(id);let data={offers:[],history:[]};let index=-1;let lastStage=null;
 const fields=['title','modelName','partId','price','category','store','condition','checkedAt','url','imageUrl','imageSource','imageCredit','imageReviewStatus','imageReviewedAt','imageUsagePermission','affiliateStatus','reviewStatus','reviewNote'];
 const message=t=>{$('status').textContent=t;};
@@ -104,7 +105,7 @@ function formData(){
  }
  return o;
 }
-function validate(){const o=data.offers[index];const r=auditOffer(o);const photo=imageEvidence(o);$('validation').textContent='Publicável: '+(r.displayable?'SIM (regras automáticas)':'NÃO')+'\nFoto: '+photo.label+'\n'+r.errors.concat(r.warnings).join('\n');}
+function validate(){const o=data.offers[index];const r=auditOffer(o);const photo=imageEvidence(o);const known=Object.values(catalog).flat().find(x=>x.id===o.partId);const model=identityAudit(o,known);$('validation').textContent='Publicável: '+(r.displayable?'SIM (regras automáticas)':'NÃO')+'\nFoto: '+photo.label+'\nIdentificação: '+(model.reasons.length?model.reasons.join('; '):'Sem inconsistência textual evidente')+'\n'+r.errors.concat(r.warnings).join('\n');}
 $('form').onsubmit=e=>{e.preventDefault();if(index<0)return;data.offers[index]={...formData(),reviewStatus:'pending'};message('Edição salva como pendente. Aprove após a revisão.');render();select(index);};
 $('hold').onclick=()=>{if(index<0)return;data.offers[index]={...formData(),reviewStatus:'hold'};message('Oferta suspensa.');render();select(index);};
 $('approve').onclick=()=>{if(index<0)return;const o={...formData(),reviewStatus:'approved'};const r=auditOffer(o);
@@ -147,6 +148,20 @@ $('audit79').onclick=()=>{
    ' duplicatas de URL/modelo.\nLojas: '+stores+(issues.length?'\nPendências principais:\n'+issues.join('\n'):'')+
    '\nFotos e especificações continuam sujeitas à conferência do modelo exato.');
  }catch(e){message(e.message)}
+};
+$('model92').onclick=()=>{
+ const known=new Map(Object.entries(catalog).flatMap(([category,items])=>items.map(p=>[p.id,{...p,category}])));
+ const issues=data.offers.map((o,i)=>({i,o,audit:identityAudit(o,known.get(o.partId))})).filter(x=>x.audit.reasons.length);
+ message('IDENTIFICAÇÃO RAVEN 9.2: '+issues.length+' anúncio(s) com campos suspeitos ou incompletos.\n'+
+ issues.slice(0,20).map(({i,o,audit})=>'#'+(i+1)+' '+o.partId+' · '+audit.reasons.join('; ')).join('\n')+
+ '\nEstas regras são alertas, não prova de identificação. Confira manualmente SKU, capacidade e condição.');
+};
+$('monitor92').onclick=()=>{
+ const report=monitorSnapshot(data.offers,new Date(),data.history||[]);
+ message('SAÚDE DE LINKS E PREÇOS: '+report.total+' registros · '+report.needsAttention+' com alertas · '+
+ report.withPriceChanges+' alterações de preço presentes no histórico.\n'+
+ report.rows.filter(o=>o.problems.length).slice(0,15).map(o=>o.store+' / '+o.partId+': '+o.problems.join('; ')).join('\n')+
+ '\nEste botão não testa endereços externos. Para verificação HTTP opcional, use o comando tools/monitor-ofertas92.mjs no terminal.');
 };
 $('quality90').onclick=()=>{
  const rows=data.offers.map(x=>offerQuality(x));
