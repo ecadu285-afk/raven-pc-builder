@@ -1,0 +1,66 @@
+<!doctype html><html lang="pt-BR"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Central de imagens 9.2 | Raven Operação Local</title><meta name="robots" content="noindex,nofollow">
+<link rel="stylesheet" href="../storefront.css?v=79"><link rel="stylesheet" href="../raven92.css?v=1">
+</head><body class="catalog-v8"><main class="shell raven92-page">
+<a href="../inicio.html" class="raven92-back">‹ Voltar ao site</a>
+<header class="raven92-hero"><span>PAINEL LOCAL DE REVISÃO</span><h1>Central de imagens e modelos</h1>
+<p>Lista fotos ausentes ou ainda não revisadas, com atalhos para conferir os anúncios. Não pesquisa nem baixa imagens automaticamente; não altera o GitHub.</p></header>
+<p class="raven92-notice"><strong>Sem autenticação.</strong> Use este painel apenas para operação local. Imagens precisam corresponder ao SKU e ter autorização de uso documentada.</p>
+<section class="raven92-panel"><div class="raven92-actions">
+<button type="button" id="load" class="raven92-button">Carregar catálogo</button>
+<label>Importar JSON local <input id="file" type="file" accept=".json,application/json"></label>
+<label>Filtrar fila <select id="filter"><option value="all">Todos</option><option value="missing">Sem imagem</option><option value="unreviewed">Imagem não revisada</option><option value="suspect">Modelo a conferir</option></select></label>
+<button type="button" id="csv" class="raven92-button secondary">Exportar fila CSV</button>
+<a class="raven92-button secondary" href="revisar-ofertas.html">Abrir revisor de ofertas</a>
+</div><p id="status" role="status">Carregue os dados para começar.</p></section>
+<section id="queue" class="raven92-photo-queue" aria-label="Itens para conferência"></section>
+<p class="raven92-muted">As fotos mostradas na fila são apenas URLs cadastradas de domínios aceitos. Uma URL válida não comprova identidade do produto nem autorização de reprodução. CSV local, sem publicação.</p>
+</main><script type="module">
+import {catalog} from '../catalog.js';
+import {safeProductImage,imageEvidence} from '../raven91-catalog.mjs';
+import {identityAudit} from '../raven92-core.mjs';
+import {trustedOfferUrl} from '../offer-policy.mjs';
+const $=id=>document.getElementById(id);
+const known=new Map(Object.entries(catalog).flatMap(([type,items])=>items.map(x=>[x.id,{...x,category:type}])));
+let offers=[];
+const el=(tag,text)=>{const x=document.createElement(tag);if(text!==undefined)x.textContent=text;return x};
+function entries(){
+ return offers.map(o=>{
+  const photo=imageEvidence(o),audit=identityAudit(o,known.get(o.partId));
+  return {o,photo,audit,missing:!safeProductImage(o),unreviewed:!photo.reviewed,suspect:Boolean(audit.reasons.length)};
+ }).filter(row=>{const f=$('filter').value;return f==='all'||row[f]===true});
+}
+function draw(){
+ const rows=entries();
+ $('status').textContent=rows.length+' registro(s) exibido(s) de '+offers.length+
+ ' · '+rows.filter(x=>x.missing).length+' sem foto · '+rows.filter(x=>x.unreviewed).length+' não revisados';
+ const root=$('queue');root.replaceChildren();
+ if(!rows.length)root.append(el('p','Nenhuma ocorrência encontrada para este filtro.'));
+ for(const {o,photo,audit,missing} of rows.slice(0,150)){
+  const box=el('article'),heading=el('strong',o.title||o.modelName||o.partId||'Sem título');
+  const meta=el('small',(o.store||'')+' · '+(o.partId||'')+' · '+(missing?'Sem foto cadastrada':photo.label));
+  const status=el('small',audit.reasons.length?'Modelo: '+audit.reasons.join('; '):'Referência sem inconsistência textual evidente');
+  box.append(heading,meta,status);
+  const link=trustedOfferUrl(o.url,o.store);
+  if(link){const a=el('a','Abrir anúncio para conferência manual');a.href=link;a.rel='noopener noreferrer';a.target='_blank';box.append(a)}
+  if(o.imageUrl){const note=el('small','URL de imagem cadastrada: '+(safeProductImage(o)?'domínio permitido, não prova autorização':'URL não aceita'));box.append(note)}
+  root.append(box);
+ }
+ if(rows.length>150)root.append(el('p','Exibindo 150 registros; exporte o CSV para revisar os demais.'));
+}
+async function load(doc){
+ if(!Array.isArray(doc?.offers))throw Error('JSON precisa conter offers[].');
+ offers=doc.offers.filter(o=>o&&typeof o==='object');draw();
+}
+$('load').onclick=async()=>{try{const r=await fetch('../offers.json',{cache:'no-store'});if(!r.ok)throw Error('HTTP '+r.status);await load(await r.json())}catch(e){$('status').textContent=e.message}};
+$('file').onchange=async e=>{const f=e.target.files?.[0];if(!f)return;try{if(f.size>5000000)throw Error('Arquivo acima de 5 MB');await load(JSON.parse(await f.text()))}catch(e){$('status').textContent=e.message}e.target.value='';};
+$('filter').onchange=draw;
+$('csv').onclick=()=>{
+ const keys=['partId','store','title','url','imageUrl','statusFoto','motivoModelo'];
+ const safe=x=>{let s=String(x??'').replace(/\r?\n/g,' ');if(/^[+=@-]/.test(s))s="'"+s;return '"'+s.replace(/"/g,'""')+'"'};
+ const rows=entries().map(({o,photo,audit})=>[o.partId,o.store,o.title,o.url,o.imageUrl,photo.label,audit.reasons.join('; ')]);
+ const csv='\ufeff'+[keys,...rows].map(row=>row.map(safe).join(';')).join('\n')+'\n';
+ const url=URL.createObjectURL(new Blob([csv],{type:'text/csv;charset=utf-8'}));
+ const a=el('a');a.href=url;a.download='raven92-central-imagens.csv';a.click();setTimeout(()=>URL.revokeObjectURL(url),1000);
+};
+</script></body></html>
