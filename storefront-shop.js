@@ -12,6 +12,7 @@ import {evidenceFor} from './raven79-intel.mjs';
 import {offerQuality,rankFeaturedGroups} from './raven90-quality.mjs';
 import {imageEvidence,safeProductImage,countCategories} from './raven91-catalog.mjs';
 import {identityAudit,smartSearchScore,matchedSpecifications} from './raven92-core.mjs';
+import {hydrateCatalogUI} from './raven92-catalog-ui.js';
 
 const known=new Map(Object.entries(catalog).flatMap(([category,items])=>items.map(item=>[item.id,{...item,category}])));
 const labels={cpu:'Processadores',board:'Placas-mãe',gpu:'Placas de vídeo',ram:'Memórias RAM',ssd:'SSDs',hdd:'HDs',psu:'Fontes',case:'Gabinetes',cooler:'Coolers',other:'Outras peças',keyboard:'Teclados',headset:'Fones e headsets',mouse:'Mouses',chair:'Cadeiras',mousepad:'Mousepads',monitor:'Monitores',fan:'Fans e ventoinhas',powerstrip:'Filtros de linha',laptop:'Notebooks',phone:'Celulares',desk:'Mesas'};
@@ -374,6 +375,7 @@ async function start(){
    groups=grouped(all.filter(o=>!['pc','kit'].includes(category(o))));
    categorySymbols();
    updateCategoryAvailability();
+   hydrateCatalogUI(all,known);
    home();
    const search=$('catalog-search'),type=$('catalog-category'),shop=$('catalog-store'),order=$('catalog-order'),more=$('catalog-more');
    const cond=$('catalog-condition'),maximum=$('catalog-max-price'),photos=$('catalog-photos-only'),recent=$('catalog-recent-only'),clear=$('catalog-clear');
