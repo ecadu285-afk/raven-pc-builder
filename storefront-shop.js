@@ -72,16 +72,13 @@ function grouped(offers){
 function element(tag,cls,text){const x=document.createElement(tag);if(cls)x.className=cls;if(text!==undefined)x.textContent=text;return x;}
 function imageFor(offer){return safeProductImage(offer);}
 function photoForGroup(item){
- // Fotos somente de anúncios do MESMO grupo de modelo e condição.
- for(const offer of item.items){
-   // Não reutilize foto de outra referência como se fosse do produto mais barato.
-   if(offer.partId!==item.best.partId)continue;
-   if(item.type==='cpu' && /\b(?:pc\s*gamer|computador\s*completo)\b/i.test(offer.title||''))continue;
-   if(evidenceFor(offer,catalog).issues.length)continue;
-   const url=imageFor(offer);
-   if(url)return {url,offer};
- }
- return null;
+ // O card mostra o preço de item.best: a foto deve vir do MESMO anúncio.
+ // Não emprestar imagens de outra loja, mesmo quando o ID interno coincidir.
+ const offer=item.best;
+ if(item.type==='cpu'&&/\b(?:pc\s*gamer|computador\s*completo)\b/i.test(offer.title||''))return null;
+ if(evidenceFor(offer,catalog).issues.length)return null;
+ const url=imageFor(offer);
+ return url?{url,offer}:null;
 }
 function productPlaceholder(type){
  const root=element('div','hardware-placeholder placeholder-'+type);
