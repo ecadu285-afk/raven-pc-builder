@@ -15,6 +15,6 @@ assert.match(read('afiliados.html'),/TerabyteShop/);
 assert.match(read('categorias.html'),/Departamentos e categorias/);
 
 const style=read('raven92.css');
-assert.match(style,/market-header \\.market-nav-strip nav\\.shell\\s*\\{\\s*overflow:visible!important/,'Dropdown não pode ser recortado no desktop');
-assert.match(style,/raven90-mobile-open\\s*\\{\\s*overflow-x:hidden;/,'Menu móvel mantém submenu no fluxo');
+assert.ok(style.includes('.market-header .market-nav-strip nav.shell{\n    overflow:visible!important;'),'Dropdown não pode ser recortado no desktop');
+assert.ok(style.includes('.market-header .market-nav-strip nav.raven90-mobile-open{\n    overflow-x:hidden;'),'Menu móvel mantém submenu no fluxo');
 console.log('PASS: Raven 9.2, incluindo dropdown Explorar');
