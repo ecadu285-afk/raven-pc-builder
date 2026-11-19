@@ -1,5 +1,6 @@
 import {publicOffers,trustedOfferUrl} from './offer-policy.mjs';
 import {comparableOfferGroups} from './raven91-catalog.mjs';
+import {publicPriceState} from './price-visibility.mjs';
 const $=id=>document.getElementById(id);
 const money=n=>Number(n).toLocaleString('pt-BR',{style:'currency',currency:'BRL'});
 const stores={shopee:'Shopee',mercadolivre:'Mercado Livre',amazon:'Amazon',kabum:'KaBuM!',terabyte:'Terabyte'};
@@ -27,7 +28,7 @@ function draw(){
    const row=node('div','raven91-compare-row'),info=node('div');
    info.append(node('strong','',stores[o.store]||o.store),node('small','',o.title||o.modelName||group.model));
    const meta=node('div','raven91-compare-price');
-   meta.append(node('strong','',money(o.price)),node('small','', 'Última consulta: '+o.checkedAt.split('-').reverse().join('/')));
+   meta.append(node('strong','',money(o.price)),node('small','', 'Última consulta: '+o.checkedAt.split('-').reverse().join('/')),node('small','raven92-ad-label',o.affiliate?'Publicidade · link pode gerar comissão':'Compra direta na loja'));
    const a=node('a','raven91-compare-open','Ver na loja');a.href=trustedOfferUrl(o.url,o.store);a.target='_blank';a.rel=o.affiliate?'noopener noreferrer sponsored':'noopener noreferrer';
    row.append(info,meta,a);table.append(row);
   }
@@ -38,7 +39,7 @@ function draw(){
 async function init(){
  try{
   const response=await fetch('./offers.json',{cache:'no-store'});if(!response.ok)throw Error('HTTP '+response.status);
-  const data=await response.json();groups=comparableOfferGroups(publicOffers(data.offers));
+  const data=await response.json();groups=comparableOfferGroups(publicOffers(data.offers).filter(o=>publicPriceState(o).show));
   const id=new URLSearchParams(location.search).get('produto');
   if(id)$('compare-query').value=id;
   for(const id of ['compare-query','compare-category','compare-order'])$(id).addEventListener(id==='compare-query'?'input':'change',draw);

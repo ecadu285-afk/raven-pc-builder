@@ -28,7 +28,7 @@
 <meta property="og:description" content="Explore ofertas de peças de PC em Amazon, Mercado Livre e Shopee com transparência de preços e links de afiliado.">
 <meta property="og:url" content="https://ecadu285-afk.github.io/raven-pc-builder/loja.html">
 <meta name="twitter:card" content="summary">
-<link rel="stylesheet" href="raven90-ui.css?v=1">
+<link rel="stylesheet" href="raven90-ui.css?v=1"><link rel="stylesheet" href="raven92.css?v=1">
 </head><body>
 <header><strong>RAVEN <span>PC BUILDER</span></strong><nav aria-label="Menu"><a href="inicio.html">Início</a><a href="index.html">Montador 3D</a><a href="produtos.html">Peças</a><a href="pcs-montados.html">PCs montados</a><a href="orcamento.html">Orçamento</a><a href="loja.html" aria-current="page">Todos os anúncios</a><a href="servicos.html">Serviços</a><a href="meu-pc.html">Upgrade do meu PC</a><a href="aprender.html">Hardware 3D</a><a href="aprender.html">Guia básico de PC</a><a href="afiliados.html">Transparência</a></nav></header>
 <main><p style="font-size:13px"><a href="produtos.html" style="color:#c2a6ff;font-weight:800">← Voltar à página de produtos e categorias</a></p><span class="eyebrow">RAVEN MARKETPLACE · LOJA DE COMPONENTES</span><h1>Todos os anúncios em uma só vitrine.</h1><p class="intro">Explore anúncios publicados e compare ofertas para o mesmo modelo nas lojas. Para escolher por categoria, use a página de produtos. A compra é realizada diretamente na Amazon, Mercado Livre ou Shopee. O RAVEN não processa pagamentos nem vende diretamente os produtos.</p>
@@ -55,12 +55,13 @@ function safeImage(value,store){
 }
 function valid(o){return o&&stores[o.store]&&typeof o.price==='number'&&Number.isFinite(o.price)&&o.price>0&&/^\d{4}-\d{2}-\d{2}$/.test(o.checkedAt||'')&&Number.isFinite(Date.parse(o.checkedAt+'T00:00:00Z'))&&safeUrl(o.url,stores[o.store].hosts);}
 function el(tag,cls,text){const e=document.createElement(tag);if(cls)e.className=cls;if(text!==undefined)e.textContent=text;return e;}
-function ageDays(o){return Math.floor((Date.now()-Date.parse(o.checkedAt+'T00:00:00Z'))/86400000);}
+function ageDays(o){const now=new Date();return Math.floor((Date.UTC(now.getUTCFullYear(),now.getUTCMonth(),now.getUTCDate())-Date.parse(o.checkedAt+'T00:00:00Z'))/86400000);}
+function publicPrice(o){return o.store!=='amazon'&&ageDays(o)>=0&&ageDays(o)<=14;}
 function paymentName(o){return o.priceCondition==='pix'?'Valor informado no Pix':o.priceCondition==='card'?'Valor informado no cartão':o.priceCondition==='other'?'Condição de pagamento informada':'Condição de pagamento a conferir';}
 function comparisons(){
  const byModel=new Map();
  for(const o of rows){
-  if(ageDays(o)<0||ageDays(o)>14)continue;
+  if(!publicPrice(o))continue;
   const key=[o.partId||o.modelName,o.category,o.condition].join('|').toLowerCase();
   if(!byModel.has(key))byModel.set(key,[]);
   byModel.get(key).push(o);
@@ -118,7 +119,7 @@ function groupOffers(data){
  const buckets=new Map();
  for(const o of data){const k=groupId(o);if(!buckets.has(k))buckets.set(k,[]);buckets.get(k).push(o)}
  return [...buckets.values()].map(offers=>{
-  offers.sort((a,b)=>a.price-b.price||b.checkedAt.localeCompare(a.checkedAt));
+  offers.sort((a,b)=>Number(publicPrice(b))-Number(publicPrice(a))||a.price-b.price||b.checkedAt.localeCompare(a.checkedAt));
   const byStore=new Map(),extra=[];
   for(const o of offers){if(byStore.has(o.store))extra.push(o);else byStore.set(o.store,o)}
   const choices=[...byStore.values()].sort((a,b)=>a.price-b.price);
@@ -128,17 +129,17 @@ function groupOffers(data){
 function offerEntry(o){
  const line=el('div','offer-choice'),description=el('div');
  const vendor=el('strong','',stores[o.store]?.name||o.store);
- const value=el('span','',money(o.price)+(o.condition==='used'?' · Usado':' · Novo'));
+ const value=el('span','',(publicPrice(o)?money(o.price):'Consultar preço na loja')+(o.condition==='used'?' · Usado':' · Novo'));
  const details=el('span','offer-freshness','Registrado em '+o.checkedAt.split('-').reverse().join('/')+(ageDays(o)>14?' · Preço antigo':''));
  description.append(vendor,document.createTextNode('  '),value,document.createElement('br'),details);
- const a=el('a','','Ver oferta');a.href=o.url;a.target='_blank';a.rel=o.affiliate?'noopener noreferrer sponsored':'noopener noreferrer';
+ const a=el('a','',o.affiliate?'Ver na loja · publicidade':'Ver na loja');a.href=o.url;a.target='_blank';a.rel=o.affiliate?'noopener noreferrer sponsored':'noopener noreferrer';
  a.setAttribute('aria-label','Abrir anúncio de '+nameOf(o)+' na '+(stores[o.store]?.name||o.store));
  line.append(description,a);return line;
 }
 function render(){
  const q=$('q').value.trim().toLocaleLowerCase('pt-BR');
  const cat=$('cat').value,store=$('store').value,order=$('order').value,budget=$('budget').value;
- const selected=rows.filter(o=>(cat==='all'||o.category===cat)&&(store==='all'||o.store===store)&&(budget==='all'||o.price<=Number(budget))&&(!q||[o.title,o.modelName,o.partId,stores[o.store].name].join(' ').toLocaleLowerCase('pt-BR').includes(q)));
+ const selected=rows.filter(o=>(cat==='all'||o.category===cat)&&(store==='all'||o.store===store)&&(budget==='all'||(publicPrice(o)&&o.price<=Number(budget)))&&(!q||[o.title,o.modelName,o.partId,stores[o.store].name].join(' ').toLocaleLowerCase('pt-BR').includes(q)));
  const groups=groupOffers(selected).sort((a,b)=>order==='low'?a.best.price-b.best.price:order==='high'?b.best.price-a.best.price:b.latest.localeCompare(a.latest));
  const root=$('products');root.replaceChildren();
  $('count').textContent=groups.length+' modelo(s) em '+selected.length+' oferta(s) · anúncios da mesma referência agrupados · confira marca, frete, condição e estoque na loja';
@@ -150,7 +151,7 @@ function render(){
   if(nStores>1)tags.append(el('span','tag',nStores+' lojas'));
   content.append(tags,el('h2','',model));
   const label=g.offers.length===1?'1 anúncio nesta referência':g.offers.length+' anúncios semelhantes desta referência';
-  content.append(el('div','offer-total',label),el('div','price',money(best.price)),el('div','price-caption','Menor preço cadastrado nos resultados deste filtro'));
+  content.append(el('div','offer-total',label),el('div','price',publicPrice(best)?money(best.price):'Consultar preço'),el('div','price-caption',publicPrice(best)?'Preço registrado em '+best.checkedAt.split('-').reverse().join('/'):'Consulte diretamente a loja'));
   if(g.offers.length>1){
    content.append(el('p','group-subtitle','Ofertas agrupadas pela referência do produto, não necessariamente pelo mesmo fabricante ou SKU. Compare a capacidade, a condição, a garantia e a versão no anúncio.'));
   } else {
