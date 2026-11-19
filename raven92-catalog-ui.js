@@ -1,21 +1,17 @@
 /** Raven 9.2 — sugestões da busca e facetas extraídas somente de dados publicados. */
-import {catalog} from './catalog.js';
-import {publicOffers} from './offer-policy.mjs';
 import {specifications,rankCatalogSearch} from './raven92-core.mjs';
 const $=id=>document.getElementById(id);
-const reference=new Map(Object.entries(catalog).flatMap(([category,items])=>items.map(o=>[o.id,{...o,category}])));
 function optionsFor(select,values){
  const unique=[...new Set(values.filter(Boolean))].sort((a,b)=>String(a).localeCompare(String(b),'pt-BR',{numeric:true}));
  for(const value of unique){
   const opt=document.createElement('option');opt.value=value;opt.textContent=value;select.append(opt);
  }
 }
-async function init(){
- const input=$('catalog-search');if(!input)return;
+export function hydrateCatalogUI(sourceOffers,reference){
+ const input=$('catalog-search');if(!input||input.dataset.raven92Ready)return;
+ input.dataset.raven92Ready='true';
  try{
-  const r=await fetch('./offers.json',{cache:'no-store'});if(!r.ok)throw Error('falha HTTP '+r.status);
-  const doc=await r.json();
-  const offers=publicOffers(doc.offers).filter(o=>!['pc','kit'].includes(o.category));
+  const offers=(Array.isArray(sourceOffers)?sourceOffers:[]).filter(o=>!['pc','kit'].includes(o.category));
   const socks=[],memory=[],capacities=[];
   for(const item of offers){
    const specs=specifications(item,reference.get(item.partId));
@@ -48,4 +44,4 @@ async function init(){
   if(input.value)suggest();
  }catch(e){console.warn('Raven: sugestões/facetas não disponíveis',e);}
 }
-init();
+
