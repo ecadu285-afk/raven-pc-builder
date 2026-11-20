@@ -1632,6 +1632,20 @@
       "priceCondition": "",
       "category": "phone",
       "modelName": "Samsung Galaxy A25"
+    },
+    {
+      "partId": "550",
+      "store": "amazon",
+      "price": 236.11,
+      "checkedAt": "2026-11-20",
+      "url": "https://link.amazon/B0a9gZUX3",
+      "condition": "new",
+      "affiliate": true,
+      "title": "550W Black Vulcan 80 Plus Bronze",
+      "imageUrl": "https://a.co/d/05sVEvDY",
+      "priceCondition": "",
+      "category": "psu",
+      "modelName": "Fonte 550 W 80 Plus Bronze"
     }
   ],
   "history": [
