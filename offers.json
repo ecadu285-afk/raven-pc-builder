@@ -1618,6 +1618,20 @@
       "priceCondition": "",
       "category": "keyboard",
       "modelName": "TECLADO MECANICO"
+    },
+    {
+      "partId": "custom41-phone-c7b72b2453e008cc0b",
+      "store": "amazon",
+      "price": 1131.97,
+      "checkedAt": "2026-11-20",
+      "url": "https://link.amazon/B01E1reQC",
+      "condition": "new",
+      "affiliate": true,
+      "title": "Samsung Galaxy A25 5G",
+      "imageUrl": "https://a.co/d/0fSYhTcn",
+      "priceCondition": "",
+      "category": "phone",
+      "modelName": "Samsung Galaxy A25"
     }
   ],
   "history": [
