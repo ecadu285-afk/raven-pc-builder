@@ -1646,6 +1646,20 @@
       "priceCondition": "",
       "category": "psu",
       "modelName": "Fonte 550 W 80 Plus Bronze"
+    },
+    {
+      "partId": "p500",
+      "store": "amazon",
+      "price": 215.99,
+      "checkedAt": "2026-11-20",
+      "url": "https://link.amazon/B0ef1s5q3",
+      "condition": "new",
+      "affiliate": true,
+      "title": "500W 80 Plu",
+      "imageUrl": "https://a.co/d/06YapPav",
+      "priceCondition": "",
+      "category": "psu",
+      "modelName": "Fonte 500 W 80 Plus Bronze"
     }
   ],
   "history": [
