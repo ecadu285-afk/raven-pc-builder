@@ -1674,6 +1674,20 @@
       "priceCondition": "",
       "category": "headset",
       "modelName": "HEADSET GAMER HAVIT H2232D"
+    },
+    {
+      "partId": "custom41-monitor-e237296daf25158220",
+      "store": "amazon",
+      "price": 537.9,
+      "checkedAt": "2026-11-20",
+      "url": "https://www.amazon.com.br/Monitor-Gamer-AOC-G-SYNC-24G50F/dp/B0FLKGNYJ8?__mk_pt_BR=%C3%85M%C3%85%C5%BD%C3%95%C3%91&crid=1FS4KU0DFULCI&dib=eyJ2IjoiMSJ9.iBATrbmrhusbyJR0Xu65kfVmmUx10LC83bisMplKRht2b3yl3ErYaHdec_AF-8oNhF9j_AbO2Sbv7jSHDfW_JY6_onCP60KfPcm7vRagMBuWPw9BemDKWqrqLdB4OIOAxPIMFds7c_2wu1e2e3Bk2cCiDuxxDE8PDzAiwxXbiz1IyBNmHTkNv956KHd5L-5zQ2N_1JBENRWnn4m7wIWYUhSzKv04ku2TjFQrND2l9eIo_EMWHVONdYBuR-hkdLx5eRquLK5CAiPzG3B6poj0Kr1QW3tNj_g6qOxo47U7tB0.IMhOKHA8-6KKqXlTnt4MFZ-hUg7dHL0q2yIrW5SXflI&dib_tag=se&keywords=MONITOR&qid=1795135205&sprefix=monito%2Caps%2C329&sr=8-5&ufe=app_do%3Aamzn1.fos.9e6a115c-05b9-4b96-8e1c-b1f9ce2ac1a6&linkCode=ll2&tag=ravenpcbuilde-20&linkId=8d85a7afefe9f9abe94baa35b899eab0&ref_=as_li_ss_tl",
+      "condition": "new",
+      "affiliate": true,
+      "title": "Monitor Gamer AOC AGON G50 24\"",
+      "imageUrl": "https://a.co/d/05MEoHrH",
+      "priceCondition": "",
+      "category": "monitor",
+      "modelName": "MONITOR 24 POL"
     }
   ],
   "history": [
