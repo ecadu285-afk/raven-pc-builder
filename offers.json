@@ -1604,6 +1604,20 @@
       "priceCondition": "",
       "category": "case",
       "modelName": "MINI TOWER DE VIDRO"
+    },
+    {
+      "partId": "custom41-keyboard-1129f850cf54e9690c",
+      "store": "amazon",
+      "price": 115.71,
+      "checkedAt": "2026-11-20",
+      "url": "https://link.amazon/B08WGbIdg",
+      "condition": "new",
+      "affiliate": true,
+      "title": "Teclado Mecânico Gamer Redragon",
+      "imageUrl": "https://a.co/d/036AVR1z",
+      "priceCondition": "",
+      "category": "keyboard",
+      "modelName": "TECLADO MECANICO"
     }
   ],
   "history": [
