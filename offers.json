@@ -1590,6 +1590,20 @@
       "priceCondition": "",
       "category": "laptop",
       "modelName": "Intel Celeron 14in 8GB RAM 256GB SSD"
+    },
+    {
+      "partId": "custom41-case-75a852698f22e63fd8",
+      "store": "shopee",
+      "price": 142.5,
+      "checkedAt": "2026-11-20",
+      "url": "https://s.shopee.com.br/3qOoDlFv0g",
+      "condition": "new",
+      "affiliate": true,
+      "title": "Mini-Tower, Lateral de Vidro",
+      "imageUrl": "https://down-br.img.susercontent.com/file/sg-11134201-7rdyw-mc28nvdour408d@resize_w450_nl.webp",
+      "priceCondition": "",
+      "category": "case",
+      "modelName": "MINI TOWER DE VIDRO"
     }
   ],
   "history": [
