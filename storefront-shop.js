@@ -390,7 +390,9 @@ async function start(){
      const fresh=shown.filter(isRecent).length,old=shown.length-fresh;
      const date=typeof data.updatedAt==='string'&&/^\d{4}-\d{2}-\d{2}$/.test(data.updatedAt)
        ? data.updatedAt.split('-').reverse().join('/'):'não informada';
-     status.textContent='Data indicada no catálogo: '+date+' · '+fresh+' anúncio(s) com preço consultado nos últimos 14 dias · '+old+' com preço antigo. Os valores não são verificados em tempo real; confirme preço, disponibilidade e frete na loja.';
+     status.textContent=fresh+' anúncio(s) com preço consultado nos últimos 14 dias · '+old+' com preço antigo. Os valores não são verificados em tempo real; confira preço, frete e disponibilidade na loja.';
+     const aboutDates=$('catalog-about-dates');
+     if(aboutDates)aboutDates.textContent='Última atualização informada do catálogo: '+date+'. Data de publicação dos anúncios: não informada. Datas individuais de consulta aparecem em “Sobre o anúncio” nos produtos.';
      status.classList.toggle('warning',fresh===0||old>fresh);
    }
    groups=grouped(all.filter(o=>!['pc','kit'].includes(category(o))));
