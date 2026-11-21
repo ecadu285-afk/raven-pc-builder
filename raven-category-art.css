@@ -1,0 +1,8 @@
+/* Raven: miniaturas roxas de categoria. Somente fallback para ofertas sem foto. */
+.raven-category-art{position:absolute;inset:0;display:grid;place-items:center;padding:10px;background:#fcfaf7;overflow:hidden}
+.raven-category-art-tile{width:auto;height:94%;max-width:92%;aspect-ratio:1/1;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:5px;background:linear-gradient(145deg,#eddcff 0%,#d5b4f5 48%,#bf99ec 100%);border-radius:22%;box-shadow:0 8px 20px #5b298e26,inset 0 1px 0 #ffffffb0;padding:8px 9px 6px}
+.raven-category-art-icon{display:block;width:min(66%,92px);height:58%;min-height:30px;filter:drop-shadow(0 2px 1px #30135e10)}
+.raven-category-art-accent{display:block;width:31%;height:5px;min-height:3px;border-radius:99px;background:#ff8a25}
+.raven-category-art-name{font:900 clamp(9px,1.3vw,16px)/1.13 system-ui,Arial,sans-serif;color:#32184f;letter-spacing:.015em;text-align:center;overflow-wrap:break-word;max-width:100%;margin-top:2px}
+.catalog-v8 .offer-visual:has(.raven-category-art) .offer-photo-label,.home-v8 .offer-visual:has(.raven-category-art) .offer-photo-label{font-size:9px;color:#6c5881;background:#faf7ffeb;right:6px;bottom:5px}
+@media(max-width:600px){.raven-category-art{padding:5px}.raven-category-art-tile{border-radius:20%;gap:3px;padding:4px}.raven-category-art-icon{width:58%;height:55%}.raven-category-art-accent{height:3px;min-height:2px}.raven-category-art-name{font-size:clamp(8px,2.3vw,11px)}}
