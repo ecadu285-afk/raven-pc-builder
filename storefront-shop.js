@@ -88,12 +88,21 @@ function productPlaceholder(type){
  return ravenCategoryArt(type);
 }
 function categorySymbols(){
- // Remover qualquer fotografia genérica previamente inserida em categorias.
- for(const link of document.querySelectorAll('.cat-card')){
-   const frame=link.querySelector('.cat-symbol');
-   const key=new URL(link.href).searchParams.get('categoria');
-   if(!frame||!key)continue;
-   frame.replaceChildren(document.createTextNode(glyphs[key]||'PC'));
+ // Usar as artes roxas ORIGINAIS por categoria, inclusive Kits, PCs e Gabinetes.
+ const artwork=new Set(['gpu','cpu','board','ram','ssd','psu','case','hdd','kit','pc']);
+ for(const link of document.querySelectorAll('.catalog-quick .cat-card')){
+  const frame=link.querySelector('.cat-symbol');
+  if(!frame)continue;
+  const params=new URL(link.href).searchParams;
+  const key=params.get('categoria')||params.get('tipo');
+  if(!key)continue;
+  const text=key==='case'?'GAB':key==='pc'?'PC':key==='kit'?'KIT':glyphs[key]||'PC';
+  if(!artwork.has(key)){frame.replaceChildren(document.createTextNode(text));continue;}
+  const image=document.createElement('img');
+  image.src='raven-art/'+key+'.webp';
+  image.alt='';image.loading='lazy';image.decoding='async';
+  image.onerror=()=>frame.replaceChildren(document.createTextNode(text));
+  frame.replaceChildren(image);
  }
 }
 function updateCategoryAvailability(){
@@ -136,7 +145,9 @@ function productCard(item){
  if(!priceState.show)price.classList.add('raven-price-withheld');
  article.dataset.dataQuality=quality.state;
  article.title='Completude do anúncio: '+quality.reasons.slice(0,3).join('; ');
- price.append(element('small','',priceState.label));
+ price.append(element('small','',
+  o.store==='amazon'?'Preço confirmado diretamente na Amazon':
+  priceState.show?'Preço cadastrado · confira na loja':'Valor a confirmar · consulte a loja'));
  if(!priceState.show){
   article.classList.add(o.store==='amazon'?'raven-partner-price-hidden':'raven-stale-offer');
   article.setAttribute('data-price-status','a-consultar');
@@ -202,7 +213,16 @@ function productCard(item){
  compareLink.setAttribute('aria-label','Comparar anúncios da referência interna de '+item.model);
  const detailLink=element('a','raven91-card-compare','Ficha técnica e avaliações');
  detailLink.href='produto.html?produto='+encodeURIComponent(o.partId);
- content.append(technical,historyLink,marketActions,detailLink,compareLink,note,a);
+ const about=element('details','raven-offer-about');
+ about.append(
+  element('summary','','Sobre o anúncio'),
+  element('p','','Loja parceira: '+partnerName),
+  element('p','','Última consulta informada: '+(o.checkedAt?.split('-').reverse().join('/')||'não informada')),
+  element('p','','Data de publicação: não informada no catálogo'),
+  element('p','','Condição: '+(o.condition==='used'?'usado':o.condition==='refurbished'?'recondicionado':'novo')),
+  element('p','','Os preços e a disponibilidade podem mudar sem aviso.')
+ );
+ content.append(technical,about,historyLink,marketActions,detailLink,compareLink,note,a);
  if(item.primary.length>1||item.others.length){
    const detail=element('details','offer-alternatives');
    detail.append(element('p','offer-comparison-warning','Compare capacidade, revisão, marca e condição. Anúncios agrupados podem não ter exatamente o mesmo SKU.'));
@@ -405,4 +425,5 @@ async function start(){
    renderUserCollections();
  }catch(err){root.replaceChildren(element('div','no-offers','Não foi possível carregar ofertas. Tente atualizar a página.'));const line=$('catalog-count');if(line)line.textContent='Falha ao carregar arquivo de ofertas.';}
 }
+categorySymbols();
 start();
