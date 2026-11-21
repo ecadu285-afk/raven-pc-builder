@@ -132,16 +132,25 @@ function productCard(item){
  }else visual.append(productPlaceholder(item.type));
  visual.append(element('span','offer-label',labels[item.type]||'Componente'),caption);
  const content=element('div','offer-info');
- const storeBadge=element('span','raven91-store-badge',shops[o.store]?.name||o.store);
+ const partnerName=shops[o.store]?.name||'Loja parceira';
+ const partner=element('div','raven-partner-line');
+ partner.append(
+  element('span','raven-partner-tag','LOJA PARCEIRA'),
+  element('span','raven-partner-name',partnerName)
+ );
  const title=element('h3','',item.model);
  const quality=offerQuality(o);
  const priceState=publicPriceState(o);
- const store=element('div','offer-store',(item.primary.length>1?item.primary.length+' lojas · ':'')+'Anúncio em '+shops[o.store].name+(o.condition==='used'?' · Usado':''));
- const price=element('div','offer-price',priceState.show?BRL(o.price):'Consultar preço na loja');
+ const store=element('div','offer-store',(item.primary.length>1?item.primary.length+' lojas · ':'')+'Venda na '+partnerName+(o.condition==='used'?' · Usado':''));
+ const price=element('div','offer-price',priceState.show?BRL(o.price):o.store==='amazon'?'Preço na Amazon':'Preço a confirmar');
+ if(!priceState.show)price.classList.add('raven-price-withheld');
  article.dataset.dataQuality=quality.state;
  article.title='Completude do anúncio: '+quality.reasons.slice(0,3).join('; ');
  price.append(element('small','',priceState.label));
- if(!priceState.show){article.classList.add('raven-stale-offer');article.setAttribute('data-price-status','a-consultar');}
+ if(!priceState.show){
+  article.classList.add(o.store==='amazon'?'raven-partner-price-hidden':'raven-stale-offer');
+  article.setAttribute('data-price-status','a-consultar');
+ }
 
  const key=item.id.slice(0,180);
  const save=element('button','market-action','♡ Salvar');
@@ -165,8 +174,9 @@ function productCard(item){
  cart.addEventListener('click',()=>change('cart',cart));
  review.addEventListener('click',()=>openMarketReviews(item));
  marketActions.append(save,cart,review);
- const a=element('a','offer-link',priceState.show?'Ver oferta na loja':'Consultar preço na loja');a.href=safeUrl(o.url,o.store);a.target='_blank';a.rel=o.affiliate?'noopener noreferrer sponsored':'noopener noreferrer';
- const note=element('p','offer-trust-note',o.affiliate?'Publicidade · este link pode gerar comissão. Compra na loja parceira.':'Compra na loja parceira.');
+ const a=element('a','offer-link',o.store==='amazon'?'Ver preço na Amazon':priceState.show?'Ver oferta na '+partnerName:'Ver preço na '+partnerName);
+ a.href=safeUrl(o.url,o.store);a.target='_blank';a.rel=o.affiliate?'noopener noreferrer sponsored':'noopener noreferrer';
+ const note=element('p','offer-trust-note','Compra e pagamento na '+partnerName+'. A Raven não processa pedidos.'+(o.affiliate?' Link de afiliado: podemos receber comissão.':''));
  const evidence=evidenceFor(o,catalog);
  const modelAudit=identityAudit(o,known.get(o.partId));
  const evidenceLine=element('p','offer-model-evidence',evidence.label+' · '+evidence.imageStatus);
@@ -179,7 +189,7 @@ function productCard(item){
  quality.needsModel?'Identificação incompleta · confira marca, referência e capacidade na loja.':
  quality.needsPhoto?'Foto não cadastrada · confirme o modelo no anúncio.':
  'Dados cadastrados · confirme vendedor, estado e preço na loja.');
- content.append(storeBadge,title,store,price,caution,evidenceLine);
+ content.append(partner,title,store,price,caution,evidenceLine);
  const detailFacts=productFacts(o,known.get(o.partId));
  const technical=element('details','offer-technical');
  const technicalSummary=element('summary','',detailFacts.length?'Ficha técnica disponível ('+detailFacts.length+' dados)':'Detalhes e identificação');
