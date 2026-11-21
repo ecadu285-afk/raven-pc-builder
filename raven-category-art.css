@@ -19,4 +19,19 @@
 .home-v8 .offer-trust-note{color:#685f76;font-size:11px;line-height:1.5}
 
 /* Raven — imagens de categorias de periféricos, leves e consistentes com as artes roxas. */
-.raven-category-art .raven-peripheral-card-art{display:block;width:min(100%,290px);height:auto;max-height:100%;aspect-ratio:1/1;object-fit:contain;border-radius:16px;}
+.raven-category-art .raven-peripheral-card-art{
+ display:block;
+ box-sizing:border-box;
+ width:min(100%,178px)!important;
+ height:min(100%,178px)!important;
+ max-width:100%!important;
+ max-height:100%!important;
+ aspect-ratio:1/1;
+ padding:0!important;
+ margin:0!important;
+ object-fit:contain!important;
+ object-position:center!important;
+ border-radius:12px;
+ background:transparent!important;
+ transform:none!important;
+}
