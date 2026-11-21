@@ -346,7 +346,7 @@ function catalogPage(){
  const array=catalogDisplayEntries(filtered,mode,grouped);
  array.sort((a,b)=>ord==='relevance'&&search?.value?smartSearchScore(b.best,search.value,known.get(b.best.partId))-smartSearchScore(a.best,search.value,known.get(a.best.partId))||a.best.price-b.best.price:ord==='highest'?b.best.price-a.best.price:ord==='recent'?b.best.checkedAt.localeCompare(a.best.checkedAt):a.best.price-b.best.price);
  const count=$('catalog-count');
- if(count)count.textContent=array.length?'Explore as ofertas disponíveis':'Nenhum produto encontrado para estes filtros.'; '+filtered.filter(x=>!isRecent(x)).length+' antigos). Anúncios suspensos não são exibidos.';
+ if(count)count.textContent=array.length?'Explore as ofertas disponíveis':'Nenhum produto encontrado para estes filtros.';
  root.replaceChildren(...array.slice(0,visibleLimit).map(productCard));
  if(!array.length){
   const emptyCategory=type?.value&&type.value!=='all'&&!all.some(o=>category(o)===type.value);
