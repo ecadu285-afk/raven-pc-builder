@@ -117,15 +117,9 @@ function updateCategoryAvailability(){
 function productCard(item){
  const o=item.best,article=element('article','offer-card');
  const visual=element('div','offer-visual');
- const photo=photoForGroup(item);
- const caption=element('span','offer-photo-label',photo?imageEvidence(photo.offer).label:'Ilustração da categoria');
- if(photo){
-   const img=document.createElement('img');
-   img.src=photo.url;img.loading='lazy';img.decoding='async';
-   img.alt='Foto cadastrada para '+item.model;
-   img.onerror=()=>{img.remove();visual.prepend(productPlaceholder(item.type));caption.textContent='Ilustração da categoria';};
-   visual.append(img);
- }else visual.append(productPlaceholder(item.type));
+ // Raven: somente arte da categoria na vitrine; fotos originais continuam no cadastro.
+ const caption=element('span','offer-photo-label','Imagem ilustrativa · categoria');
+ visual.append(productPlaceholder(item.type));
  visual.append(element('span','offer-label',labels[item.type]||'Componente'),caption);
  const content=element('div','offer-info');
  const partnerName=shops[o.store]?.name||'Loja parceira';
