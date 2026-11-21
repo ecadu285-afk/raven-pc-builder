@@ -14,6 +14,7 @@ import {offerQuality,rankFeaturedGroups} from './raven90-quality.mjs';
 import {imageEvidence,safeProductImage,countCategories} from './raven91-catalog.mjs';
 import {identityAudit,smartSearchScore,matchedSpecifications} from './raven92-core.mjs';
 import {hydrateCatalogUI} from './raven92-catalog-ui.js';
+import {ravenCategoryArt} from './raven-category-art.js';
 
 const known=new Map(Object.entries(catalog).flatMap(([category,items])=>items.map(item=>[item.id,{...item,category}])));
 const labels={cpu:'Processadores',board:'Placas-mãe',gpu:'Placas de vídeo',ram:'Memórias RAM',ssd:'SSDs',hdd:'HDs',psu:'Fontes',case:'Gabinetes',cooler:'Coolers',other:'Outras peças',keyboard:'Teclados',headset:'Fones e headsets',mouse:'Mouses',chair:'Cadeiras',mousepad:'Mousepads',monitor:'Monitores',fan:'Fans e ventoinhas',powerstrip:'Filtros de linha',laptop:'Notebooks',phone:'Celulares',desk:'Mesas'};
@@ -84,12 +85,7 @@ function photoForGroup(item){
  return url?{url,offer}:null;
 }
 function productPlaceholder(type){
- const root=element('div','hardware-placeholder placeholder-'+type);
- root.setAttribute('aria-label','Miniatura estilizada da categoria, não é imagem do modelo');
- const object=element('span','hardware-object',glyphs[type]||'PC');
- object.setAttribute('aria-hidden','true');
- root.append(object);
- return root;
+ return ravenCategoryArt(type);
 }
 function categorySymbols(){
  // Remover qualquer fotografia genérica previamente inserida em categorias.
@@ -122,12 +118,12 @@ function productCard(item){
  const o=item.best,article=element('article','offer-card');
  const visual=element('div','offer-visual');
  const photo=photoForGroup(item);
- const caption=element('span','offer-photo-label',photo?imageEvidence(photo.offer).label:'Sem foto deste modelo');
+ const caption=element('span','offer-photo-label',photo?imageEvidence(photo.offer).label:'Ilustração da categoria');
  if(photo){
    const img=document.createElement('img');
    img.src=photo.url;img.loading='lazy';img.decoding='async';
    img.alt='Foto cadastrada para '+item.model;
-   img.onerror=()=>{img.remove();visual.prepend(productPlaceholder(item.type));caption.textContent='Sem foto deste modelo';};
+   img.onerror=()=>{img.remove();visual.prepend(productPlaceholder(item.type));caption.textContent='Ilustração da categoria';};
    visual.append(img);
  }else visual.append(productPlaceholder(item.type));
  visual.append(element('span','offer-label',labels[item.type]||'Componente'),caption);
