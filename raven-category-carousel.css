@@ -31,3 +31,8 @@
  .catalog-v8 .categories.raven-carousel-track .cat-card strong{font-size:11px}
 }
 @media(prefers-reduced-motion:reduce){.catalog-v8 .catalog-quick .categories.raven-carousel-track{scroll-behavior:auto!important}}
+
+/* Datas e procedência ficam em Sobre, sem poluir os cards. */
+.catalog-v8 .raven-catalog-about{margin:9px 0 17px;padding:11px 14px;border:1px solid #e3dbea;border-radius:12px;background:#fff;color:#594f68;font-size:12px}
+.catalog-v8 .raven-catalog-about summary{font-weight:850;color:#3c275f;cursor:pointer}
+.catalog-v8 .raven-catalog-about p{margin:8px 0 0;line-height:1.55}
