@@ -69,3 +69,17 @@
 
 /* Raven 6.2: nota de procedência dos anúncios, sem selo de verificação fictício */
 .offer-trust-note{font-size:.76rem;line-height:1.42;opacity:.83;margin:2px 0 7px}
+
+/* Parceiros Raven: procedência clara sem alegar que a Raven seja a vendedora. */
+.catalog-v8 .raven-partner-line{display:flex;align-items:center;gap:7px;justify-content:space-between;flex-wrap:wrap;margin-bottom:1px}
+.catalog-v8 .raven-partner-tag{display:inline-flex;align-items:center;padding:5px 7px;border-radius:6px;background:#e9f6f0;color:#17634b;border:1px solid #c8e7d8;font-size:9px;font-weight:900;letter-spacing:.055em}
+.catalog-v8 .raven-partner-name{font-size:12px;line-height:1.25;color:#292144;font-weight:850}
+.catalog-v8 .raven-partner-price-hidden{border-color:#e5dfef;background:#fff}
+.catalog-v8 .raven-partner-price-hidden .raven-price-withheld{font-size:clamp(17px,1.8vw,21px);letter-spacing:-.025em;color:#302744}
+.catalog-v8 .raven-partner-price-hidden .offer-price small{font-size:11px;color:#6f667b;line-height:1.45}
+.catalog-v8 .raven-partner-price-hidden .offer-link{background:#ff843e!important;color:#20172b!important}
+.catalog-v8 .raven-partner-price-hidden .offer-link:hover{background:#f1702b!important}
+.catalog-v8 .offer-trust-note{opacity:1;color:#685f76;font-size:11px;line-height:1.55}
+.catalog-v8 .raven-partner-disclosure{display:flex;gap:8px 18px;align-items:flex-start;flex-wrap:wrap;padding:14px 17px;border:1px solid #e0d9ec;border-radius:12px;background:#faf9fd;margin:15px 0;color:#5b5269;font-size:12px;line-height:1.55}
+.catalog-v8 .raven-partner-disclosure strong{color:#2d2149;font-size:12px}
+@media(max-width:460px){.catalog-v8 .raven-partner-tag{font-size:8px}.catalog-v8 .raven-partner-name{font-size:11px}.catalog-v8 .raven-partner-disclosure{padding:12px}}
