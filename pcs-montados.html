@@ -22,9 +22,10 @@
 <main><div class="eyebrow">VITRINE EXCLUSIVA · PC COMPLETO OU KIT</div><h1>Prefere comprar seu <span>computador já montado?</span></h1><p class="lead">Aqui você pesquisa PCs completos e kits de upgrade em uma área separada das peças individuais. Escolha um orçamento, ordene do menor para o maior preço e abra as ofertas diretamente na Shopee, Mercado Livre ou Amazon.</p>
 <div class="actions"><a class="btn secondary" href="orcamento.html">Quero montar escolhendo as peças</a><a class="btn secondary" href="produtos.html">Ver componentes avulsos</a></div>
 <section class="panel"><h2>Encontre um PC na sua faixa de preço</h2><div class="form"><label>Tipo de produto<select id="type"><option value="pc">PC completo montado</option><option value="kit">Kit de upgrade (sem gabinete completo)</option></select></label><label>Preço mínimo (R$)<input type="number" id="min" min="0" step="50" placeholder="Sem mínimo"></label><label>Preço máximo (R$)<input type="number" id="max" min="0" step="50" placeholder="Sem máximo"></label><label>Ordenação<select id="sort"><option value="asc">Menor preço primeiro</option><option value="desc">Maior preço primeiro</option></select></label></div><div class="form" style="margin-top:14px;grid-template-columns:2fr 1fr auto"><label>Procurar configuração<input id="search" type="search" placeholder="Ex.: Ryzen 5, i5, 16GB, RTX" autocomplete="off"></label><label>Loja<select id="store"><option value="all">Todas</option><option value="shopee">Shopee</option><option value="mercadolivre">Mercado Livre</option><option value="amazon">Amazon</option><option value="kabum">KaBuM!</option><option value="terabyte">TerabyteShop</option></select></label><button id="clear" class="btn secondary" type="button">Limpar filtros</button></div><p id="loadStatus" class="footnote">Carregando ofertas publicadas...</p></section>
-<section class="panel"><div class="eyebrow">ANÚNCIOS CADASTRADOS</div><h2>Modelos e preços</h2><p id="counter" class="count" role="status">Carregando...</p><div class="pc-grid" id="results"></div></section>
+<section class="panel"><div class="eyebrow">ENCONTRE SEU COMPUTADOR</div><h2>PCs e kits disponíveis</h2><p id="counter" class="count" role="status">Carregando...</p><div class="pc-grid" id="results"></div></section>
 <section class="panel"><h2>Antes de comprar</h2><p class="lead">Confira no anúncio a configuração exata, placa-mãe, GPU, quantidade de RAM, armazenamento, fonte, garantia, condição e prazo. O site não processa pagamentos e não consulta estoque em tempo real. Kits de upgrade podem não incluir gabinete, fonte ou armazenamento.</p></section></main><footer>© 2026 Raven Creatives Studios · Compras em lojas parceiras · <a href="afiliados.html">Transparência comercial</a></footer>
 <script type="module">import {publicOffers} from './offer-policy.mjs';
+import {publicPriceState} from './price-visibility.mjs';
 const $=id=>document.getElementById(id),money=n=>Number(n).toLocaleString('pt-BR',{style:'currency',currency:'BRL'}),shops={amazon:{name:'Amazon',domains:['amazon.com.br','amazon.com','amzn.to','link.amazon']},shopee:{name:'Shopee',domains:['shopee.com.br','shopee.com','shope.ee']},mercadolivre:{name:'Mercado Livre',domains:['mercadolivre.com.br','mercadolivre.com','meli.la']},kabum:{name:'KaBuM!',domains:['kabum.com.br','awin1.com','tidd.ly']},terabyte:{name:'TerabyteShop',domains:['terabyteshop.com.br']}};let offers=[];
 const normalized=s=>String(s||'').normalize('NFD').replace(/[\u0300-\u036f]/g,'').toLowerCase().replace(/\s+/g,' ').trim();
 function safeUrl(text,domains){try{const u=new URL(text);return u.protocol==='https:'&&!u.username&&!u.password&&domains.some(h=>u.hostname===h||u.hostname.endsWith('.'+h))?u.href:null}catch{return null}}
@@ -35,19 +36,17 @@ function isRecentPc(o){const dt=Date.parse(String(o?.checkedAt||'')+'T12:00:00Z'
 function node(tag,cls,value){const x=document.createElement(tag);if(cls)x.className=cls;if(value!==undefined)x.textContent=value;return x}
 function key(o){return [typeOf(o),normalized(o.modelName||o.title||o.partId),o.condition==='used'?'used':'new'].join('|')}
 function group(items){const map=new Map();for(const o of items){const k=key(o);if(!map.has(k))map.set(k,[]);map.get(k).push(o)}return [...map.values()].map(arr=>{arr.sort((a,b)=>Number(isRecentPc(b))-Number(isRecentPc(a))||a.price-b.price);const seen=new Set(),byStore=[],similar=[];for(const o of arr){(seen.has(o.store)?similar:byStore).push(o);seen.add(o.store)}return {best:arr[0],all:arr,byStore,similar}})}
-function offerRow(o){const row=node('div','pc-offer'),name=node('div'),bold=node('strong','',shops[o.store].name),small=node('div','',money(o.price));const a=node('a','',isRecentPc(o)?'Ver anúncio ↗':'Conferir preço ↗');a.href=safeUrl(o.url,shops[o.store].domains);a.target='_blank';a.rel=o.affiliate?'noopener noreferrer sponsored':'noopener noreferrer';name.append(bold,small);row.append(name,a);return row}
+function offerRow(o){const row=node('div','pc-offer'),name=node('div'),bold=node('strong','',shops[o.store].name),small=node('div','',publicPriceState(o).show?money(o.price):'Preço na loja');const a=node('a','','Ver anúncio ↗');a.href=safeUrl(o.url,shops[o.store].domains);a.target='_blank';a.rel=o.affiliate?'noopener noreferrer sponsored':'noopener noreferrer';name.append(bold,small);row.append(name,a);return row}
 function pcCard(g){const o=g.best,card=node('article','pc-card'),photo=node('div','pc-photo'),inner=node('div','pc-content');const type=typeOf(o)==='kit'?'kit':'pc';const img=node('img');img.src='raven-art/'+type+'.webp';img.loading='lazy';img.alt='Imagem ilustrativa da categoria '+(type==='kit'?'kit de upgrade':'PC completo')+'; não representa o modelo exato';img.onerror=()=>{photo.textContent=type==='kit'?'KIT':'PC';};photo.append(img);inner.append(
   node('span','tag',typeOf(o)==='kit'?'KIT DE UPGRADE':'PC MONTADO'),
   node('h3','',o.modelName||o.title||'Computador completo'),
-  node('div','pc-price',money(o.price)),
-  node('p','pc-meta',(isRecentPc(o)?'Menor preço cadastrado':'Preço antigo · reconferir no anúncio')+' · '+g.all.length+' oferta(s)')
+  node('div','pc-price',publicPriceState(o).show?money(o.price):o.store==='amazon'?'Ver preço na Amazon':'Preço na loja')
  );
  if(o.specs||o.description)inner.append(node('p','pc-meta',String(o.specs||o.description).slice(0,400)));
  const about=node('details','pc-about');
  about.append(
   node('summary','','Sobre o anúncio'),
-  node('p','','Última consulta informada: '+o.checkedAt.split('-').reverse().join('/')),
-  node('p','','Data de publicação: não informada no catálogo'),
+  node('p','','Imagem ilustrativa; confirme o modelo e as especificações no anúncio.'),
   node('p','','Loja parceira: '+(shops[o.store]?.name||'não informada')),
   node('p','','Preços, disponibilidade e frete podem variar na loja.')
  );
@@ -58,8 +57,8 @@ function render(){
  const filtered=offers.filter(o=>typeOf(o)===type&&(store==='all'||o.store===store)&&o.price>=low&&o.price<=high&&(!q||normalized([o.title,o.modelName,o.specs,o.description].join(' ')).includes(q)));
  const groups=group(filtered);
  groups.sort((a,b)=>sort==='desc'?b.best.price-a.best.price:a.best.price-b.best.price);
- const root=$('results');root.replaceChildren();$('counter').textContent=groups.length+' modelo(s) · '+filtered.length+' anúncio(s)';
- if(!groups.length){const div=node('div','empty',type==='pc'?'Ainda não há PCs montados publicados para este filtro. Publique PCs aprovados no robô pela seção Kits e PCs completos → Prévia dos PCs aprovados.':'Ainda não há kits de upgrade publicados para este filtro. Cadastre os kits separadamente das peças avulsas.');root.append(div);return}
+ const root=$('results');root.replaceChildren();$('counter').textContent=groups.length?'Escolha o modelo e consulte a loja parceira.':'Nenhum produto encontrado para estes filtros.';
+ if(!groups.length){const div=node('div','empty',type==='pc'?'Não encontramos PCs montados para estes filtros. Tente outra busca.':'Não encontramos kits de upgrade para estes filtros. Tente outra busca.');root.append(div);return}
  groups.slice(0,90).forEach(g=>root.append(pcCard(g)));
 }
 // O Raven Bot publica PCs e kits em arquivos independentes, além do offers.json.
@@ -97,7 +96,7 @@ async function load(){
   const unique=new Map();
   for(const row of combined)unique.set([typeOf(row),row.store,row.url].join('|'),row);
   offers=[...unique.values()];
-  $('loadStatus').textContent='Catálogo carregado: '+offers.filter(x=>typeOf(x)==='pc').length+' oferta(s) de PC e '+offers.filter(x=>typeOf(x)==='kit').length+' de kit. Preços, estoque e frete devem ser confirmados na loja.';
+  $('loadStatus').textContent='Ofertas de lojas parceiras. Confira condições, preço e disponibilidade diretamente no anúncio.';
   render();
  }catch(e){$('loadStatus').textContent='Falha ao carregar ofertas: '+e.message}
 }
