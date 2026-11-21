@@ -54,5 +54,16 @@ export function ravenCategoryArt(type){
  svg.innerHTML=icons[kind];
  const accent=document.createElement('span');accent.className='raven-category-art-accent';accent.setAttribute('aria-hidden','true');
  const label=document.createElement('strong');label.className='raven-category-art-name';label.textContent=labels[kind];
- tile.append(svg,accent,label);root.append(tile);return root;
+ tile.append(svg,accent,label);root.append(tile);
+ // As dez artes geradas originalmente sao servidas em WebP. A miniatura vetorial
+ // permanece como reserva caso a imagem ainda nao tenha sido publicada.
+ if(['gpu','cpu','board','ram','ssd','psu','case','hdd','kit','pc'].includes(kind)){
+  const img=document.createElement('img');img.className='raven-category-art-original';
+  img.src='raven-art/'+kind+'.webp';img.loading='lazy';img.decoding='async';
+  img.alt='Arte roxa ilustrativa de '+labels[kind];
+  img.addEventListener('load',()=>{tile.hidden=true;});
+  img.addEventListener('error',()=>{img.remove();});
+  root.append(img);
+ }
+ return root;
 }
