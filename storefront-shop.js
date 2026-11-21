@@ -113,14 +113,13 @@ function updateCategoryAvailability(){
    let count=link.querySelector('.raven91-cat-count');
    if(!count){count=element('small','raven91-cat-count');link.append(count);}
    const value=counts[id]||0;
-   count.textContent=value?value+' anúncio(s) cadastrado(s)':'Em preparação · sem anúncios';
+   count.textContent=value?'Ver produtos':'Em breve';
    link.classList.toggle('raven91-category-empty',!value);
  }
  const coverage=$('raven91-catalog-coverage');
  if(coverage){
-   const nonEmpty=Object.keys(counts).filter(key=>counts[key]>0).length;
    const message=coverage.querySelector('[data-coverage]');
-   if(message)message.textContent=all.length+' anúncios elegíveis · '+nonEmpty+' categorias com ofertas. Categorias em preparação não são preenchidas artificialmente.';
+   if(message)message.textContent='Encontre peças e compare ofertas das lojas parceiras.';
  }
 }
 function productCard(item){
@@ -144,10 +143,8 @@ function productCard(item){
  const price=element('div','offer-price',priceState.show?BRL(o.price):o.store==='amazon'?'Preço na Amazon':'Preço a confirmar');
  if(!priceState.show)price.classList.add('raven-price-withheld');
  article.dataset.dataQuality=quality.state;
- article.title='Completude do anúncio: '+quality.reasons.slice(0,3).join('; ');
- price.append(element('small','',
-  o.store==='amazon'?'Preço confirmado diretamente na Amazon':
-  priceState.show?'Preço cadastrado · confira na loja':'Valor a confirmar · consulte a loja'));
+ article.title=item.model+' — '+partnerName; ');
+ price.append(element('small','',priceState.show?'Confirme valor e disponibilidade na loja':'Consulte o valor na loja parceira'));
  if(!priceState.show){
   article.classList.add(o.store==='amazon'?'raven-partner-price-hidden':'raven-stale-offer');
   article.setAttribute('data-price-status','a-consultar');
@@ -178,19 +175,8 @@ function productCard(item){
  const a=element('a','offer-link',o.store==='amazon'?'Ver preço na Amazon':priceState.show?'Ver oferta na '+partnerName:'Ver preço na '+partnerName);
  a.href=safeUrl(o.url,o.store);a.target='_blank';a.rel=o.affiliate?'noopener noreferrer sponsored':'noopener noreferrer';
  const note=element('p','offer-trust-note','Compra e pagamento na '+partnerName+'. A Raven não processa pedidos.'+(o.affiliate?' Link de afiliado: podemos receber comissão.':''));
- const evidence=evidenceFor(o,catalog);
- const modelAudit=identityAudit(o,known.get(o.partId));
- const evidenceLine=element('p','offer-model-evidence',evidence.label+' · '+evidence.imageStatus);
- if(evidence.issues.length){
-  evidenceLine.classList.add('needs-review');
-  evidenceLine.textContent='Revisão de modelo necessária: '+evidence.issues.join('; ')+'. Confira o SKU antes da compra.';
- }
- const caution=element('p','raven90-product-check',
- modelAudit.reasons.length?'Referência a conferir: '+modelAudit.reasons.slice(0,2).join('; ')+'.':
- quality.needsModel?'Identificação incompleta · confira marca, referência e capacidade na loja.':
- quality.needsPhoto?'Foto não cadastrada · confirme o modelo no anúncio.':
- 'Dados cadastrados · confirme vendedor, estado e preço na loja.');
- content.append(partner,title,store,price,caution,evidenceLine);
+ // Diagnósticos e pendências de revisão permanecem nos dados administrativos.
+ content.append(partner,title,store,price);
  const detailFacts=productFacts(o,known.get(o.partId));
  const technical=element('details','offer-technical');
  const technicalSummary=element('summary','',detailFacts.length?'Ficha técnica disponível ('+detailFacts.length+' dados)':'Detalhes e identificação');
@@ -206,8 +192,7 @@ function productCard(item){
  }else{
   technical.append(element('p','offer-spec-disclaimer','Não há ficha técnica confiável para esta referência. Confira as especificações diretamente no anúncio.'));
  }
- const historyLink=element('a','offer-history-link','Histórico de preços registrados');
- historyLink.href='historico.html?produto='+encodeURIComponent(o.partId);
+ // O histórico de conferências não aparece no cartão público.
  const compareLink=element('a','raven91-card-compare','Comparar lojas');
  compareLink.href='comparar-ofertas.html?produto='+encodeURIComponent(o.partId);
  compareLink.setAttribute('aria-label','Comparar anúncios da referência interna de '+item.model);
@@ -217,19 +202,18 @@ function productCard(item){
  about.append(
   element('summary','','Sobre o anúncio'),
   element('p','','Loja parceira: '+partnerName),
-  element('p','','Última consulta informada: '+(o.checkedAt?.split('-').reverse().join('/')||'não informada')),
-  element('p','','Data de publicação: não informada no catálogo'),
+  element('p','','A miniatura é ilustrativa; confira a foto exata no anúncio da loja.'),
   element('p','','Condição: '+(o.condition==='used'?'usado':o.condition==='refurbished'?'recondicionado':'novo')),
   element('p','','Os preços e a disponibilidade podem mudar sem aviso.')
  );
- content.append(technical,about,historyLink,marketActions,detailLink,compareLink,note,a);
+ content.append(technical,about,marketActions,detailLink,compareLink,note,a);
  if(item.primary.length>1||item.others.length){
    const detail=element('details','offer-alternatives');
    detail.append(element('p','offer-comparison-warning','Compare capacidade, revisão, marca e condição. Anúncios agrupados podem não ter exatamente o mesmo SKU.'));
    detail.append(element('summary','',(item.primary.length+item.others.length-1)+' outra(s) oferta(s) para comparar'));
    for(const v of item.items.filter(x=>x!==o)){
      const state=publicPriceState(v);
-     const link=element('a','',shops[v.store].name+' · '+(state.show?BRL(v.price):'Consultar preço na loja')+' · '+v.checkedAt.split('-').reverse().join('/')+(v.affiliate?' · Publicidade':''));
+     const link=element('a','',shops[v.store].name+' · '+(state.show?BRL(v.price):'Consultar preço na loja')+(v.affiliate?' · Publicidade':''));
      if(!state.show)link.classList.add('raven-alt-stale');
      link.href=safeUrl(v.url,v.store);link.target='_blank';link.rel=v.affiliate?'noopener noreferrer sponsored':'noopener noreferrer';detail.append(link);
    }
@@ -361,9 +345,8 @@ function catalogPage(){
      matchesSpecifications:(o,f)=>matchedSpecifications(o,f,known.get(o.partId))});
  const array=catalogDisplayEntries(filtered,mode,grouped);
  array.sort((a,b)=>ord==='relevance'&&search?.value?smartSearchScore(b.best,search.value,known.get(b.best.partId))-smartSearchScore(a.best,search.value,known.get(a.best.partId))||a.best.price-b.best.price:ord==='highest'?b.best.price-a.best.price:ord==='recent'?b.best.checkedAt.localeCompare(a.best.checkedAt):a.best.price-b.best.price);
- const modelCount=grouped(filtered).length;
  const count=$('catalog-count');
- if(count)count.textContent=filtered.length+' oferta(s) elegível(is) em '+modelCount+' modelo(s) · mostrando '+Math.min(visibleLimit,array.length)+' de '+array.length+(mode==='offers'?' anúncios individuais':' modelos agrupados')+'. ('+filtered.filter(isRecent).length+' preços recentes; '+filtered.filter(x=>!isRecent(x)).length+' antigos). Anúncios suspensos não são exibidos.';
+ if(count)count.textContent=array.length?'Explore as ofertas disponíveis':'Nenhum produto encontrado para estes filtros.'; '+filtered.filter(x=>!isRecent(x)).length+' antigos). Anúncios suspensos não são exibidos.';
  root.replaceChildren(...array.slice(0,visibleLimit).map(productCard));
  if(!array.length){
   const emptyCategory=type?.value&&type.value!=='all'&&!all.some(o=>category(o)===type.value);
@@ -384,17 +367,7 @@ async function start(){
    if(!response.ok)throw Error('Falha HTTP '+response.status);
    const data=await response.json();
    all=publicOffers(data.offers).filter(valid);
-   const status=$('catalog-trust-status');
-   if(status){
-     const shown=all.filter(o=>!['pc','kit'].includes(category(o)));
-     const fresh=shown.filter(isRecent).length,old=shown.length-fresh;
-     const date=typeof data.updatedAt==='string'&&/^\d{4}-\d{2}-\d{2}$/.test(data.updatedAt)
-       ? data.updatedAt.split('-').reverse().join('/'):'não informada';
-     status.textContent=fresh+' anúncio(s) com preço consultado nos últimos 14 dias · '+old+' com preço antigo. Os valores não são verificados em tempo real; confira preço, frete e disponibilidade na loja.';
-     const aboutDates=$('catalog-about-dates');
-     if(aboutDates)aboutDates.textContent='Última atualização informada do catálogo: '+date+'. Data de publicação dos anúncios: não informada. Datas individuais de consulta aparecem em “Sobre o anúncio” nos produtos.';
-     status.classList.toggle('warning',fresh===0||old>fresh);
-   }
+   // Datas, validade e métricas ficam fora da vitrine pública.
    groups=grouped(all.filter(o=>!['pc','kit'].includes(category(o))));
    categorySymbols();
    updateCategoryAvailability();
