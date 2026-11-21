@@ -4,7 +4,21 @@
 <meta property="og:url" content="https://ecadu285-afk.github.io/raven-pc-builder/pcs-montados.html">
 <meta name="twitter:card" content="summary">
 <link rel="stylesheet" href="raven90-ui.css?v=1">
-</head><body><header><div class="top"><a class="brand" href="inicio.html">RAVEN <b>PC STUDIO</b></a><nav><a href="inicio.html">Início</a><a href="orcamento.html">Montar pelas peças</a><a href="pcs-montados.html" aria-current="page">PCs montados</a><a href="produtos.html">Peças avulsas</a><a href="comparar-pcs.html">Comparar PCs</a><a href="servicos.html">Serviços</a></nav></div></header>
+<style>
+/* Garantir que a arte da categoria nao sobreponha os nomes e precos. */
+.pc-card{min-width:0;isolation:isolate}
+.pc-card .pc-photo{position:relative;display:block;flex:0 0 205px;width:100%;height:205px;min-height:0;overflow:hidden;background:#faf7f2}
+.pc-card .pc-photo img{position:absolute;inset:0;display:block;width:100%!important;height:100%!important;max-width:100%;max-height:100%;object-fit:contain!important;object-position:center;padding:9px!important;margin:0}
+.pc-card .pc-content{position:relative;z-index:1;min-width:0;background:#241a30}
+.pc-card .pc-content h3{color:#fff;font-size:16px;line-height:1.35;overflow-wrap:anywhere;margin:0}
+.pc-card .pc-content .pc-price{font-size:24px;line-height:1.25}
+.pc-card .pc-about{padding:10px 12px;border:1px solid #655079;border-radius:10px;background:#1b1426;color:#dfcfef}
+.pc-card .pc-about summary{font-size:12px;font-weight:800;cursor:pointer}
+.pc-card .pc-about p{margin:7px 0 0;font-size:12px;line-height:1.5;color:#d7c8e5}
+.pc-card .pc-options{margin-top:auto}
+@media(max-width:600px){.pc-card .pc-photo{flex-basis:185px;height:185px}.pc-card .pc-content{padding:15px}}
+</style>
+</head><body><header><div class="top"><a class="brand" href="inicio.html">RAVEN <b>PC BUILDER</b></a><nav><a href="inicio.html">Início</a><a href="orcamento.html">Montar pelas peças</a><a href="pcs-montados.html" aria-current="page">PCs montados</a><a href="produtos.html">Peças avulsas</a><a href="comparar-pcs.html">Comparar PCs</a><a href="servicos.html">Serviços</a></nav></div></header>
 <main><div class="eyebrow">VITRINE EXCLUSIVA · PC COMPLETO OU KIT</div><h1>Prefere comprar seu <span>computador já montado?</span></h1><p class="lead">Aqui você pesquisa PCs completos e kits de upgrade em uma área separada das peças individuais. Escolha um orçamento, ordene do menor para o maior preço e abra as ofertas diretamente na Shopee, Mercado Livre ou Amazon.</p>
 <div class="actions"><a class="btn secondary" href="orcamento.html">Quero montar escolhendo as peças</a><a class="btn secondary" href="produtos.html">Ver componentes avulsos</a></div>
 <section class="panel"><h2>Encontre um PC na sua faixa de preço</h2><div class="form"><label>Tipo de produto<select id="type"><option value="pc">PC completo montado</option><option value="kit">Kit de upgrade (sem gabinete completo)</option></select></label><label>Preço mínimo (R$)<input type="number" id="min" min="0" step="50" placeholder="Sem mínimo"></label><label>Preço máximo (R$)<input type="number" id="max" min="0" step="50" placeholder="Sem máximo"></label><label>Ordenação<select id="sort"><option value="asc">Menor preço primeiro</option><option value="desc">Maior preço primeiro</option></select></label></div><div class="form" style="margin-top:14px;grid-template-columns:2fr 1fr auto"><label>Procurar configuração<input id="search" type="search" placeholder="Ex.: Ryzen 5, i5, 16GB, RTX" autocomplete="off"></label><label>Loja<select id="store"><option value="all">Todas</option><option value="shopee">Shopee</option><option value="mercadolivre">Mercado Livre</option><option value="amazon">Amazon</option><option value="kabum">KaBuM!</option><option value="terabyte">TerabyteShop</option></select></label><button id="clear" class="btn secondary" type="button">Limpar filtros</button></div><p id="loadStatus" class="footnote">Carregando ofertas publicadas...</p></section>
@@ -22,8 +36,22 @@ function node(tag,cls,value){const x=document.createElement(tag);if(cls)x.classN
 function key(o){return [typeOf(o),normalized(o.modelName||o.title||o.partId),o.condition==='used'?'used':'new'].join('|')}
 function group(items){const map=new Map();for(const o of items){const k=key(o);if(!map.has(k))map.set(k,[]);map.get(k).push(o)}return [...map.values()].map(arr=>{arr.sort((a,b)=>Number(isRecentPc(b))-Number(isRecentPc(a))||a.price-b.price);const seen=new Set(),byStore=[],similar=[];for(const o of arr){(seen.has(o.store)?similar:byStore).push(o);seen.add(o.store)}return {best:arr[0],all:arr,byStore,similar}})}
 function offerRow(o){const row=node('div','pc-offer'),name=node('div'),bold=node('strong','',shops[o.store].name),small=node('div','',money(o.price));const a=node('a','',isRecentPc(o)?'Ver anúncio ↗':'Conferir preço ↗');a.href=safeUrl(o.url,shops[o.store].domains);a.target='_blank';a.rel=o.affiliate?'noopener noreferrer sponsored':'noopener noreferrer';name.append(bold,small);row.append(name,a);return row}
-function pcCard(g){const o=g.best,card=node('article','pc-card'),photo=node('div','pc-photo'),inner=node('div','pc-content');const type=typeOf(o)==='kit'?'kit':'pc';const img=node('img');img.src='raven-art/'+type+'.webp';img.loading='lazy';img.alt='Imagem ilustrativa da categoria '+(type==='kit'?'kit de upgrade':'PC completo')+'; não representa o modelo exato';img.onerror=()=>{photo.textContent=type==='kit'?'KIT':'PC';};photo.append(img);inner.append(node('span','tag',typeOf(o)==='kit'?'KIT DE UPGRADE':'PC MONTADO'),node('h3','',o.modelName||o.title||'Computador completo'),node('div','pc-price',money(o.price)),node('p','pc-meta', (isRecentPc(o)?'Menor preço cadastrado':'PREÇO ANTIGO · reconferir no anúncio')+' · '+g.all.length+' oferta(s) · última consulta em '+o.checkedAt.split('-').reverse().join('/')));
+function pcCard(g){const o=g.best,card=node('article','pc-card'),photo=node('div','pc-photo'),inner=node('div','pc-content');const type=typeOf(o)==='kit'?'kit':'pc';const img=node('img');img.src='raven-art/'+type+'.webp';img.loading='lazy';img.alt='Imagem ilustrativa da categoria '+(type==='kit'?'kit de upgrade':'PC completo')+'; não representa o modelo exato';img.onerror=()=>{photo.textContent=type==='kit'?'KIT':'PC';};photo.append(img);inner.append(
+  node('span','tag',typeOf(o)==='kit'?'KIT DE UPGRADE':'PC MONTADO'),
+  node('h3','',o.modelName||o.title||'Computador completo'),
+  node('div','pc-price',money(o.price)),
+  node('p','pc-meta',(isRecentPc(o)?'Menor preço cadastrado':'Preço antigo · reconferir no anúncio')+' · '+g.all.length+' oferta(s)')
+ );
  if(o.specs||o.description)inner.append(node('p','pc-meta',String(o.specs||o.description).slice(0,400)));
+ const about=node('details','pc-about');
+ about.append(
+  node('summary','','Sobre o anúncio'),
+  node('p','','Última consulta informada: '+o.checkedAt.split('-').reverse().join('/')),
+  node('p','','Data de publicação: não informada no catálogo'),
+  node('p','','Loja parceira: '+(shops[o.store]?.name||'não informada')),
+  node('p','','Preços, disponibilidade e frete podem variar na loja.')
+ );
+ inner.append(about);
  const list=node('div','pc-options');g.byStore.forEach(x=>list.append(offerRow(x)));if(g.similar.length){const details=node('details','more'),sum=node('summary','',g.similar.length+' anúncio(s) semelhante(s) da mesma loja');details.append(sum);g.similar.forEach(x=>details.append(offerRow(x)));list.append(details)}inner.append(list);card.append(photo,inner);return card}
 function render(){
  const type=$('type').value,q=normalized($('search').value),store=$('store').value,low=Number($('min').value)||0,high=Number($('max').value)||Infinity,sort=$('sort').value;
