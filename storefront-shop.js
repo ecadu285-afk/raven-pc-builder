@@ -143,7 +143,7 @@ function productCard(item){
  const price=element('div','offer-price',priceState.show?BRL(o.price):o.store==='amazon'?'Preço na Amazon':'Preço a confirmar');
  if(!priceState.show)price.classList.add('raven-price-withheld');
  article.dataset.dataQuality=quality.state;
- article.title=item.model+' — '+partnerName; ');
+ article.title=item.model+' — '+partnerName;
  price.append(element('small','',priceState.show?'Confirme valor e disponibilidade na loja':'Consulte o valor na loja parceira'));
  if(!priceState.show){
   article.classList.add(o.store==='amazon'?'raven-partner-price-hidden':'raven-stale-offer');
