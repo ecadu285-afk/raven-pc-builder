@@ -30,13 +30,13 @@
 <main class="shell" id="conteudo">
 <div class="catalog-intro"><span class="eyebrow">PEÇAS PARA COMPUTADOR</span>
 <h1>Encontre a peça do seu PC.</h1>
-<p>Pesquise modelos e compare ofertas cadastradas. Preços não são consultados em tempo real: confirme valor, condição, frete e estoque na loja antes de comprar.</p></div>
-<div class="raven-partner-disclosure" role="note"><strong>Vitrine de lojas parceiras</strong><span>A Raven apresenta anúncios de varejistas. A compra e o pagamento são feitos na loja de destino; alguns links podem gerar comissão. Os preços cadastrados são informativos e podem mudar. Na Amazon, o preço é consultado diretamente na loja até existir integração autorizada.</span></div>
+<p>Encontre peças, compare lojas e escolha a melhor opção para seu computador.</p></div>
+<div class="raven-partner-disclosure" role="note"><strong>Vitrine de lojas parceiras</strong><span>A compra e o pagamento acontecem no site da loja. Alguns links podem gerar comissão para a Raven; confirme preço, frete e disponibilidade antes de comprar.</span></div>
 <div class="raven-catalog-location" aria-label="Sua região"><div><strong>⌖ Sua região para comprar hardware</strong><p>Detecte sua cidade com permissão ou informe manualmente seu CEP. Frete e prazo dependem da loja parceira.</p></div>
 <div class="raven-catalog-locate-actions"><button type="button" data-raven-detect data-status-id="ravenLocateStatus">Detectar localização</button><a href="minha-conta.html#endereco">Informar CEP</a></div>
 <p role="status" id="ravenLocateStatus" aria-live="polite"></p></div>
 <p class="raven92-category-index"><a href="categorias.html">Guia de departamentos e categorias</a> · As compras são feitas nas lojas parceiras.</p><section aria-label="Buscar e filtrar produtos">
-<section class="raven91-catalog-info" id="raven91-catalog-coverage"><strong>Catálogo Raven</strong><span data-coverage>Consultando as categorias com anúncios...</span><a href="comparar-ofertas.html">Comparar lojas</a></section>
+<section class="raven91-catalog-info" id="raven91-catalog-coverage"><strong>Catálogo Raven</strong><span data-coverage>Encontre peças e compare ofertas das lojas parceiras.</span><a href="comparar-ofertas.html">Comparar lojas</a></section>
 <div class="catalog-toolbar">
 <label>Pesquisar peça<input id="catalog-search" type="search" placeholder="Ex.: Ryzen 5 5500, AM4, GTX 1650, SSD..." autocomplete="off"></label>
 <label>Categoria<select id="catalog-category"><option value="all">Todas as peças</option><option value="gpu">Placas de vídeo</option>
@@ -48,7 +48,7 @@
 <option value="case">Gabinetes</option>
 <option value="hdd">HDs</option><option value="cooler">Coolers</option><option value="other">Outros / a conferir</option><optgroup label="Periféricos e eletrônicos"><option value="keyboard">Teclados</option><option value="headset">Fones e headsets</option><option value="mouse">Mouses</option><option value="chair">Cadeiras</option><option value="mousepad">Mousepads</option><option value="monitor">Monitores</option><option value="fan">Fans e ventoinhas</option><option value="powerstrip">Filtros de linha</option><option value="laptop">Notebooks</option><option value="phone">Celulares</option><option value="desk">Mesas</option></optgroup></select></label>
 <label>Loja<select id="catalog-store"><option value="all">Todas as lojas</option><option value="shopee">Shopee</option><option value="mercadolivre">Mercado Livre</option><option value="amazon">Amazon</option><option value="kabum">KaBuM!</option><option value="terabyte">TerabyteShop</option></select></label>
-<label>Ordenar<select id="catalog-order"><option value="relevance">Mais relevantes para a busca</option><option value="lowest">Menor preço</option><option value="highest">Maior preço</option><option value="recent">Mais recentes</option></select></label>
+<label>Ordenar<select id="catalog-order"><option value="relevance">Mais relevantes para a busca</option><option value="lowest">Menor preço</option><option value="highest">Maior preço</option></select></label>
 <label>Visualização<select id="catalog-view-mode"><option value="offers">Todos os anúncios, separados por loja</option><option value="models">Agrupar por modelo</option></select></label>
 </div>
 <div class="raven92-spec-toolbar" aria-label="Filtros técnicos">
@@ -60,8 +60,6 @@
 <div class="catalog-extra-filters" aria-label="Filtros avançados">
 <label>Condição<select id="catalog-condition"><option value="all">Novo ou usado</option><option value="new">Novo</option><option value="used">Usado</option><option value="refurbished">Recondicionado</option></select></label>
 <label>Preço máximo (R$)<input id="catalog-max-price" type="number" inputmode="decimal" min="1" max="1000000" step="10" placeholder="Sem limite"></label>
-<label class="catalog-photo-only"><input type="checkbox" id="catalog-photos-only"> Somente anúncios com foto cadastrada</label>
-<label class="catalog-recent-only"><input type="checkbox" id="catalog-recent-only"> Somente preços conferidos nos últimos 14 dias</label>
 <button type="button" id="catalog-clear" class="catalog-clear">Limpar filtros</button>
 </div></section>
 <section class="catalog-quick" aria-labelledby="quick-title"><h2 id="quick-title">Categorias</h2><div class="categories"><a class="cat-card" href="produtos.html?categoria=gpu#catalogo"><span class="cat-symbol" aria-hidden="true">GPU</span><strong>Placas de vídeo</strong></a>
@@ -74,7 +72,7 @@
 <a class="cat-card" href="produtos.html?categoria=hdd#catalogo"><span class="cat-symbol" aria-hidden="true">HD</span><strong>HDs</strong></a>
 <a class="cat-card" href="pcs-montados.html?tipo=kit#results"><span class="cat-symbol" aria-hidden="true">KIT</span><strong>Kits de upgrade</strong><small class="raven91-cat-count">Ver kits disponíveis</small></a>
 <a class="cat-card" href="pcs-montados.html?tipo=pc#results"><span class="cat-symbol" aria-hidden="true">PC</span><strong>PCs completos</strong><small class="raven91-cat-count">Ver PCs montados</small></a></div></section>
-<section class="catalog-quick" aria-labelledby="accessories-title"><h2 id="accessories-title">Periféricos, acessórios e eletrônicos</h2><p>Selecione a categoria para ver anúncios cadastrados e publicados nas lojas parceiras.</p><div class="categories">
+<section class="catalog-quick" aria-labelledby="accessories-title"><h2 id="accessories-title">Periféricos, acessórios e eletrônicos</h2><p>Explore diferentes produtos e encontre o que procura.</p><div class="categories">
 <a class="cat-card" href="produtos.html?categoria=keyboard#catalogo"><span class="cat-symbol" aria-hidden="true">TEC</span><strong>Teclados</strong></a>
 <a class="cat-card" href="produtos.html?categoria=headset#catalogo"><span class="cat-symbol" aria-hidden="true">FONE</span><strong>Fones e headsets</strong></a>
 <a class="cat-card" href="produtos.html?categoria=mouse#catalogo"><span class="cat-symbol" aria-hidden="true">MOU</span><strong>Mouses</strong></a>
@@ -89,11 +87,7 @@
 </div></section>
 <section class="catalog-results" id="catalogo" aria-labelledby="products-title">
 <div class="section-head"><div><h2 id="products-title">Peças disponíveis</h2></div><a href="orcamento.html" class="all-link">Montar pelo orçamento ›</a></div>
-<p id="catalog-trust-status" class="catalog-trust-status" role="status">Carregando informações do catálogo...</p>
-<details class="raven-catalog-about" id="raven-catalog-about"><summary>Sobre o catálogo e datas</summary>
-<p id="catalog-about-dates">Aguardando dados da atualização do catálogo.</p>
-<p>As datas de consulta não são datas de publicação dos vendedores. Confira os preços no anúncio original antes de comprar.</p></details>
-<p id="catalog-count" role="status" class="countline">Carregando ofertas...</p>
+<p id="catalog-count" role="status" class="countline">Encontrando produtos...</p>
 <div class="cards" id="catalog-grid"><div class="no-offers">Carregando os produtos publicados...<noscript><a href="categorias.html">Explore as categorias sem JavaScript</a>.</noscript></div></div>
 <button id="catalog-more" type="button" class="load-more" hidden>Mostrar mais anúncios</button>
 <button id="catalog-show-all" type="button" class="load-more" hidden>Mostrar todos os anúncios deste filtro</button>
@@ -101,7 +95,7 @@
 </section></main>
 <footer class="simple-footer"><div class="shell"><p>© 2026 Raven Creatives Studios · Catálogo de anúncios publicados</p><nav aria-label="Informações"><a href="afiliados.html">Transparência</a><a href="servicos.html">Sobre a Raven</a><a href="inicio.html">Início</a></nav></div></footer>
 <script defer src="raven-category-carousel.js?v=1"></script>
-<script type="module" src="storefront-shop.js?v=118"></script>
+<script type="module" src="storefront-shop.js?v=119"></script>
 <script type="module" src="raven-location.js?v=1"></script>
 <script defer src="raven90-ui.js?v=1"></script>
 </body></html>
