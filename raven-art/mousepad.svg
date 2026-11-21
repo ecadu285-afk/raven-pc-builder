@@ -1,0 +1,8 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 400 400" role="img" aria-label="Ilustração de PAD">
+<defs><linearGradient id="lav" x1=".12" y1="0" x2=".83" y2="1"><stop offset="0" stop-color="#efd9ff"/><stop offset=".52" stop-color="#d7b8fb"/><stop offset="1" stop-color="#bd97ed"/></linearGradient><filter id="shadow" x="-20%" y="-20%" width="140%" height="150%"><feDropShadow dx="0" dy="8" stdDeviation="9" flood-color="#392063" flood-opacity=".16"/></filter></defs>
+<rect width="400" height="400" rx="17" fill="#fffaf5"/>
+<rect x="27" y="22" width="346" height="352" rx="82" fill="url(#lav)" filter="url(#shadow)"/>
+<g transform="translate(83 39) scale(2.34)"><rect x="8" y="43" width="84" height="37" rx="8" fill="none" stroke="#4c2781" stroke-width="7"/><path d="M62 20c-9 0-15 7-15 17v17c0 12 7 18 15 18s15-6 15-18V37c0-10-6-17-15-17Z" fill="#4c2781"/><path d="M62 22v18" stroke="#eadbff" stroke-width="3"/></g>
+<rect x="156" y="290" width="88" height="8" rx="4" fill="#ff8b16"/>
+<text x="200" y="353" font-family="system-ui,Arial,sans-serif" font-size="54" font-weight="900" text-anchor="middle" fill="#30135d">PAD</text>
+</svg>

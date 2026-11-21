@@ -1,0 +1,8 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 400 400" role="img" aria-label="Ilustração de CAD">
+<defs><linearGradient id="lav" x1=".12" y1="0" x2=".83" y2="1"><stop offset="0" stop-color="#efd9ff"/><stop offset=".52" stop-color="#d7b8fb"/><stop offset="1" stop-color="#bd97ed"/></linearGradient><filter id="shadow" x="-20%" y="-20%" width="140%" height="150%"><feDropShadow dx="0" dy="8" stdDeviation="9" flood-color="#392063" flood-opacity=".16"/></filter></defs>
+<rect width="400" height="400" rx="17" fill="#fffaf5"/>
+<rect x="27" y="22" width="346" height="352" rx="82" fill="url(#lav)" filter="url(#shadow)"/>
+<g transform="translate(83 39) scale(2.34)"><rect x="24" y="12" width="52" height="46" rx="12" fill="#4c2781"/><path d="M20 54h60v11H20z" fill="#eadbff" stroke="#4c2781" stroke-width="4"/><path d="M50 65v19 M30 89h40 M27 77h-7V54 M73 77h7V54" stroke="#4c2781" stroke-width="7" stroke-linecap="round"/></g>
+<rect x="156" y="290" width="88" height="8" rx="4" fill="#ff8b16"/>
+<text x="200" y="353" font-family="system-ui,Arial,sans-serif" font-size="54" font-weight="900" text-anchor="middle" fill="#30135d">CAD</text>
+</svg>

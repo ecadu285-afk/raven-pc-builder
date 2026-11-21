@@ -84,12 +84,23 @@ function photoForGroup(item){
  const url=imageFor(offer);
  return url?{url,offer}:null;
 }
+const peripheralArtwork=new Set(["keyboard","headset","mouse","chair","mousepad","monitor","fan","powerstrip","laptop","phone","desk"]);
 function productPlaceholder(type){
+ if(peripheralArtwork.has(type)){
+  const root=element('div','raven-category-art');
+  const image=document.createElement('img');
+  image.className='raven-peripheral-card-art';
+  image.src='raven-art/'+type+'.svg';
+  image.loading='lazy';image.alt='';
+  image.onerror=()=>root.replaceChildren(ravenCategoryArt(type));
+  root.append(image);
+  return root;
+ }
  return ravenCategoryArt(type);
 }
 function categorySymbols(){
  // Usar as artes roxas ORIGINAIS por categoria, inclusive Kits, PCs e Gabinetes.
- const artwork=new Set(['gpu','cpu','board','ram','ssd','psu','case','hdd','kit','pc']);
+ const artwork=new Set(['gpu','cpu','board','ram','ssd','psu','case','hdd','kit','pc',...peripheralArtwork]);
  for(const link of document.querySelectorAll('.catalog-quick .cat-card')){
   const frame=link.querySelector('.cat-symbol');
   if(!frame)continue;
@@ -99,7 +110,7 @@ function categorySymbols(){
   const text=key==='case'?'GAB':key==='pc'?'PC':key==='kit'?'KIT':glyphs[key]||'PC';
   if(!artwork.has(key)){frame.replaceChildren(document.createTextNode(text));continue;}
   const image=document.createElement('img');
-  image.src='raven-art/'+key+'.webp';
+  image.src='raven-art/'+key+(peripheralArtwork.has(key)?'.svg':'.webp');
   image.alt='';image.loading='lazy';image.decoding='async';
   image.onerror=()=>frame.replaceChildren(document.createTextNode(text));
   frame.replaceChildren(image);
