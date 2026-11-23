@@ -10,10 +10,12 @@ const cpu=catalog.cpu.find(x=>x.id==='5500');
 const facts=productFacts({partId:cpu.id,category:'cpu',title:cpu.name},{...cpu,category:'cpu'});
 assert.ok(facts.some(x=>x.label==='Socket'&&x.value==='AM4'));
 assert.ok(productFactsDescription(facts).includes('Socket: AM4'));
-assert.deepEqual(productFacts({partId:'unlisted',category:'cpu',title:'Modelo não validado'}),[]);
+const unknown=productFacts({partId:'unlisted',category:'cpu',title:'Modelo não validado'});
+assert.ok(unknown.length>0 && unknown.filter(x=>x.label!=='Produto anunciado').every(x=>x.source==='pendente'),'Campos técnicos ausentes devem aparecer como A confirmar, sem inventar ficha');
 const card=productFacts({partId:'gpu-unknown',category:'gpu',title:'Placa RX 590 8GB'});
-assert.ok(card.some(x=>x.label==='Memória anunciada'&&x.source==='título do anúncio'));
-assert.equal(productFacts({partId:'non-matching',category:'cpu',title:'CPU'},{...cpu}).length,0);
+assert.ok(card.some(x=>x.label==='Memória de vídeo'&&x.value==='8GB'&&x.source==='anúncio'),'Memória extraída do título precisa ser marcada como declaração do anúncio');
+const mismatch=productFacts({partId:'non-matching',category:'cpu',title:'CPU'},{...cpu});
+assert.ok(mismatch.every(x=>x.source!=='cadastro'),'Não aproveitar ficha de referência com ID diferente');
 
 // 6.9: conflitos e campos não verificados devem continuar explícitos.
 const board={id:'b450',socket:'AM4',memory:'DDR4',form:'mATX'};
