@@ -59,6 +59,7 @@
     elements.progress.style.width = percent + '%';
     elements.progressText.textContent = done + ' de ' + lessons.length + ' aulas concluídas';
     elements.progress.parentElement.setAttribute('aria-valuenow', String(percent));
+    window.dispatchEvent(new Event('ravenAcademyProgress'));
   }
   function renderList() {
     elements.list.replaceChildren();
@@ -96,7 +97,7 @@
     safeWrite(activeKey, current.id);
     elements.frame.title = 'Raven Academy: ' + current.title;
     // Atualizar somente após selecionar evita carregar múltiplos players ao mesmo tempo.
-    if (elements.frame.getAttribute('src') !== current.embedUrl) {
+    if (!document.getElementById('rvaPanelVideos')?.hidden && elements.frame.getAttribute('src') !== current.embedUrl) {
       elements.frame.setAttribute('src', current.embedUrl);
     }
     elements.fallback.hidden = true;
@@ -156,5 +157,13 @@
       elements.complete.disabled = true;
     }
   }
+  window.addEventListener('ravenAcademyTab', event => {
+    if (event.detail?.name !== 'videos') {
+      // Parar a reprodução ao sair da aba de videoaulas.
+      elements.frame.removeAttribute('src');
+    } else if (lessons[activeIndex] && elements.frame.getAttribute('src') !== lessons[activeIndex].embedUrl) {
+      elements.frame.setAttribute('src', lessons[activeIndex].embedUrl);
+    }
+  });
   loadLessons();
 })();
