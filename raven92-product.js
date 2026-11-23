@@ -79,9 +79,10 @@ async function init(){
   if(facts.length){
    const dl=make('dl','raven92-facts');
    for(const f of facts){const pair=make('div');pair.append(make('dt','',f.label),make('dd','',f.value+(f.source==='título do anúncio'?' (informado pelo vendedor)':'')));dl.append(pair)}root.append(dl);
-  }else root.append(make('p','raven92-muted','Não há especificações técnicas suficientes registradas para este produto.'));
+  }else root.append(make('p','raven92-muted','Especificações ainda não verificadas. Confirme o modelo na loja.'));
   const spec=specifications(best,ref);
-  root.append(make('p','raven92-muted','Fonte dos dados: '+spec.source+'. Verifique ficha oficial, BIOS, revisão e condições de compatibilidade.'));
+  root.append(make('p','raven92-muted','Fonte dos dados: '+spec.source+'. Confirme modelo, revisão e compatibilidade antes da compra.'));
+  if(spec.officialUrl){const source=make('a','raven92-button secondary','Consultar ficha oficial do fabricante ↗');source.href=spec.officialUrl;source.target='_blank';source.rel='noopener noreferrer';root.append(source);}
   const verify=make('a','raven92-button secondary','Abrir verificador de montagem');verify.href='verificar-pc.html?produto='+encodeURIComponent(id);root.append(verify);
   const related=[...new Map(all.filter(x=>x.category===best.category&&x.partId!==id).map(x=>[x.partId,x])).values()].slice(0,6);
   if(related.length)for(const item of related){const a=make('a','raven92-related-link',item.modelName||item.title||item.partId);
