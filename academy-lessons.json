@@ -1,0 +1,66 @@
+{
+  "schemaVersion": 1,
+  "notes": "10 links enviados pelo proprietário. Títulos provisórios, pois não foi possível consultar metadados dos vídeos. Verificar se cada vídeo está compartilhado para visualização antes de publicar.",
+  "lessons": [
+    {
+      "id": "aula-01",
+      "title": "Aula 01",
+      "description": "Videoaula do acervo Raven Academy",
+      "driveUrl": "https://drive.google.com/file/d/1UFR7ZfI4vqTPL3Feni__Ja9d_7UL9Jer/view?usp=drive_link"
+    },
+    {
+      "id": "aula-02",
+      "title": "Aula 02",
+      "description": "Videoaula do acervo Raven Academy",
+      "driveUrl": "https://drive.google.com/file/d/1844mgEngAiFEmyEY52P8I_R7ZcYS48Dm/view?usp=drive_link"
+    },
+    {
+      "id": "aula-03",
+      "title": "Aula 03",
+      "description": "Videoaula do acervo Raven Academy",
+      "driveUrl": "https://drive.google.com/file/d/1WIiwr7s0SDXPcACcSXrlMp1Yht_qk3vi/view?usp=drive_link"
+    },
+    {
+      "id": "aula-04",
+      "title": "Aula 04",
+      "description": "Videoaula do acervo Raven Academy",
+      "driveUrl": "https://drive.google.com/file/d/1u04GpjBbOZUWXgduTmoMjdcIM4TDUkIC/view?usp=drive_link"
+    },
+    {
+      "id": "aula-05",
+      "title": "Aula 05",
+      "description": "Videoaula do acervo Raven Academy",
+      "driveUrl": "https://drive.google.com/file/d/1NRxSD6_IaN4oHCesgFk3qSbL0FH8pv2c/view?usp=drive_link"
+    },
+    {
+      "id": "aula-06",
+      "title": "Aula 06",
+      "description": "Videoaula do acervo Raven Academy",
+      "driveUrl": "https://drive.google.com/file/d/1LDm-Mnw2lnh4CrVNzUEr7Pys59eLy5Z3/view?usp=drive_link"
+    },
+    {
+      "id": "aula-07",
+      "title": "Aula 07",
+      "description": "Videoaula do acervo Raven Academy",
+      "driveUrl": "https://drive.google.com/file/d/1tv510wrKF8zvkqvvxPGRGuGpfiunmTvj/view?usp=drive_link"
+    },
+    {
+      "id": "aula-08",
+      "title": "Aula 08",
+      "description": "Videoaula do acervo Raven Academy",
+      "driveUrl": "https://drive.google.com/file/d/1WT7OlJnVE9ycPZQ8mzbnEs0Pt5ycFZcc/view?usp=drive_link"
+    },
+    {
+      "id": "aula-09",
+      "title": "Aula 09",
+      "description": "Videoaula do acervo Raven Academy",
+      "driveUrl": "https://drive.google.com/file/d/10ujkwX1jP7kmIGsWUGgCEg43uhjbEQQb/view?usp=drive_link"
+    },
+    {
+      "id": "aula-10",
+      "title": "Aula 10",
+      "description": "Videoaula do acervo Raven Academy",
+      "driveUrl": "https://drive.google.com/file/d/1Jta_Y7ThwGJZuCmZpZs7OqALiDHDguKB/view?usp=drive_link"
+    }
+  ]
+}
