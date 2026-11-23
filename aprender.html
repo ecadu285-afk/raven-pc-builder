@@ -7,12 +7,44 @@
 <meta property="og:description" content="Guia básico de PC: componentes, montagem, limpeza segura e diagnóstico com simulação 3D.">
 <meta property="og:url" content="https://ecadu285-afk.github.io/raven-pc-builder/aprender.html">
 <meta name="twitter:card" content="summary">
-<link rel="stylesheet" href="raven90-ui.css?v=1">
+<link rel="stylesheet" href="raven90-ui.css?v=1"><link rel="stylesheet" href="academy-videos.css?v=1">
 </head><body><a class="skip" href="#principal">Ir para aulas</a>
-<div class="shell"><header><a class="brand" href="inicio.html">RAVEN <b>ACADEMY</b></a><nav aria-label="Menu"><a href="inicio.html">Início</a><a href="index.html">Montador 3D</a><a href="produtos.html">Produtos</a><a href="aprender.html" aria-current="page">Hardware 3D</a><a href="produtos.html">Produtos</a><a href="servicos.html">Serviços</a></nav></header></div>
-<main class="wrap" id="principal"><div class="intro"><span class="eyebrow">GUIA GRATUITO / PC, MONTAGEM E LIMPEZA</span><h1>Aprenda a conhecer, montar e <span style="color:var(--lime)">cuidar do seu PC.</span></h1><p>Um guia objetivo para identificar as peças do computador, conferir compatibilidade, acompanhar a montagem e fazer limpeza preventiva. A simulação 3D é esquemática; ela ajuda a visualizar, mas não substitui prática supervisionada e manuais dos fabricantes.</p><div class="notice"><strong>Segurança:</strong> desligue e retire o computador da tomada antes de abrir o gabinete. Nunca abra uma fonte de alimentação nem um monitor: eles podem conter capacitores com carga perigosa mesmo desligados. Se não souber executar uma etapa com segurança, procure orientação técnica.</div></div>
-<section class="raven-course-highlight" aria-label="Guia de hardware"><span class="eyebrow">GUIA GRATUITO · DIRETO AO PONTO</span><h2>Peças, montagem, limpeza e problemas comuns</h2><p>Quatro módulos e uma maquete 3D para aprender o essencial sobre computadores. O curso completo de informática ficará para uma etapa futura, com aulas produzidas pelo próprio estúdio.</p><div class="raven-course-actions"><a class="raven-academy-link" href="produtos.html">Encontrar componentes ↗</a><a class="raven-academy-link" href="servicos.html">Conhecer o PC Studio ↗</a></div></section>
-<div class="workspace">
+<div class="shell"><header><a class="brand" href="inicio.html">RAVEN <b>ACADEMY</b></a><nav aria-label="Menu"><a href="inicio.html">Início</a><a href="#videoaulas">Videoaulas</a><a href="#laboratorio3d">Hardware 3D</a><a href="index.html">Montador 3D</a><a href="produtos.html">Produtos</a><a href="servicos.html">Serviços</a></nav></header></div>
+<main class="wrap" id="principal"><div class="intro"><span class="eyebrow">RAVEN ACADEMY / VIDEOAULAS E HARDWARE 3D</span><h1>Aprenda com videoaulas e pratique no <span style="color:var(--lime)">laboratório 3D.</span></h1><p>Assista às videoaulas da Raven Academy no seu ritmo. Depois, explore quatro módulos interativos sobre componentes, montagem, limpeza e diagnóstico. A simulação 3D é esquemática e não substitui prática supervisionada nem os manuais dos fabricantes.</p><div class="notice"><strong>Segurança:</strong> desligue e retire o computador da tomada antes de abrir o gabinete. Nunca abra uma fonte de alimentação nem um monitor: eles podem conter capacitores com carga perigosa mesmo desligados. Se não souber executar uma etapa com segurança, procure orientação técnica.</div></div>
+
+<section class="rva-academy" id="videoaulas" aria-labelledby="rvaTitle">
+  <div class="rva-heading">
+    <div><span class="eyebrow">RAVEN ACADEMY · APRENDA POR VÍDEO</span><h2 id="rvaTitle">Sua biblioteca de videoaulas</h2>
+    <p>Dez aulas do acervo da Raven Academy, em ordem. Assista, avance para a próxima aula e marque sua conclusão. Os títulos são provisórios e podem ser atualizados no catálogo.</p></div>
+    <div class="rva-progress-wrap"><strong id="rvaProgressText">0 de 10 aulas concluídas</strong>
+      <div class="rva-progress-track" role="progressbar" aria-label="Progresso das videoaulas" aria-valuemin="0" aria-valuemax="100" aria-valuenow="0"><span id="rvaProgress"></span></div>
+    </div>
+  </div>
+  <div class="rva-layout" id="rvaAcademy">
+    <div class="rva-player-pane">
+      <div class="rva-player"><iframe id="rvaVideo" title="Videoaula da Raven Academy" loading="lazy" allow="autoplay; fullscreen; picture-in-picture" referrerpolicy="strict-origin-when-cross-origin" allowfullscreen></iframe>
+        <div class="rva-player-fallback" id="rvaFallback" hidden>Não foi possível carregar a biblioteca de videoaulas.</div>
+      </div>
+      <div class="rva-player-info">
+        <h3 id="rvaCurrentTitle">Carregando videoaulas…</h3><p id="rvaCurrentDescription">Selecione uma aula para começar.</p>
+        <div class="rva-actions">
+          <button type="button" id="rvaPrev" class="rva-secondary" disabled>← Anterior</button>
+          <button type="button" id="rvaNext" class="rva-secondary" disabled>Próxima aula →</button>
+          <button type="button" id="rvaComplete" class="rva-primary" disabled>Marcar como concluída</button>
+          <a id="rvaOpen" class="rva-secondary" href="https://drive.google.com/" target="_blank" rel="noopener noreferrer">Abrir no Google Drive ↗</a>
+        </div>
+      </div>
+    </div>
+    <aside class="rva-list-pane" aria-label="Lista de videoaulas">
+      <div class="rva-list-header"><strong>Playlist de aulas</strong><small id="rvaCount">Carregando…</small></div>
+      <div class="rva-lesson-list" id="rvaList"></div>
+    </aside>
+  </div>
+  <p class="rva-status" id="rvaStatus" role="status">Carregando a lista de aulas…</p>
+  <p class="rva-note">O progresso das videoaulas é salvo apenas neste navegador, sem certificado ou sincronização com a conta. Para reproduzir, cada vídeo precisa ter permissão de visualização no Google Drive. Caso o player não abra, use “Abrir no Google Drive”.</p>
+</section>
+<section class="raven-course-highlight" aria-label="Guia de hardware"><span class="eyebrow">GUIA GRATUITO · DIRETO AO PONTO</span><h2>Peças, montagem, limpeza e problemas comuns</h2><p>Quatro módulos e uma maquete 3D para aprender o essencial sobre computadores, além da trilha de videoaulas disponível acima.</p><div class="raven-course-actions"><a class="raven-academy-link" href="produtos.html">Encontrar componentes ↗</a><a class="raven-academy-link" href="servicos.html">Conhecer o PC Studio ↗</a></div></section>
+<div class="workspace" id="laboratorio3d">
 <aside class="sidebar" aria-label="Módulos do mini curso"><h2>Trilha de aprendizado</h2><div id="modules" class="modules"></div><div class="progress" aria-label="Progresso dos módulos"><b id="progress"></b></div><small id="progressText">0 de 4 módulos concluídos</small><p class="little">O progresso é salvo neste navegador. Não emite certificado profissional.</p></aside>
 <div class="lesson">
 <div class="lesson-head"><div id="moduleCount" class="kicker">MÓDULO 01 · FUNDAMENTOS</div><h2 id="moduleTitle">Conhecendo as peças</h2><p id="moduleDescription">Comece pelos componentes que formam um computador.</p></div>
@@ -106,5 +138,5 @@ async function initializeThree(){
 initializeThree();
 </script><script type="module">
 (async()=>{const root=document.getElementById('ravenVideoList');if(!root)return;try{const response=await fetch('./videos.json',{cache:'no-store'});if(!response.ok)return;const data=await response.json();if(!Array.isArray(data.videos))return;const cards=[];for(const item of data.videos.slice(0,6)){if(!item||typeof item.title!=='string')continue;const card=document.createElement('article'),title=document.createElement('strong'),status=document.createElement('small');title.textContent=item.title;card.append(title);let url=null;try{const u=new URL(item.url);if(u.protocol==='https:'&&!u.username&&!u.password&&!u.port&&['youtube.com','www.youtube.com','m.youtube.com','youtu.be'].includes(u.hostname))url=u.href}catch{}if(url){const link=document.createElement('a');link.href=url;link.textContent='Assistir no YouTube ↗';link.target='_blank';link.rel='noopener noreferrer';card.append(link)}else{status.textContent='Vídeo em preparação';card.append(status)}cards.push(card)}if(cards.length)root.replaceChildren(...cards)}catch{}})();
-</script><script defer src="raven90-ui.js?v=1"></script>
+</script><script defer src="raven90-ui.js?v=1"></script><script defer src="academy-videos.js?v=1"></script>
 </body></html>
