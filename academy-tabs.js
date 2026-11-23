@@ -78,12 +78,21 @@
       tabs[destination].button.focus();
     });
   });
+  function scrollToCurrentAnchor() {
+    const anchor = document.getElementById(location.hash.slice(1));
+    if (anchor) requestAnimationFrame(() => anchor.scrollIntoView({block: 'start'}));
+  }
   window.addEventListener('hashchange', () => {
     const name = getHashTab(location.hash);
-    if (name) activate(name);
+    if (name) {
+      activate(name);
+      scrollToCurrentAnchor();
+    }
   });
-  // Se o link for um conteúdo da aba, revelá-la antes do scroll inicial.
-  activate(getHashTab(location.hash) || (tabByName.has(read(rememberedTab)) ? read(rememberedTab) : 'videos'));
+  // Revelar a aba antes de navegar para um link direto a um conteúdo interno.
+  const initialHashTab = getHashTab(location.hash);
+  activate(initialHashTab || (tabByName.has(read(rememberedTab)) ? read(rememberedTab) : 'videos'));
+  if (initialHashTab) scrollToCurrentAnchor();
   window.addEventListener('storage', renderProgress);
   window.addEventListener('ravenAcademyProgress', renderProgress);
   renderProgress();
