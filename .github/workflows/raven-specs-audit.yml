@@ -1,0 +1,29 @@
+name: Raven - auditoria de especificacoes
+on:
+  push:
+    paths:
+      - offers.json
+      - raven-specs-verified.mjs
+      - scripts/raven-specs-audit.mjs
+      - .github/workflows/raven-specs-audit.yml
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  revisar-fichas:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+      - name: Conferir especificacoes cadastradas
+        run: node scripts/raven-specs-audit.mjs offers.json
+      - name: Anexar relatorio de revisao
+        uses: actions/upload-artifact@v4
+        with:
+          name: raven-fichas-revisao
+          path: raven-specs-review.json
+          retention-days: 14
