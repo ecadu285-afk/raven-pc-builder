@@ -9,6 +9,7 @@ import {publicPriceState} from './price-visibility.mjs';
 import {filterCatalogOffers} from './catalog-filters.mjs';
 import {catalogDisplayEntries} from './catalog-display.mjs';
 import {productFacts,productFactsDescription} from './product-details.mjs';
+import {verifiedSpecFor} from './raven-specs-verified.mjs';
 import {evidenceFor} from './raven79-intel.mjs';
 import {offerQuality,rankFeaturedGroups} from './raven90-quality.mjs';
 import {imageEvidence,safeProductImage,countCategories} from './raven91-catalog.mjs';
@@ -188,9 +189,10 @@ function productCard(item){
  const note=element('p','offer-trust-note','Compra e pagamento na '+partnerName+'. A Raven não processa pedidos.'+(o.affiliate?' Link de afiliado: podemos receber comissão.':''));
  // Diagnósticos e pendências de revisão permanecem nos dados administrativos.
  content.append(partner,title,store,price);
+ const officialSpec=verifiedSpecFor(o);
  const detailFacts=productFacts(o,known.get(o.partId));
  const technical=element('details','offer-technical');
- const technicalSummary=element('summary','',detailFacts.length?'Ficha técnica disponível ('+detailFacts.length+' dados)':'Detalhes e identificação');
+ const technicalSummary=element('summary','',officialSpec?'Ficha oficial verificada ('+detailFacts.length+' dados)':detailFacts.length?'Detalhes e identificação ('+detailFacts.length+')':'Especificações pendentes');
  technical.append(technicalSummary);
  if(detailFacts.length){
   const list=element('dl','offer-facts');
@@ -199,9 +201,17 @@ function productCard(item){
    list.append(entry);
   });
   technical.append(list);
-  technical.append(element('small','offer-spec-disclaimer','Informações da referência cadastrada ou do título do vendedor. Confirme o código exato e a ficha oficial antes da compra.'));
+  if(officialSpec){
+   const source=element('a','raven-official-spec-link','Ver ficha oficial do fabricante ↗');
+   source.href=officialSpec.officialUrl;source.target='_blank';source.rel='noopener noreferrer';
+   technical.append(source);
+   technical.append(element('small','offer-spec-disclaimer','Ficha do modelo, não verificação do anúncio específico. Confirme o código do produto e a compatibilidade antes da compra.'));
+  }else{
+   technical.append(element('small','offer-spec-disclaimer','Dados cadastrados ou declarados no anúncio, ainda não conferidos com o fabricante.'));
+  }
  }else{
-  technical.append(element('p','offer-spec-disclaimer','Não há ficha técnica confiável para esta referência. Confira as especificações diretamente no anúncio.'));
+  technical.classList.add('raven-spec-pending');
+  technical.append(element('small','offer-spec-disclaimer','Especificações ainda não verificadas. Confira o modelo na loja.'));
  }
  // O histórico de conferências não aparece no cartão público.
  const compareLink=element('a','raven91-card-compare','Comparar lojas');
