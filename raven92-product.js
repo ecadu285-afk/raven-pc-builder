@@ -1,7 +1,7 @@
 import {catalog} from './catalog.js';
 import {publicPriceState} from './price-visibility.mjs';
 import {publicOffers,trustedOfferUrl,offerAgeDays} from './offer-policy.mjs';
-import {productFacts} from './product-details.mjs';
+import {productFacts,productSpecificationSheet} from './product-details.mjs';
 import {safeProductImage,imageEvidence} from './raven91-catalog.mjs';
 import {identityAudit,specifications,productCollectionKey} from './raven92-core.mjs';
 import {ravenMarketInit,ravenMarketUser,ravenMarketReviews,ravenMarketReviewCreate} from './raven-market.js';
@@ -74,15 +74,25 @@ async function init(){
   const history=make('a','raven92-button secondary','Histórico');history.href='historico.html?produto='+encodeURIComponent(id);
   actions.append(compare,history);info.append(actions);wrap.append(photo,info);wrap.hidden=false;
   $('product-offers').replaceChildren(...choices.map(card));
-  const facts=productFacts(best,ref);
+  const sheet=productSpecificationSheet(best,ref);
   const root=$('product-facts');root.replaceChildren();
-  if(facts.length){
-   const dl=make('dl','raven92-facts');
-   for(const f of facts){const pair=make('div');pair.append(make('dt','',f.label),make('dd','',f.value+(f.source==='título do anúncio'?' (informado pelo vendedor)':'')));dl.append(pair)}root.append(dl);
-  }else root.append(make('p','raven92-muted','Especificações ainda não verificadas. Confirme o modelo na loja.'));
-  const spec=specifications(best,ref);
-  root.append(make('p','raven92-muted','Fonte dos dados: '+spec.source+'. Confirme modelo, revisão e compatibilidade antes da compra.'));
-  if(spec.officialUrl){const source=make('a','raven92-button secondary','Consultar ficha oficial do fabricante ↗');source.href=spec.officialUrl;source.target='_blank';source.rel='noopener noreferrer';root.append(source);}
+  const infoHeading=make('h3','',sheet.status==='official'?'Ficha oficial do modelo':
+    sheet.status==='partial'?'Informações técnicas disponíveis':'Ficha técnica · a confirmar');
+  root.append(infoHeading);
+  const dl=make('dl','raven92-facts');
+  for(const f of sheet.facts){
+   const pair=make('div');
+   if(f.source==='pendente')pair.classList.add('raven-spec-unconfirmed');
+   const suffix=f.source==='anúncio'?' (informado no anúncio)':
+     f.source==='cadastro'?' (cadastro Raven)':'';
+   pair.append(make('dt','',f.label),make('dd','',f.value+suffix));dl.append(pair);
+  }
+  root.append(dl);
+  root.append(make('p','raven92-muted',sheet.warning));
+  if(sheet.officialUrl){
+   const source=make('a','raven92-button secondary','Consultar ficha oficial do fabricante ↗');
+   source.href=sheet.officialUrl;source.target='_blank';source.rel='noopener noreferrer';root.append(source);
+  }
   const verify=make('a','raven92-button secondary','Abrir verificador de montagem');verify.href='verificar-pc.html?produto='+encodeURIComponent(id);root.append(verify);
   const related=[...new Map(all.filter(x=>x.category===best.category&&x.partId!==id).map(x=>[x.partId,x])).values()].slice(0,6);
   if(related.length)for(const item of related){const a=make('a','raven92-related-link',item.modelName||item.title||item.partId);
