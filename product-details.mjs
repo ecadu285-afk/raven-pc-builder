@@ -1,8 +1,12 @@
+import {verifiedSpecFor} from './raven-specs-verified.mjs';
 /** Raven 6.7 — detalhes somente de fichas já cadastradas ou do próprio anúncio.
  * Nenhum atributo desconhecido é completado por IA nem por estimativa de outro produto.
  */
 const allowed=(value)=>typeof value==='string'&&value.trim()?value.trim():null;
 export function productFacts(offer={},reference=null){
+ const official=verifiedSpecFor(offer);
+ if(official)return official.facts;
+
  const p=reference&&reference.id===offer.partId&&reference.conceptual!==true?reference:null;
  const type=offer.category||p?.category||'other';
  const result=[];
