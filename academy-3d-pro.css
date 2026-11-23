@@ -1,0 +1,38 @@
+/* Raven Academy · 3D Pro Lab. Escopo exclusivo da página de aprendizado. */
+.rva-pro-toolbar{display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:12px;margin:0 0 14px;padding:14px;border-radius:15px;border:1px solid #41604b;background:linear-gradient(120deg,#13271d,#101a18)}
+.rva-pro-modes{display:flex;gap:7px;flex-wrap:wrap}
+.rva-pro-mode,.rva-pro-tool{font:inherit;min-height:39px;border-radius:10px;padding:9px 12px;color:#d5ebd7;background:#1a2a20;border:1px solid #43624b;font-size:12px;font-weight:800;display:inline-flex;align-items:center;justify-content:center;gap:7px;transition:background .18s,border-color .18s}
+.rva-pro-mode:hover,.rva-pro-tool:hover{background:#304b37;border-color:#9bd780}
+.rva-pro-mode[aria-pressed="true"],.rva-pro-tool[aria-pressed="true"]{background:#baff63;color:#17220e;border-color:#baff63}
+.rva-pro-tools{display:flex;gap:7px;flex-wrap:wrap}
+.rva-pro-tool:focus-visible,.rva-pro-mode:focus-visible,.rva-part-button:focus-visible{outline:3px solid #c6ff86;outline-offset:2px}
+#rvaPanelLab .viewer{background:radial-gradient(circle at 45% 36%,#27423b 0%,#0d1f1b 49%,#07120f 100%);min-height:500px;overflow:hidden}
+#rvaPanelLab .viewer::after{content:"";position:absolute;inset:0;pointer-events:none;background:linear-gradient(90deg,#0d1d1a22,transparent 40%,#11282027);z-index:0}
+#rvaPanelLab #stage{z-index:1;touch-action:pan-y}
+#rvaPanelLab #stage canvas{display:block;max-width:100%}
+#rvaPanelLab .viewer-head{z-index:3}
+#rvaPanelLab .viewer-head span{background:#0c1a16e8;border:1px solid #5b8265;backdrop-filter:blur(8px);color:#ddffd1;font-weight:800}
+#rvaPanelLab .viewer-footer{z-index:3}
+#rvaPanelLab .viewer-footer small{font-size:11px;line-height:1.5}
+.rva-pro-inspector{border:1px solid #4f7351;background:linear-gradient(130deg,#1c3829,#182a23);padding:15px;border-radius:12px;display:grid;gap:6px;margin:6px 0 2px}
+.rva-pro-inspector .eyebrow{font-size:10px}
+.rva-pro-inspector strong{font-size:16px;color:#e9ffe8}
+.rva-pro-inspector p{margin:0;font-size:12px;line-height:1.6;color:#cee4ce}
+.rva-pro-inspector a{display:inline-flex;justify-content:flex-start;width:max-content;min-height:26px;align-items:center;font-size:12px;font-weight:800;color:#baff63;text-decoration:underline;text-underline-offset:3px}
+.rva-part-panel{border:1px solid #3e5847;border-radius:13px;background:#101e18;padding:15px 18px;margin-top:14px}
+.rva-part-panel h3{margin:0 0 12px;font-size:14px;letter-spacing:.015em}
+.rva-part-legend{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:8px}
+.rva-part-button{border:1px solid #3d6149;border-radius:9px;color:#d9f3de;background:#192c20;min-height:40px;padding:10px;font-size:12px;font-weight:750;text-align:center;white-space:normal}
+.rva-part-button:hover{background:#2a4932}
+.rva-part-button[aria-pressed="true"]{background:#284830;color:#beff89;border-color:#baff63;box-shadow:inset 0 -2px #baff63}
+.rva-pro-usage{color:#b2cbb7;font-size:11px;line-height:1.6;margin:11px 0 0}
+.rva-lab-note{margin:12px 0 0;font-size:11px;color:#b8cabc;line-height:1.65}
+#rvaPanelLab .lesson-head{background:linear-gradient(110deg,#1b3428,#121d1a)}
+#rvaPanelLab .reader{background:#14241c}
+#rvaPanelLab .lesson-main{grid-template-columns:minmax(0,1.12fr) minmax(0,.88fr)}
+#rvaPanelLab .rva-pro-notice{padding:10px 12px;border-radius:10px;background:#12271e;border:1px solid #3f694b;color:#bbe6b8;font-size:11px;margin:0 0 14px}
+@media(max-width:1060px){#rvaPanelLab .lesson-main{grid-template-columns:1fr}#rvaPanelLab .viewer{min-height:490px}}
+@media(min-width:1061px) and (max-width:1280px){#rvaPanelLab .lesson-main{grid-template-columns:1fr}#rvaPanelLab .viewer{min-height:460px}}
+@media(max-width:680px){.rva-pro-toolbar{align-items:stretch}.rva-pro-modes,.rva-pro-tools{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));width:100%}.rva-pro-mode,.rva-pro-tool{min-width:0}#rvaPanelLab .viewer{min-height:390px}.rva-part-legend{grid-template-columns:repeat(2,minmax(0,1fr))}}
+@media(max-width:440px){#rvaPanelLab .viewer{min-height:330px}.rva-part-panel{padding:12px}.rva-pro-inspector{padding:12px}.rva-pro-mode,.rva-pro-tool{font-size:11px}}
+@media(prefers-reduced-motion:reduce){.rva-pro-mode,.rva-pro-tool{transition:none}}
