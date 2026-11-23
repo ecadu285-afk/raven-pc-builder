@@ -1,19 +1,71 @@
 <!doctype html>
-<html lang="pt-BR"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><meta name="theme-color" content="#0a1010"><meta name="description" content="Guia básico de PC: componentes, montagem, limpeza segura e diagnóstico com simulação 3D."><title>RAVEN Academy | Mini curso de montagem e manutenção</title>
+<html lang="pt-BR"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><meta name="theme-color" content="#0a1010"><meta name="description" content="Aprenda na Raven Academy com 10 videoaulas, laboratório 3D interativo e exercícios de hardware e manutenção."><title>RAVEN Academy | Videoaulas, laboratório 3D e exercícios</title>
 <style>
 :root{color-scheme:dark;--bg:#090e0d;--surface:#111b17;--panel:#17231c;--border:#345042;--lime:#baff63;--text:#edf8ef;--muted:#afc2b3;font-family:Inter,system-ui,-apple-system,Segoe UI,Arial,sans-serif}*{box-sizing:border-box}html{scroll-behavior:smooth}body{margin:0;background:radial-gradient(ellipse at 70% 0%,#1d3b26,transparent 42%),var(--bg);color:var(--text);line-height:1.55}a{color:inherit;text-decoration:none}button{cursor:pointer;font:inherit}a:focus-visible,button:focus-visible,select:focus-visible{outline:3px solid var(--lime);outline-offset:3px}.skip{position:absolute;left:10px;top:-80px;padding:10px;background:white;color:black;z-index:50}.skip:focus{top:10px}.wrap{max-width:1300px;margin:auto;padding-left:24px;padding-right:24px}.shell{border-bottom:1px solid #273b2d;background:#0b1410ec;backdrop-filter:blur(15px);position:sticky;top:0;z-index:50}header{max-width:1300px;margin:auto;padding:17px 24px;display:flex;justify-content:space-between;align-items:center;gap:14px;flex-wrap:wrap}.brand{font-size:17px;font-weight:900;letter-spacing:.07em}.brand b{color:var(--lime)}nav{display:flex;gap:20px;flex-wrap:wrap;align-items:center}nav a{font-size:13px;color:#bed3c2}nav a:hover{color:var(--lime)}.intro{padding-top:68px;padding-bottom:42px}.eyebrow{font-size:11px;text-transform:uppercase;letter-spacing:.18em;color:var(--lime);font-weight:850}h1{font-size:clamp(34px,5vw,58px);line-height:1.07;letter-spacing:-.045em;margin:11px 0 16px;max-width:900px}p{color:var(--muted)}.intro>p{font-size:15px;max-width:790px;line-height:1.75}.notice{max-width:1000px;border:1px solid #57734a;background:#1b2d20;border-radius:12px;padding:14px 17px;color:#d5ebd0;font-size:13px;margin-top:22px}.workspace{display:grid;grid-template-columns:250px minmax(0,1fr);gap:19px;align-items:start;padding-bottom:60px}.sidebar{border:1px solid var(--border);border-radius:16px;background:#101a15;padding:17px;position:sticky;top:99px}.sidebar h2{font-size:13px;text-transform:uppercase;letter-spacing:.13em;margin:5px 0 18px;color:#b0c9b1}.module{width:100%;display:flex;align-items:center;text-align:left;gap:12px;border:1px solid transparent;border-radius:11px;padding:13px 11px;background:transparent;color:#c2d7c7;font-size:13px;margin:4px 0}.module span{border:1px solid #42664b;border-radius:8px;width:29px;height:29px;display:grid;place-items:center;color:var(--lime);font-size:11px;flex-shrink:0}.module:hover,.module.active{border-color:#60874f;background:#1d3323;color:white}.sidebar .progress{height:8px;background:#2d422f;border-radius:15px;overflow:hidden;margin:22px 0 9px}.sidebar .progress b{display:block;background:linear-gradient(90deg,#74b557,var(--lime));height:100%;width:0;transition:width .3s}.sidebar small{font-size:11px;color:#afc2ae}.lesson{min-width:0}.lesson-head{padding:23px;border:1px solid var(--border);background:linear-gradient(130deg,#172820,#101915);border-radius:16px 16px 0 0}.lesson-head .kicker{font-size:11px;color:var(--lime);font-weight:800;letter-spacing:.1em}.lesson-head h2{font-size:clamp(24px,3vw,34px);margin:8px 0}.lesson-head p{margin:0;font-size:14px}.lesson-main{display:grid;grid-template-columns:minmax(0,1.06fr) minmax(0,.94fr);border:1px solid var(--border);border-top:0;border-radius:0 0 16px 16px;overflow:hidden}.viewer{position:relative;min-width:0;background:radial-gradient(ellipse at 50% 48%,#2b3934,#0a1211 67%);min-height:440px;display:flex;flex-direction:column}.viewer-head{position:absolute;z-index:5;top:13px;left:13px;right:13px;display:flex;justify-content:space-between;gap:10px;align-items:center;pointer-events:none}.viewer-head span{font-size:10px;color:#c7f4ad;background:#112017d9;border:1px solid #456142;border-radius:8px;padding:8px 10px}.viewer #stage{position:absolute;inset:0;touch-action:pan-y}#stage canvas{width:100%;height:100%;display:block}#fallback[hidden]{display:none!important}#fallback{position:absolute;inset:20% 12% 23%;display:grid;place-items:center;gap:10px;border:1px dashed #55755a;border-radius:12px;background:#173020;font-size:13px;color:#d5ecc7;text-align:center;padding:20px}.viewer-footer{position:absolute;z-index:5;bottom:15px;left:16px;right:16px;display:flex;justify-content:space-between;gap:10px;align-items:flex-end;pointer-events:none}.viewer-footer small{font-size:11px;color:#c1d5c4;background:#0a1414b8;padding:6px 9px;border-radius:7px}.viewer-footer button{pointer-events:auto;font-size:12px;padding:7px 11px;color:#ecffdf;border:1px solid #5f8350;border-radius:8px;background:#192c1f}.reader{background:#15221b;padding:26px;display:flex;flex-direction:column;gap:12px;min-width:0}.teacher{display:flex;gap:13px;align-items:center;border-bottom:1px solid #345242;padding-bottom:15px}.avatar{width:55px;height:55px;border-radius:17px;background:linear-gradient(140deg,#567851,#182a1d);border:1px solid #6c9d5b;display:grid;place-items:center;flex-shrink:0}.avatar svg{width:37px;height:37px}.teacher strong{display:block;font-size:14px}.teacher small{font-size:11px;color:#b3d3b8}.step-number{font-size:11px;color:var(--lime);font-weight:850;margin-top:6px}.reader h3{font-size:24px;line-height:1.25;margin:0}.reader p{font-size:14px;line-height:1.75;margin:0;white-space:pre-line}.tip{border:1px solid #425b43;padding:12px 14px;border-radius:11px;color:#c6e5ca;background:#1b3023;font-size:12px;line-height:1.55}.tip strong{color:var(--lime)}.controls{display:flex;flex-wrap:wrap;gap:9px;margin-top:auto;padding-top:10px}.action{background:#baff63;border:none;border-radius:9px;padding:12px 16px;color:#11200b;font-weight:850;font-size:13px}.secondary{border:1px solid #4f7057;background:transparent;color:#d8eed8;border-radius:9px;padding:11px 14px;font-weight:700;font-size:12px}.action:disabled,.secondary:disabled{opacity:.45;cursor:not-allowed}.reader .controls button{flex:1 1 145px}.exercises{margin-top:18px;border:1px solid var(--border);border-radius:15px;padding:25px;background:#132019}.exercises h2{font-size:20px;margin:0 0 10px}.question{font-size:14px;color:#d5ead4}.quiz-options{display:flex;flex-direction:column;gap:9px;margin:15px 0}.quiz-options button{display:block;width:100%;text-align:left;padding:12px 14px;border:1px solid #455a45;border-radius:10px;color:#e4f4e0;background:#1b2c20}.quiz-options button:hover{border-color:var(--lime)}.quiz-options button[aria-pressed=true]{background:#314d2e;border-color:var(--lime)}.quiz-status{font-size:13px;min-height:23px}.faq{padding:30px 0 65px}.faq h2{font-size:29px}.faq details{padding:15px 17px;background:#131f18;border:1px solid var(--border);margin:9px 0;border-radius:10px}.faq summary{cursor:pointer;font-weight:700}.faq p{font-size:13px}footer{border-top:1px solid #2f4637;padding:30px 24px;color:#9bafa4;text-align:center;font-size:12px}.visually-hidden{position:absolute;clip:rect(0,0,0,0);clip-path:inset(50%);height:1px;width:1px;overflow:hidden;white-space:nowrap}.little{font-size:11px;color:#b6c8bd}@media(max-width:1060px){.workspace{grid-template-columns:1fr}.sidebar{position:static}.sidebar .modules{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:4px}}@media(max-width:760px){.lesson-main{grid-template-columns:1fr}.viewer{min-height:360px}.reader{padding:23px}.intro{padding-top:45px}.sidebar .modules{grid-template-columns:1fr 1fr}}@media(max-width:440px){.sidebar .modules{grid-template-columns:1fr}.viewer{min-height:320px}.lesson-head{padding:18px}.reader h3{font-size:22px}nav{gap:12px}.reader{padding:18px}}@media(prefers-reduced-motion:reduce){html{scroll-behavior:auto}*{transition:none!important;animation:none!important}}
 </style><link rel="stylesheet" href="raven-theme.css?v=61"><style>.raven-hardware-videos{margin:0 0 55px;padding:23px;border:1px solid #665381;border-radius:18px;background:linear-gradient(120deg,#291e39,#142c24)}.raven-hardware-videos h2{margin:9px 0;font-size:clamp(22px,3vw,29px);color:#f6eeff}.raven-hardware-videos p{color:#d0c4dc}.raven-video-cards{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:12px}.raven-video-cards article{border:1px solid #5a456e;background:#1c1728;border-radius:12px;padding:17px;display:grid;gap:9px}.raven-video-cards strong{font-size:14px}.raven-video-cards small{font-size:12px;color:#cbbdd5}.raven-video-cards a{color:#d7beff;font-size:12px;font-weight:900}@media(max-width:700px){.raven-video-cards{grid-template-columns:1fr}}</style><link rel="stylesheet" href="raven-accent-v7.css?v=7"><style>.raven-next-step{margin:24px 0 44px;padding:clamp(20px,3vw,31px);background:linear-gradient(120deg,#302047,#1b2930);border:1px solid #8461bd;border-radius:17px}.raven-next-step h2{font-size:clamp(23px,3vw,32px);color:#f6edff;margin:10px 0}.raven-next-step p{max-width:730px;color:#d9d0e6;font-size:14px;line-height:1.65}.raven-next-actions{display:flex;flex-wrap:wrap;gap:10px;margin-top:19px}.raven-next-actions a{display:inline-flex;align-items:center;justify-content:center;border-radius:10px;padding:12px 16px;text-decoration:none;font-weight:900;font-size:13px}.raven-next-primary{background:#c6a2ff;color:#1d112f}.raven-next-secondary{background:#251b36;border:1px solid #70588e;color:#f4eaff}@media(max-width:530px){.raven-next-actions{display:grid}.raven-next-actions a{width:100%}}</style><meta property="og:site_name" content="Raven PC Builder"><meta property="og:type" content="website"><meta name="robots" content="index,follow"><link rel="canonical" href="https://ecadu285-afk.github.io/raven-pc-builder/aprender.html">
-<meta property="og:title" content="RAVEN Academy | Mini curso de montagem e manutenção">
-<meta property="og:description" content="Guia básico de PC: componentes, montagem, limpeza segura e diagnóstico com simulação 3D.">
+<meta property="og:title" content="RAVEN Academy | Videoaulas, laboratório 3D e exercícios">
+<meta property="og:description" content="Videoaulas, laboratório 3D e testes de hardware na Raven Academy.">
 <meta property="og:url" content="https://ecadu285-afk.github.io/raven-pc-builder/aprender.html">
 <meta name="twitter:card" content="summary">
-<link rel="stylesheet" href="raven90-ui.css?v=1">
+<link rel="stylesheet" href="raven90-ui.css?v=1"><link rel="stylesheet" href="academy-videos.css?v=1"><link rel="stylesheet" href="academy-tabs.css?v=1">
 </head><body><a class="skip" href="#principal">Ir para aulas</a>
-<div class="shell"><header><a class="brand" href="inicio.html">RAVEN <b>ACADEMY</b></a><nav aria-label="Menu"><a href="inicio.html">Início</a><a href="index.html">Montador 3D</a><a href="produtos.html">Produtos</a><a href="aprender.html" aria-current="page">Hardware 3D</a><a href="produtos.html">Produtos</a><a href="servicos.html">Serviços</a></nav></header></div>
-<main class="wrap" id="principal"><div class="intro"><span class="eyebrow">GUIA GRATUITO / PC, MONTAGEM E LIMPEZA</span><h1>Aprenda a conhecer, montar e <span style="color:var(--lime)">cuidar do seu PC.</span></h1><p>Um guia objetivo para identificar as peças do computador, conferir compatibilidade, acompanhar a montagem e fazer limpeza preventiva. A simulação 3D é esquemática; ela ajuda a visualizar, mas não substitui prática supervisionada e manuais dos fabricantes.</p><div class="notice"><strong>Segurança:</strong> desligue e retire o computador da tomada antes de abrir o gabinete. Nunca abra uma fonte de alimentação nem um monitor: eles podem conter capacitores com carga perigosa mesmo desligados. Se não souber executar uma etapa com segurança, procure orientação técnica.</div></div>
-<section class="raven-course-highlight" aria-label="Guia de hardware"><span class="eyebrow">GUIA GRATUITO · DIRETO AO PONTO</span><h2>Peças, montagem, limpeza e problemas comuns</h2><p>Quatro módulos e uma maquete 3D para aprender o essencial sobre computadores. O curso completo de informática ficará para uma etapa futura, com aulas produzidas pelo próprio estúdio.</p><div class="raven-course-actions"><a class="raven-academy-link" href="produtos.html">Encontrar componentes ↗</a><a class="raven-academy-link" href="servicos.html">Conhecer o PC Studio ↗</a></div></section>
-<div class="workspace">
-<aside class="sidebar" aria-label="Módulos do mini curso"><h2>Trilha de aprendizado</h2><div id="modules" class="modules"></div><div class="progress" aria-label="Progresso dos módulos"><b id="progress"></b></div><small id="progressText">0 de 4 módulos concluídos</small><p class="little">O progresso é salvo neste navegador. Não emite certificado profissional.</p></aside>
+<div class="shell"><header><a class="brand" href="inicio.html">RAVEN <b>ACADEMY</b></a><nav aria-label="Menu"><a href="inicio.html">Início</a><a href="#videoaulas">Videoaulas</a><a href="#laboratorio3d">Hardware 3D</a><a href="#exercicios">Exercícios</a><a href="index.html">Montador 3D</a><a href="produtos.html">Produtos</a><a href="servicos.html">Serviços</a></nav></header></div>
+<main class="wrap" id="principal"><div class="intro"><span class="eyebrow">RAVEN ACADEMY / VIDEOAULAS E HARDWARE 3D</span><h1>Aprenda com videoaulas e pratique no <span style="color:var(--lime)">laboratório 3D.</span></h1><p>Assista às videoaulas da Raven Academy no seu ritmo. Depois, explore quatro módulos interativos sobre componentes, montagem, limpeza e diagnóstico. A simulação 3D é esquemática e não substitui prática supervisionada nem os manuais dos fabricantes.</p><div class="notice"><strong>Segurança:</strong> desligue e retire o computador da tomada antes de abrir o gabinete. Nunca abra uma fonte de alimentação nem um monitor: eles podem conter capacitores com carga perigosa mesmo desligados. Se não souber executar uma etapa com segurança, procure orientação técnica.</div></div>
+
+
+<section id="academy-hub" class="rva-hub" aria-labelledby="rvaHubTitle">
+  <div class="rva-hub-top"><div><span class="eyebrow">SUA JORNADA DE APRENDIZADO</span><h2 id="rvaHubTitle">Escolha como deseja aprender</h2>
+  <p>Comece pelas videoaulas, explore a maquete interativa ou teste o que aprendeu. Cada trilha tem progresso independente.</p></div>
+  <span class="rva-hub-note">✓ Progresso salvo neste navegador</span></div>
+  <div class="rva-metrics" aria-label="Resumo do seu progresso">
+    <div class="rva-metric"><span class="rva-metric-label">Videoaulas</span><strong id="rvaStatvideos" class="rva-metric-value">0 / 10</strong><div class="rva-metric-line"><b id="rvaStatBarvideos"></b></div><span class="rva-metric-caption">Marque as aulas assistidas</span></div>
+    <div class="rva-metric"><span class="rva-metric-label">Práticas 3D</span><strong id="rvaStatlab" class="rva-metric-value">0 / 4</strong><div class="rva-metric-line"><b id="rvaStatBarlab"></b></div><span class="rva-metric-caption">Conclua cada módulo prático</span></div>
+    <div class="rva-metric"><span class="rva-metric-label">Avaliações</span><strong id="rvaStatquiz" class="rva-metric-value">0 / 4</strong><div class="rva-metric-line"><b id="rvaStatBarquiz"></b></div><span class="rva-metric-caption">Responda aos quatro testes</span></div>
+  </div>
+  <div id="rvaTabs" class="rva-tablist" role="tablist" aria-label="Seções da Raven Academy">
+    <button id="rvaTabVideos" class="rva-tab" type="button" role="tab" aria-selected="true" aria-controls="rvaPanelVideos" tabindex="0"><span class="rva-tab-icon" aria-hidden="true">▶</span><span><strong>Videoaulas</strong><small>10 aulas · assistir</small></span></button>
+    <button id="rvaTabLab" class="rva-tab" type="button" role="tab" aria-selected="false" aria-controls="rvaPanelLab" tabindex="-1"><span class="rva-tab-icon" aria-hidden="true">◈</span><span><strong>Laboratório 3D</strong><small>4 módulos · praticar</small></span></button>
+    <button id="rvaTabQuiz" class="rva-tab" type="button" role="tab" aria-selected="false" aria-controls="rvaPanelQuiz" tabindex="-1"><span class="rva-tab-icon" aria-hidden="true">✓</span><span><strong>Exercícios</strong><small>4 testes · avaliar</small></span></button>
+  </div>
+</section>
+<div id="rvaPanelVideos" class="rva-tabpanel" role="tabpanel" aria-labelledby="rvaTabVideos">
+<section class="rva-academy" id="videoaulas" aria-labelledby="rvaTitle">
+  <div class="rva-heading">
+    <div><span class="eyebrow">RAVEN ACADEMY · APRENDA POR VÍDEO</span><h2 id="rvaTitle">Sua biblioteca de videoaulas</h2>
+    <p>Dez aulas do acervo da Raven Academy, em ordem. Assista, avance para a próxima aula e marque sua conclusão. Os títulos são provisórios e podem ser atualizados no catálogo.</p></div>
+    <div class="rva-progress-wrap"><strong id="rvaProgressText">0 de 10 aulas concluídas</strong>
+      <div class="rva-progress-track" role="progressbar" aria-label="Progresso das videoaulas" aria-valuemin="0" aria-valuemax="100" aria-valuenow="0"><span id="rvaProgress"></span></div>
+    </div>
+  </div>
+  <div class="rva-layout" id="rvaAcademy">
+    <div class="rva-player-pane">
+      <div class="rva-player"><iframe id="rvaVideo" title="Videoaula da Raven Academy" loading="lazy" allow="autoplay; fullscreen; picture-in-picture" referrerpolicy="strict-origin-when-cross-origin" allowfullscreen></iframe>
+        <div class="rva-player-fallback" id="rvaFallback" hidden>Não foi possível carregar a biblioteca de videoaulas.</div>
+      </div>
+      <div class="rva-player-info">
+        <h3 id="rvaCurrentTitle">Carregando videoaulas…</h3><p id="rvaCurrentDescription">Selecione uma aula para começar.</p>
+        <div class="rva-actions">
+          <button type="button" id="rvaPrev" class="rva-secondary" disabled>← Anterior</button>
+          <button type="button" id="rvaNext" class="rva-secondary" disabled>Próxima aula →</button>
+          <button type="button" id="rvaComplete" class="rva-primary" disabled>Marcar como concluída</button>
+          <a id="rvaOpen" class="rva-secondary" href="https://drive.google.com/" target="_blank" rel="noopener noreferrer">Abrir no Google Drive ↗</a>
+        </div>
+      </div>
+    </div>
+    <aside class="rva-list-pane" aria-label="Lista de videoaulas">
+      <div class="rva-list-header"><strong>Playlist de aulas</strong><small id="rvaCount">Carregando…</small></div>
+      <div class="rva-lesson-list" id="rvaList"></div>
+    </aside>
+  </div>
+  <p class="rva-status" id="rvaStatus" role="status">Carregando a lista de aulas…</p>
+  <p class="rva-note">O progresso das videoaulas é salvo apenas neste navegador, sem certificado ou sincronização com a conta. Para reproduzir, cada vídeo precisa ter permissão de visualização no Google Drive. Caso o player não abra, use “Abrir no Google Drive”.</p>
+</section>
+</div>
+<div id="rvaPanelLab" class="rva-tabpanel" role="tabpanel" aria-labelledby="rvaTabLab" hidden>
+<section class="raven-course-highlight" aria-label="Guia de hardware"><span class="eyebrow">GUIA GRATUITO · DIRETO AO PONTO</span><h2>Peças, montagem, limpeza e problemas comuns</h2><p>Quatro módulos e uma maquete 3D para aprender o essencial sobre computadores, além da trilha de videoaulas disponível acima.</p><div class="raven-course-actions"><a class="raven-academy-link" href="produtos.html">Encontrar componentes ↗</a><a class="raven-academy-link" href="servicos.html">Conhecer o PC Studio ↗</a></div></section>
+<div class="rva-lab-heading"><span class="eyebrow">LABORATÓRIO INTERATIVO</span><h2>Conheça os componentes em 3D</h2><p>Use a maquete para visualizar as peças, siga as cinco etapas de cada módulo e marque a prática como concluída ao terminar.</p></div>
+<div class="workspace" id="laboratorio3d">
+<aside class="sidebar" aria-label="Módulos do laboratório 3D"><h2>Módulos práticos</h2><div id="modules" class="modules"></div><div class="progress" aria-label="Progresso dos módulos"><b id="progress"></b></div><small id="progressText">0 de 4 práticas concluídas</small><p class="little">O progresso é salvo neste navegador. Não emite certificado profissional.</p></aside>
 <div class="lesson">
 <div class="lesson-head"><div id="moduleCount" class="kicker">MÓDULO 01 · FUNDAMENTOS</div><h2 id="moduleTitle">Conhecendo as peças</h2><p id="moduleDescription">Comece pelos componentes que formam um computador.</p></div>
 <div class="lesson-main">
@@ -21,16 +73,26 @@
 <article class="reader">
 <div class="teacher"><span class="avatar" aria-hidden="true"><svg viewBox="0 0 48 48" fill="none"><path d="M10 32 8 15l16-9 16 9-2 17-14 10-14-10Z" stroke="#d1ffa0" stroke-width="2.5"/><path d="M13 24h22M18 24l6 9 6-9" stroke="#d1ffa0" stroke-width="2.5" stroke-linejoin="round"/><circle cx="18" cy="17" r="2" fill="#d1ffa0"/><circle cx="30" cy="17" r="2" fill="#d1ffa0"/></svg></span><div><strong>Guia digital RAVEN</strong><small>Explicação em texto · leitura por voz opcional</small></div></div>
 <span class="step-number" id="stepLabel">ETAPA 1 DE 5</span><h3 id="stepTitle">Vamos começar</h3><p id="stepText"></p><div class="tip" id="stepTip"></div>
-<div class="controls"><button id="prev" type="button" class="secondary">← Anterior</button><button id="next" type="button" class="action">Próxima etapa →</button><button id="speak" type="button" class="secondary">Ouvir explicação</button></div>
+<div class="controls"><button id="prev" type="button" class="secondary">← Anterior</button><button id="next" type="button" class="action">Próxima etapa →</button><button id="speak" type="button" class="secondary">Ouvir explicação</button><button id="rvaLabFinish" type="button" class="action rva-lab-finish" hidden>Concluir esta prática ✓</button></div><p id="rvaLabStatus" class="rva-lab-done" role="status"></p>
 </article></div>
-<section class="exercises"><h2>Teste rápido do módulo</h2><p id="question" class="question"></p><div id="choices" class="quiz-options" role="group" aria-label="Alternativas do teste"></div><p id="feedback" class="quiz-status" role="status"></p></section>
+
 </div></div>
+</div>
+<div id="rvaPanelQuiz" class="rva-tabpanel" role="tabpanel" aria-labelledby="rvaTabQuiz" hidden>
+<section class="rva-quiz-wrap" id="exercicios">
+  <span class="eyebrow">RAVEN ACADEMY · TESTE SEUS CONHECIMENTOS</span><h2>Desafios de hardware e manutenção</h2>
+  <p>Escolha um dos módulos, leia a pergunta e marque a alternativa correta. Cada teste concluído aparece no painel de progresso.</p>
+  <div class="rva-quiz-modules" id="rvaQuizModules" aria-label="Selecionar teste do módulo"></div>
+  <section class="exercises" aria-labelledby="rvaQuizMeta"><div id="rvaQuizMeta" class="rva-quiz-meta">MÓDULO 01</div><h2>Teste rápido do módulo</h2><p id="question" class="question"></p><div id="choices" class="quiz-options" role="group" aria-label="Alternativas do teste"></div><p id="feedback" class="quiz-status" role="status"></p><div class="rva-quiz-controls"><button id="rvaQuizPrev" type="button">← Teste anterior</button><button id="rvaQuizNext" type="button">Próximo teste →</button></div></section>
+  <p class="rva-quiz-help">Estas são atividades introdutórias, não avaliações certificadoras. Responder corretamente ao teste não marca a prática 3D como concluída.</p>
+</section>
+</div>
 <section class="faq"><span class="eyebrow">ANTES DE PRATICAR</span><h2>Dúvidas importantes</h2>
 <details><summary>Posso usar qualquer memória RAM em qualquer placa-mãe?</summary><p>Não. DDR3, DDR4 e DDR5 têm encaixes diferentes. A placa-mãe e a CPU precisam suportar a geração escolhida. Mesmo quando o encaixe é igual, confira capacidade, frequência, compatibilidade e BIOS no manual.</p></details>
 <details><summary>Posso abrir a fonte para limpar?</summary><p>Não. Fontes têm componentes capazes de armazenar carga perigosa após o desligamento. Limpe apenas as áreas externas e a entrada/saída de ar sem abrir o equipamento; manutenção interna deve ser feita por profissional qualificado.</p></details>
 <details><summary>O visualizador 3D mostra o modelo exato da peça vendida?</summary><p>Não. Ele representa o formato e a função das peças para fins didáticos. Fotos, dimensões, conectores e garantias devem ser conferidos nas páginas oficiais dos anúncios e fabricantes.</p></details>
 <details><summary>Depois de fazer o mini curso já posso prestar manutenção profissional?</summary><p>É uma introdução. Comece com estudo, prática supervisionada, ferramentas adequadas, testes e documentação; não prometa serviços que ainda não sabe executar. Para reparos elétricos, procure formação profissional específica.</p></details>
-</section><section class="raven-hardware-videos" aria-labelledby="raven-videos-title"><span class="eyebrow">PRÓXIMAS DEMONSTRAÇÕES</span><h2 id="raven-videos-title">Vídeos de montagem e manutenção</h2><p>Esta área está reservada aos vídeos próprios do PC Studio. Quando forem publicados, os links aparecerão aqui.</p><div id="ravenVideoList" class="raven-video-cards"><article><strong>Montagem completa</strong><small>Vídeo em preparação</small></article><article><strong>Limpeza segura</strong><small>Vídeo em preparação</small></article><article><strong>Conhecendo componentes</strong><small>Vídeo em preparação</small></article></div></section><section class="raven-next-step" aria-labelledby="next-step-title"><span class="eyebrow">PRÓXIMO PASSO</span><h2 id="next-step-title">Agora é hora de montar seu PC.</h2><p>Use o que aprendeu sobre processador, placa-mãe, RAM, fonte e armazenamento para testar uma configuração no montador 3D. Depois, compare as peças disponíveis para comprar.</p><div class="raven-next-actions"><a class="raven-next-primary" href="index.html">Montar meu PC em 3D ›</a><a class="raven-next-secondary" href="produtos.html">Pesquisar peças ›</a></div></section></main><footer>© 2026 RAVEN Creatives Studios · Conteúdo educacional introdutório · <a href="inicio.html">Voltar ao início</a> · <a href="afiliados.html">Transparência</a></footer>
+</section><section class="raven-next-step" aria-labelledby="next-step-title"><span class="eyebrow">PRÓXIMO PASSO</span><h2 id="next-step-title">Agora é hora de montar seu PC.</h2><p>Use o que aprendeu sobre processador, placa-mãe, RAM, fonte e armazenamento para testar uma configuração no montador 3D. Depois, compare as peças disponíveis para comprar.</p><div class="raven-next-actions"><a class="raven-next-primary" href="index.html">Montar meu PC em 3D ›</a><a class="raven-next-secondary" href="produtos.html">Pesquisar peças ›</a></div></section></main><footer>© 2026 RAVEN Creatives Studios · Conteúdo educacional introdutório · <a href="inicio.html">Voltar ao início</a> · <a href="afiliados.html">Transparência</a></footer>
 <script type="module">
 const chapters=[
 {id:'parts',name:'Peças do computador',description:'Entenda o papel de cada componente e o que verificar antes de comprar.',steps:[
@@ -56,15 +118,103 @@ const chapters=[
 ],quiz:{q:'Durante a limpeza, é seguro abrir a fonte de alimentação?',options:['Sim, desde que esteja desligada','Não, pode armazenar carga perigosa','Sim, se for fonte de baixa potência'],answer:1,why:'Fontes podem manter carga em capacitores. Sua abertura exige assistência qualificada.'}},
 {"id":"diagnostics","name":"Problemas comuns e cuidados","description":"Verifique falhas simples, entenda o que fazer e quando buscar assistência.","steps":[{"title":"O PC não liga","focus":"psu","text":"Confira a tomada, o cabo externo, o botão de energia e, com a alimentação desconectada, os conectores acessíveis. Se houver cheiro de queimado, cabo danificado ou faíscas, interrompa o uso e procure orientação técnica.","tip":"Nunca abra a fonte de alimentação. Ela pode reter carga perigosa mesmo desconectada."},{"title":"Liga, mas não aparece imagem","focus":"gpu","text":"Confirme se o monitor está ligado, se a entrada HDMI ou DisplayPort está selecionada e se o cabo está na saída correta. Computadores com CPU sem vídeo integrado geralmente exigem a saída de vídeo da GPU dedicada.","tip":"Não retire RAM ou placa de vídeo com o computador conectado à energia."},{"title":"O computador está lento","focus":"ram","text":"Observe o uso de CPU, memória e disco no sistema. Revise programas que iniciam automaticamente, espaço de armazenamento e atualizações. Um SSD pode acelerar carregamentos, mas nem toda lentidão exige compra de peça.","tip":"Faça backup antes de formatar, alterar partições ou reinstalar o sistema."},{"title":"Muito calor ou barulho","focus":"fan","text":"Verifique entrada e saída de ar, filtros obstruídos, ruídos incomuns e temperaturas com ferramentas adequadas. O valor aceitável depende do componente e da carga de trabalho.","tip":"Se uma ventoinha falhar ou houver cheiro anormal, desligue e procure orientação profissional."},{"title":"Evite perdas e planeje upgrades","focus":"ssd","text":"Salve cópias de documentos importantes e mantenha sistema e programas atualizados. Antes de um upgrade, confira modelo da placa-mãe, soquete, BIOS, tipo de RAM, fonte, armazenamento e espaço do gabinete.","tip":"Peças usadas e anúncios de lojas precisam ter modelo, condição, frete, garantia e disponibilidade conferidos."}],"quiz":{"q":"Qual é a melhor forma de começar a verificar um PC com problema?","options":["Trocar as peças sem testar","Registrar os sintomas e fazer verificações seguras","Formatar sem salvar os arquivos"],"answer":1,"why":"Observar e testar uma hipótese por vez evita gastos, danos e perda de dados."}}
 ];
-const $=id=>document.getElementById(id);let chapter=0,step=0,selected=null,sceneApi=null,voiceOn=false;
-const saveKey='raven-academy-pc-basico-v2';let passed={};try{const stored=JSON.parse(localStorage.getItem(saveKey)||'{}');if(stored&&typeof stored==='object'&&!Array.isArray(stored))passed=stored}catch{}
-function save(){try{localStorage.setItem(saveKey,JSON.stringify(passed))}catch{}}
+
+const $=id=>document.getElementById(id);
+let chapter=0,step=0,selected=null,sceneApi=null,voiceOn=false;
+const saveKey='raven-academy-pc-basico-v2';
+const labKey='raven-academy-lab-praticas-v1';
+function savedObject(key){try{const val=JSON.parse(localStorage.getItem(key)||'{}');return val&&typeof val==='object'&&!Array.isArray(val)?val:{}}catch{return {}}}
+let passed=savedObject(saveKey);
+let labDone=savedObject(labKey);
+function saveObject(key,obj){try{localStorage.setItem(key,JSON.stringify(obj))}catch{}}
+function announceProgress(){window.dispatchEvent(new Event('ravenAcademyProgress'))}
 function setNarration(off=true){if(off&&'speechSynthesis'in window){window.speechSynthesis.cancel();voiceOn=false;$('speak').textContent='Ouvir explicação'}}
-function renderModules(){const root=$('modules');root.replaceChildren();chapters.forEach((c,i)=>{const b=document.createElement('button');b.type='button';b.className='module'+(chapter===i?' active':'');b.setAttribute('aria-current',chapter===i?'step':'false');const n=document.createElement('span');n.textContent=passed[c.id]?'✓':String(i+1).padStart(2,'0');b.append(n,document.createTextNode(c.name));b.onclick=()=>{chapter=i;step=0;selected=null;setNarration();render()};root.append(b)});const count=Object.values(passed).filter(Boolean).length;$('progress').style.width=(count/chapters.length*100)+'%';$('progressText').textContent=count+' de '+chapters.length+' módulos concluídos';}
-function renderQuiz(c){const q=c.quiz;$('question').textContent=q.q;const root=$('choices');root.replaceChildren();q.options.forEach((choice,i)=>{const b=document.createElement('button');b.type='button';b.textContent=String.fromCharCode(65+i)+'. '+choice;b.setAttribute('aria-pressed',selected===i?'true':'false');b.onclick=()=>{selected=i;renderQuiz(c);if(i===q.answer){passed[c.id]=true;save();renderModules()}};root.append(b)});$('feedback').textContent=selected===null?'Selecione uma alternativa para testar seus conhecimentos.':selected===q.answer?'Resposta correta. '+q.why:'Ainda não. '+q.why;}
-function render(){const c=chapters[chapter],x=c.steps[step];$('moduleCount').textContent='MÓDULO '+String(chapter+1).padStart(2,'0')+' · INTRODUÇÃO';$('moduleTitle').textContent=c.name;$('moduleDescription').textContent=c.description;$('stepLabel').textContent='ETAPA '+(step+1)+' DE '+c.steps.length;$('stepTitle').textContent=x.title;$('stepText').textContent=x.text;$('stepTip').replaceChildren();const title=document.createElement('strong');title.textContent='Atenção: ';$('stepTip').append(title,document.createTextNode(x.tip));$('partLabel').textContent=({case:'Gabinete',board:'Placa-mãe',cpu:'Processador',ram:'RAM',gpu:'Placa de vídeo',ssd:'Armazenamento',fan:'Ventoinhas'})[x.focus]||'Montagem';$('prev').disabled=chapter===0&&step===0;$('next').textContent=step===c.steps.length-1?'Próximo módulo →':'Próxima etapa →';sceneApi?.focus(x.focus);renderModules();renderQuiz(c);}
+function renderModules(){
+ const root=$('modules');root.replaceChildren();
+ chapters.forEach((c,i)=>{
+  const b=document.createElement('button');b.type='button';
+  b.className='module'+(chapter===i?' active':'');
+  b.setAttribute('aria-current',chapter===i?'step':'false');
+  const n=document.createElement('span');n.textContent=labDone[c.id]===true?'✓':String(i+1).padStart(2,'0');
+  b.append(n,document.createTextNode(c.name));
+  b.onclick=()=>{chapter=i;step=0;selected=null;setNarration();render()};
+  root.append(b);
+ });
+ const count=chapters.filter(c=>labDone[c.id]===true).length;
+ $('progress').style.width=(count/chapters.length*100)+'%';
+ $('progressText').textContent=count+' de '+chapters.length+' práticas concluídas';
+ announceProgress();
+}
+function renderQuizNavigation(){
+ const root=$('rvaQuizModules');root.replaceChildren();
+ chapters.forEach((c,i)=>{
+  const b=document.createElement('button');b.type='button';
+  b.setAttribute('aria-pressed',chapter===i?'true':'false');
+  if(passed[c.id]===true)b.classList.add('is-done');
+  const strong=document.createElement('strong'),small=document.createElement('small');
+  strong.textContent=String(i+1).padStart(2,'0')+' · '+c.name;
+  small.textContent=passed[c.id]===true?'✓ Teste concluído':'Responder teste';
+  b.append(strong,small);
+  b.onclick=()=>{chapter=i;step=0;selected=null;setNarration();render()};
+  root.append(b);
+ });
+ $('rvaQuizMeta').textContent='MÓDULO '+String(chapter+1).padStart(2,'0')+' DE '+String(chapters.length).padStart(2,'0');
+ $('rvaQuizPrev').disabled=chapter===0;
+ $('rvaQuizNext').disabled=chapter===chapters.length-1;
+}
+function renderQuiz(c){
+ const q=c.quiz;
+ $('question').textContent=q.q;
+ const root=$('choices');root.replaceChildren();
+ q.options.forEach((choice,i)=>{
+  const b=document.createElement('button');b.type='button';
+  b.textContent=String.fromCharCode(65+i)+'. '+choice;
+  b.setAttribute('aria-pressed',selected===i?'true':'false');
+  b.onclick=()=>{
+   selected=i;
+   if(i===q.answer){passed[c.id]=true;saveObject(saveKey,passed)}
+   renderQuiz(c);renderQuizNavigation();announceProgress();
+  };
+  root.append(b);
+ });
+ $('feedback').textContent=selected===null
+  ?(passed[c.id]===true?'Teste já concluído neste navegador. Você pode responder novamente.':'Selecione uma alternativa para testar seus conhecimentos.')
+  :selected===q.answer?'Resposta correta. '+q.why:'Ainda não. '+q.why;
+}
+function render(){
+ const c=chapters[chapter],x=c.steps[step];
+ $('moduleCount').textContent='MÓDULO '+String(chapter+1).padStart(2,'0')+' · INTRODUÇÃO';
+ $('moduleTitle').textContent=c.name;
+ $('moduleDescription').textContent=c.description;
+ $('stepLabel').textContent='ETAPA '+(step+1)+' DE '+c.steps.length;
+ $('stepTitle').textContent=x.title;
+ $('stepText').textContent=x.text;
+ $('stepTip').replaceChildren();
+ const title=document.createElement('strong');title.textContent='Atenção: ';
+ $('stepTip').append(title,document.createTextNode(x.tip));
+ $('partLabel').textContent=({case:'Gabinete',board:'Placa-mãe',cpu:'Processador',ram:'RAM',gpu:'Placa de vídeo',ssd:'Armazenamento',fan:'Ventoinhas'})[x.focus]||'Montagem';
+ const lastStep=step===c.steps.length-1;
+ $('prev').disabled=chapter===0&&step===0;
+ $('next').disabled=lastStep&&chapter===chapters.length-1;
+ $('next').textContent=lastStep?'Próximo módulo →':'Próxima etapa →';
+ $('rvaLabFinish').hidden=!lastStep;
+ $('rvaLabFinish').textContent=labDone[c.id]===true?'✓ Prática concluída · desfazer':'✓ Concluir esta prática';
+ $('rvaLabFinish').setAttribute('aria-pressed',labDone[c.id]===true?'true':'false');
+ $('rvaLabStatus').textContent=labDone[c.id]===true?'Você concluiu esta prática neste navegador.':'Conclua as cinco etapas para marcar esta prática.';
+ sceneApi?.focus(x.focus);
+ renderModules();renderQuiz(c);renderQuizNavigation();
+}
+$('rvaLabFinish').onclick=()=>{
+ const c=chapters[chapter];
+ if(step!==c.steps.length-1)return;
+ if(labDone[c.id]===true)delete labDone[c.id];else labDone[c.id]=true;
+ saveObject(labKey,labDone);render();
+};
 $('prev').onclick=()=>{setNarration();if(step>0)step--;else if(chapter>0){chapter--;step=chapters[chapter].steps.length-1}selected=null;render()};
-$('next').onclick=()=>{setNarration();if(step<chapters[chapter].steps.length-1)step++;else{chapter=(chapter+1)%chapters.length;step=0}selected=null;render()};
+$('next').onclick=()=>{setNarration();if(step<chapters[chapter].steps.length-1)step++;else if(chapter<chapters.length-1){chapter++;step=0}selected=null;render()};
+$('rvaQuizPrev').onclick=()=>{if(chapter>0){chapter--;step=0;selected=null;setNarration();render()}};
+$('rvaQuizNext').onclick=()=>{if(chapter<chapters.length-1){chapter++;step=0;selected=null;setNarration();render()}};
+
 $('speak').onclick=()=>{if(!('speechSynthesis'in window)||!('SpeechSynthesisUtterance'in window)){ $('feedback').textContent='A leitura por voz não está disponível neste navegador.';return;}if(voiceOn){setNarration();return}setNarration();const x=chapters[chapter].steps[step];const u=new SpeechSynthesisUtterance(x.title+'. '+x.text+' Atenção: '+x.tip);u.lang='pt-BR';u.rate=.93;u.onend=()=>{voiceOn=false;$('speak').textContent='Ouvir explicação'};u.onerror=()=>{voiceOn=false;$('speak').textContent='Ouvir explicação'};voiceOn=true;$('speak').textContent='Parar leitura';window.speechSynthesis.speak(u)};
 window.addEventListener('pagehide',()=>setNarration());
 render();
@@ -99,12 +249,10 @@ async function initializeThree(){
  renderer.domElement.addEventListener('pointermove',e=>{if(!drag)return;yaw+=(e.clientX-px)*.008;pitch=Math.max(-.5,Math.min(.6,pitch+(e.clientY-py)*.006));px=e.clientX;py=e.clientY});
  renderer.domElement.addEventListener('wheel',e=>{e.preventDefault();distance=Math.max(3.4,Math.min(11,distance+e.deltaY*.007))},{passive:false});
  $('resetCamera').onclick=()=>{yaw=-.4;pitch=.15;distance=5.8};
- let then=0;function frame(t){if(!active)return;requestAnimationFrame(frame);if(document.hidden)return;const dt=Math.min(.05,(t-then)/1000||.016);then=t;if(!drag&&!reduced)yaw+=dt*.06;const ease=Math.min(1,dt*6);viewYaw+=(yaw-viewYaw)*ease;viewPitch+=(pitch-viewPitch)*ease;viewDistance+=(distance-viewDistance)*ease;root.rotation.y=viewYaw;root.rotation.x=viewPitch;camera.position.set(0,.7,viewDistance);camera.lookAt(0,0,0);renderer.render(scene,camera)}requestAnimationFrame(frame);
+ let then=0;function frame(t){if(!active)return;requestAnimationFrame(frame);if(document.hidden || !host.offsetParent)return;const dt=Math.min(.05,(t-then)/1000||.016);then=t;if(!drag&&!reduced)yaw+=dt*.06;const ease=Math.min(1,dt*6);viewYaw+=(yaw-viewYaw)*ease;viewPitch+=(pitch-viewPitch)*ease;viewDistance+=(distance-viewDistance)*ease;root.rotation.y=viewYaw;root.rotation.x=viewPitch;camera.position.set(0,.7,viewDistance);camera.lookAt(0,0,0);renderer.render(scene,camera)}requestAnimationFrame(frame);
  sceneApi={focus:updateFocus};updateFocus(chapters[chapter].steps[step].focus);
  window.addEventListener('pagehide',()=>{active=false;ro?.disconnect();renderer.dispose()},{once:true});
 }
 initializeThree();
-</script><script type="module">
-(async()=>{const root=document.getElementById('ravenVideoList');if(!root)return;try{const response=await fetch('./videos.json',{cache:'no-store'});if(!response.ok)return;const data=await response.json();if(!Array.isArray(data.videos))return;const cards=[];for(const item of data.videos.slice(0,6)){if(!item||typeof item.title!=='string')continue;const card=document.createElement('article'),title=document.createElement('strong'),status=document.createElement('small');title.textContent=item.title;card.append(title);let url=null;try{const u=new URL(item.url);if(u.protocol==='https:'&&!u.username&&!u.password&&!u.port&&['youtube.com','www.youtube.com','m.youtube.com','youtu.be'].includes(u.hostname))url=u.href}catch{}if(url){const link=document.createElement('a');link.href=url;link.textContent='Assistir no YouTube ↗';link.target='_blank';link.rel='noopener noreferrer';card.append(link)}else{status.textContent='Vídeo em preparação';card.append(status)}cards.push(card)}if(cards.length)root.replaceChildren(...cards)}catch{}})();
-</script><script defer src="raven90-ui.js?v=1"></script>
+</script><script defer src="raven90-ui.js?v=1"></script><script defer src="academy-videos.js?v=2"></script><script defer src="academy-tabs.js?v=1"></script>
 </body></html>
