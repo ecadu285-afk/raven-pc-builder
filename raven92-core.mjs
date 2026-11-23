@@ -1,3 +1,4 @@
+import {verifiedSpecFor} from './raven-specs-verified.mjs';
 /** Raven 9.2: pesquisa, facetas e identidade — somente dados cadastrados. */
 import {foldTerm} from './catalog-filters.mjs';
 import {trustedOfferUrl,offerAgeDays} from './offer-policy.mjs';
@@ -52,6 +53,8 @@ export function identityAudit(offer,reference=null){
   notice:'Regras de texto, não confirmação de SKU, fabricante ou autenticidade'};
 }
 export function specifications(offer,reference=null){
+ const verified=verifiedSpecFor(offer);
+ if(verified)return {socket:verified.socket,memory:verified.memory,capacity:null,watts:verified.watts,referenceKnown:true,source:'Ficha oficial do fabricante (conferida em '+verified.checkedAt+')',officialUrl:verified.officialUrl,verified:true};
  const p=reference&&reference.id===offer?.partId&&!reference.conceptual?reference:null;
  const hay=String([offer?.modelName,offer?.title].join(' '));
  const memory=(p?.memory||hay.match(/\bDDR[345]\b/i)?.[0]||'').toUpperCase();
