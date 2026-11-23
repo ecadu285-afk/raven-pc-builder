@@ -180,14 +180,19 @@ export async function createAcademy3D({host, fallback, onSelect = () => {}, onSt
     box('fan',.70,.70,.08,x,y,z,M.black);
     ring('fan',.29,x,y,z+.06,M.edge,.025);
     cyl('fan',.055,.07,x,y,z+.12,M.matte);
-    const group=[];
+    // Rotor único: cada pá gira ao redor do eixo, não individualmente.
+    const rotor=new THREE.Group();
+    rotor.position.set(x,y,z+.09);
+    sections.fan.add(rotor);
     for(let j=0;j<7;j++){
       const angle=j*Math.PI*2/7;
-      const blade=box('fan',.105,.26,.024,x+Math.cos(angle)*.135,y+Math.sin(angle)*.135,z+.09,M.fan);
+      const blade=new THREE.Mesh(new THREE.BoxGeometry(.105,.26,.024),M.fan);
+      blade.position.set(Math.cos(angle)*.135,Math.sin(angle)*.135,0);
       blade.rotation.z=-angle+.24;
-      group.push(blade);
+      blade.userData.partId='fan';blade.userData.pickable=true;
+      meshes.push(blade);rotor.add(blade);
     }
-    fans.push({x,y,blades:group});
+    fans.push(rotor);
   }
 
   const highlights = new Map();
@@ -245,7 +250,7 @@ export async function createAcademy3D({host, fallback, onSelect = () => {}, onSt
     if(!['explore','assembly','clean','diagnostics'].includes(next))return mode;
     mode=next;
     // Montagem começa com as peças separadas; outros modos preservam controle do usuário.
-    if(next==='assembly') exploded=true;
+    exploded=next==='assembly';
     if(next==='clean'){focus('fan');}
     if(next==='diagnostics'){focus('psu');}
     onStatus({exploded,autoRotate,mode,focusId});
@@ -334,7 +339,7 @@ export async function createAcademy3D({host, fallback, onSelect = () => {}, onSt
   io?.observe(host);
   resize();
 
-  const clock=new THREE.Clock();
+  const zero=new THREE.Vector3(),focusBounds=new THREE.Box3(),focusCenter=new THREE.Vector3();
   function frame(ms){
     if(!active)return;
     raf=requestAnimationFrame(frame);
@@ -351,22 +356,19 @@ export async function createAcademy3D({host, fallback, onSelect = () => {}, onSt
     viewTarget.lerp(desiredTarget,ease);
     root.rotation.set(pitch,yaw,0);
     for(const [id,group] of Object.entries(sections)){
-      const offset=exploded?targets[id]:new THREE.Vector3();
+      const offset=exploded?targets[id]:zero;
       group.position.lerp(offset,ease);
     }
     // As ventoinhas só giram no modo normal; em limpeza ficam paradas.
     if(!reducedMotion && mode!=='clean'){
-      for(const fan of fans)for(const blade of fan.blades){
-        // Rotação individual sutil, sem prometer simulação mecânica fiel.
-        blade.rotation.z+=dt*.07;
-      }
+      for(const rotor of fans)rotor.rotation.z-=dt*1.55;
     }
     const selected=sections[focusId];
     if(selected){
-      const bounds=new THREE.Box3().setFromObject(selected);
-      if(!bounds.isEmpty()){
-        const center=bounds.getCenter(new THREE.Vector3());
-        desiredTarget.lerp(center,Math.min(1,dt*4));
+      focusBounds.setFromObject(selected);
+      if(!focusBounds.isEmpty()){
+        focusBounds.getCenter(focusCenter);
+        desiredTarget.lerp(focusCenter,Math.min(1,dt*4));
       }
     }
     camera.position.set(viewTarget.x,viewTarget.y+.56,viewTarget.z+distance);
