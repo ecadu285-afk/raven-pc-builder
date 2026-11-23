@@ -52,5 +52,7 @@ jobs:
         run: node tools/raven92-trust.test.mjs
       - name: Verificar ofertas publicadas
         run: node tools/audit-offers.mjs --strict
+      - name: Validar Raven Academy 3D Pro
+        run: node tools/academy-3d-pro.test.mjs
       - name: Verificar links internos e sintaxe
         run: node tools/site-sanity.mjs
