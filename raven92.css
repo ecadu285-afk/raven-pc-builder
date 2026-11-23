@@ -106,3 +106,9 @@
   }
   .market-header .raven92-more-links{position:static;}
 }
+
+/* Raven: ficha compacta quando dados ainda não verificados */
+.offer-technical.raven-spec-pending{border-color:#e5deec;background:#fbf9ff}
+.offer-technical.raven-spec-pending>summary{font-size:12px;color:#665c76;padding:8px 10px}
+.offer-technical.raven-spec-pending>.offer-spec-disclaimer{font-size:11px;line-height:1.4;margin:0;padding:0 10px 8px;display:block}
+.raven-official-spec-link{font-size:12px;display:inline-block;margin:10px 0 6px;color:#53338c;font-weight:700;text-decoration:underline;text-underline-offset:2px}
