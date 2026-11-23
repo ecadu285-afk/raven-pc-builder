@@ -78,8 +78,13 @@ for(const page of ['historico.html','comparar-pcs.html','assistente.html']){
  assert.ok(html.includes('<main'));
 }
 const store=readFileSync(new URL('../storefront-shop.js',import.meta.url),'utf8');
-assert.ok(store.includes('evidenceFor(o,catalog)'));
-assert.ok(store.includes('historico.html?produto='));
+// O catálogo público mudou: a validação de imagem agora usa a variável "offer".
+assert.ok(store.includes('evidenceFor(offer,catalog)'), 'O catálogo deve validar a evidência da foto antes de exibi-la.');
+// A ficha e a comparação permanecem disponíveis nos cartões públicos.
+// O histórico de conferências não é exibido nos cartões: está separado da vitrine.
+assert.ok(store.includes("detailLink.href='produto.html?produto='"), 'Os cartões devem manter link para a ficha do produto.');
+assert.ok(store.includes("compareLink.href='comparar-ofertas.html?produto='"), 'Os cartões devem manter link para comparar ofertas.');
+assert.ok(!store.includes("historico.html?produto="), 'O histórico de conferências não deve aparecer nos cartões públicos.');
 const builder=readFileSync(new URL('../script.js',import.meta.url),'utf8');
 const builderHtml=readFileSync(new URL('../index.html',import.meta.url),'utf8');
 assert.ok(builder.includes('viewer={lowPower('));
