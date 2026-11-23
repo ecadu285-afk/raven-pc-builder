@@ -118,15 +118,103 @@ const chapters=[
 ],quiz:{q:'Durante a limpeza, é seguro abrir a fonte de alimentação?',options:['Sim, desde que esteja desligada','Não, pode armazenar carga perigosa','Sim, se for fonte de baixa potência'],answer:1,why:'Fontes podem manter carga em capacitores. Sua abertura exige assistência qualificada.'}},
 {"id":"diagnostics","name":"Problemas comuns e cuidados","description":"Verifique falhas simples, entenda o que fazer e quando buscar assistência.","steps":[{"title":"O PC não liga","focus":"psu","text":"Confira a tomada, o cabo externo, o botão de energia e, com a alimentação desconectada, os conectores acessíveis. Se houver cheiro de queimado, cabo danificado ou faíscas, interrompa o uso e procure orientação técnica.","tip":"Nunca abra a fonte de alimentação. Ela pode reter carga perigosa mesmo desconectada."},{"title":"Liga, mas não aparece imagem","focus":"gpu","text":"Confirme se o monitor está ligado, se a entrada HDMI ou DisplayPort está selecionada e se o cabo está na saída correta. Computadores com CPU sem vídeo integrado geralmente exigem a saída de vídeo da GPU dedicada.","tip":"Não retire RAM ou placa de vídeo com o computador conectado à energia."},{"title":"O computador está lento","focus":"ram","text":"Observe o uso de CPU, memória e disco no sistema. Revise programas que iniciam automaticamente, espaço de armazenamento e atualizações. Um SSD pode acelerar carregamentos, mas nem toda lentidão exige compra de peça.","tip":"Faça backup antes de formatar, alterar partições ou reinstalar o sistema."},{"title":"Muito calor ou barulho","focus":"fan","text":"Verifique entrada e saída de ar, filtros obstruídos, ruídos incomuns e temperaturas com ferramentas adequadas. O valor aceitável depende do componente e da carga de trabalho.","tip":"Se uma ventoinha falhar ou houver cheiro anormal, desligue e procure orientação profissional."},{"title":"Evite perdas e planeje upgrades","focus":"ssd","text":"Salve cópias de documentos importantes e mantenha sistema e programas atualizados. Antes de um upgrade, confira modelo da placa-mãe, soquete, BIOS, tipo de RAM, fonte, armazenamento e espaço do gabinete.","tip":"Peças usadas e anúncios de lojas precisam ter modelo, condição, frete, garantia e disponibilidade conferidos."}],"quiz":{"q":"Qual é a melhor forma de começar a verificar um PC com problema?","options":["Trocar as peças sem testar","Registrar os sintomas e fazer verificações seguras","Formatar sem salvar os arquivos"],"answer":1,"why":"Observar e testar uma hipótese por vez evita gastos, danos e perda de dados."}}
 ];
-const $=id=>document.getElementById(id);let chapter=0,step=0,selected=null,sceneApi=null,voiceOn=false;
-const saveKey='raven-academy-pc-basico-v2';let passed={};try{const stored=JSON.parse(localStorage.getItem(saveKey)||'{}');if(stored&&typeof stored==='object'&&!Array.isArray(stored))passed=stored}catch{}
-function save(){try{localStorage.setItem(saveKey,JSON.stringify(passed))}catch{}}
+
+const $=id=>document.getElementById(id);
+let chapter=0,step=0,selected=null,sceneApi=null,voiceOn=false;
+const saveKey='raven-academy-pc-basico-v2';
+const labKey='raven-academy-lab-praticas-v1';
+function savedObject(key){try{const val=JSON.parse(localStorage.getItem(key)||'{}');return val&&typeof val==='object'&&!Array.isArray(val)?val:{}}catch{return {}}}
+let passed=savedObject(saveKey);
+let labDone=savedObject(labKey);
+function saveObject(key,obj){try{localStorage.setItem(key,JSON.stringify(obj))}catch{}}
+function announceProgress(){window.dispatchEvent(new Event('ravenAcademyProgress'))}
 function setNarration(off=true){if(off&&'speechSynthesis'in window){window.speechSynthesis.cancel();voiceOn=false;$('speak').textContent='Ouvir explicação'}}
-function renderModules(){const root=$('modules');root.replaceChildren();chapters.forEach((c,i)=>{const b=document.createElement('button');b.type='button';b.className='module'+(chapter===i?' active':'');b.setAttribute('aria-current',chapter===i?'step':'false');const n=document.createElement('span');n.textContent=passed[c.id]?'✓':String(i+1).padStart(2,'0');b.append(n,document.createTextNode(c.name));b.onclick=()=>{chapter=i;step=0;selected=null;setNarration();render()};root.append(b)});const count=Object.values(passed).filter(Boolean).length;$('progress').style.width=(count/chapters.length*100)+'%';$('progressText').textContent=count+' de '+chapters.length+' módulos concluídos';}
-function renderQuiz(c){const q=c.quiz;$('question').textContent=q.q;const root=$('choices');root.replaceChildren();q.options.forEach((choice,i)=>{const b=document.createElement('button');b.type='button';b.textContent=String.fromCharCode(65+i)+'. '+choice;b.setAttribute('aria-pressed',selected===i?'true':'false');b.onclick=()=>{selected=i;renderQuiz(c);if(i===q.answer){passed[c.id]=true;save();renderModules()}};root.append(b)});$('feedback').textContent=selected===null?'Selecione uma alternativa para testar seus conhecimentos.':selected===q.answer?'Resposta correta. '+q.why:'Ainda não. '+q.why;}
-function render(){const c=chapters[chapter],x=c.steps[step];$('moduleCount').textContent='MÓDULO '+String(chapter+1).padStart(2,'0')+' · INTRODUÇÃO';$('moduleTitle').textContent=c.name;$('moduleDescription').textContent=c.description;$('stepLabel').textContent='ETAPA '+(step+1)+' DE '+c.steps.length;$('stepTitle').textContent=x.title;$('stepText').textContent=x.text;$('stepTip').replaceChildren();const title=document.createElement('strong');title.textContent='Atenção: ';$('stepTip').append(title,document.createTextNode(x.tip));$('partLabel').textContent=({case:'Gabinete',board:'Placa-mãe',cpu:'Processador',ram:'RAM',gpu:'Placa de vídeo',ssd:'Armazenamento',fan:'Ventoinhas'})[x.focus]||'Montagem';$('prev').disabled=chapter===0&&step===0;$('next').textContent=step===c.steps.length-1?'Próximo módulo →':'Próxima etapa →';sceneApi?.focus(x.focus);renderModules();renderQuiz(c);}
+function renderModules(){
+ const root=$('modules');root.replaceChildren();
+ chapters.forEach((c,i)=>{
+  const b=document.createElement('button');b.type='button';
+  b.className='module'+(chapter===i?' active':'');
+  b.setAttribute('aria-current',chapter===i?'step':'false');
+  const n=document.createElement('span');n.textContent=labDone[c.id]===true?'✓':String(i+1).padStart(2,'0');
+  b.append(n,document.createTextNode(c.name));
+  b.onclick=()=>{chapter=i;step=0;selected=null;setNarration();render()};
+  root.append(b);
+ });
+ const count=chapters.filter(c=>labDone[c.id]===true).length;
+ $('progress').style.width=(count/chapters.length*100)+'%';
+ $('progressText').textContent=count+' de '+chapters.length+' práticas concluídas';
+ announceProgress();
+}
+function renderQuizNavigation(){
+ const root=$('rvaQuizModules');root.replaceChildren();
+ chapters.forEach((c,i)=>{
+  const b=document.createElement('button');b.type='button';
+  b.setAttribute('aria-pressed',chapter===i?'true':'false');
+  if(passed[c.id]===true)b.classList.add('is-done');
+  const strong=document.createElement('strong'),small=document.createElement('small');
+  strong.textContent=String(i+1).padStart(2,'0')+' · '+c.name;
+  small.textContent=passed[c.id]===true?'✓ Teste concluído':'Responder teste';
+  b.append(strong,small);
+  b.onclick=()=>{chapter=i;step=0;selected=null;setNarration();render()};
+  root.append(b);
+ });
+ $('rvaQuizMeta').textContent='MÓDULO '+String(chapter+1).padStart(2,'0')+' DE '+String(chapters.length).padStart(2,'0');
+ $('rvaQuizPrev').disabled=chapter===0;
+ $('rvaQuizNext').disabled=chapter===chapters.length-1;
+}
+function renderQuiz(c){
+ const q=c.quiz;
+ $('question').textContent=q.q;
+ const root=$('choices');root.replaceChildren();
+ q.options.forEach((choice,i)=>{
+  const b=document.createElement('button');b.type='button';
+  b.textContent=String.fromCharCode(65+i)+'. '+choice;
+  b.setAttribute('aria-pressed',selected===i?'true':'false');
+  b.onclick=()=>{
+   selected=i;
+   if(i===q.answer){passed[c.id]=true;saveObject(saveKey,passed)}
+   renderQuiz(c);renderQuizNavigation();announceProgress();
+  };
+  root.append(b);
+ });
+ $('feedback').textContent=selected===null
+  ?(passed[c.id]===true?'Teste já concluído neste navegador. Você pode responder novamente.':'Selecione uma alternativa para testar seus conhecimentos.')
+  :selected===q.answer?'Resposta correta. '+q.why:'Ainda não. '+q.why;
+}
+function render(){
+ const c=chapters[chapter],x=c.steps[step];
+ $('moduleCount').textContent='MÓDULO '+String(chapter+1).padStart(2,'0')+' · INTRODUÇÃO';
+ $('moduleTitle').textContent=c.name;
+ $('moduleDescription').textContent=c.description;
+ $('stepLabel').textContent='ETAPA '+(step+1)+' DE '+c.steps.length;
+ $('stepTitle').textContent=x.title;
+ $('stepText').textContent=x.text;
+ $('stepTip').replaceChildren();
+ const title=document.createElement('strong');title.textContent='Atenção: ';
+ $('stepTip').append(title,document.createTextNode(x.tip));
+ $('partLabel').textContent=({case:'Gabinete',board:'Placa-mãe',cpu:'Processador',ram:'RAM',gpu:'Placa de vídeo',ssd:'Armazenamento',fan:'Ventoinhas'})[x.focus]||'Montagem';
+ const lastStep=step===c.steps.length-1;
+ $('prev').disabled=chapter===0&&step===0;
+ $('next').disabled=lastStep&&chapter===chapters.length-1;
+ $('next').textContent=lastStep?'Próximo módulo →':'Próxima etapa →';
+ $('rvaLabFinish').hidden=!lastStep;
+ $('rvaLabFinish').textContent=labDone[c.id]===true?'✓ Prática concluída · desfazer':'✓ Concluir esta prática';
+ $('rvaLabFinish').setAttribute('aria-pressed',labDone[c.id]===true?'true':'false');
+ $('rvaLabStatus').textContent=labDone[c.id]===true?'Você concluiu esta prática neste navegador.':'Conclua as cinco etapas para marcar esta prática.';
+ sceneApi?.focus(x.focus);
+ renderModules();renderQuiz(c);renderQuizNavigation();
+}
+$('rvaLabFinish').onclick=()=>{
+ const c=chapters[chapter];
+ if(step!==c.steps.length-1)return;
+ if(labDone[c.id]===true)delete labDone[c.id];else labDone[c.id]=true;
+ saveObject(labKey,labDone);render();
+};
 $('prev').onclick=()=>{setNarration();if(step>0)step--;else if(chapter>0){chapter--;step=chapters[chapter].steps.length-1}selected=null;render()};
-$('next').onclick=()=>{setNarration();if(step<chapters[chapter].steps.length-1)step++;else{chapter=(chapter+1)%chapters.length;step=0}selected=null;render()};
+$('next').onclick=()=>{setNarration();if(step<chapters[chapter].steps.length-1)step++;else if(chapter<chapters.length-1){chapter++;step=0}selected=null;render()};
+$('rvaQuizPrev').onclick=()=>{if(chapter>0){chapter--;step=0;selected=null;setNarration();render()}};
+$('rvaQuizNext').onclick=()=>{if(chapter<chapters.length-1){chapter++;step=0;selected=null;setNarration();render()}};
+
 $('speak').onclick=()=>{if(!('speechSynthesis'in window)||!('SpeechSynthesisUtterance'in window)){ $('feedback').textContent='A leitura por voz não está disponível neste navegador.';return;}if(voiceOn){setNarration();return}setNarration();const x=chapters[chapter].steps[step];const u=new SpeechSynthesisUtterance(x.title+'. '+x.text+' Atenção: '+x.tip);u.lang='pt-BR';u.rate=.93;u.onend=()=>{voiceOn=false;$('speak').textContent='Ouvir explicação'};u.onerror=()=>{voiceOn=false;$('speak').textContent='Ouvir explicação'};voiceOn=true;$('speak').textContent='Parar leitura';window.speechSynthesis.speak(u)};
 window.addEventListener('pagehide',()=>setNarration());
 render();
@@ -161,7 +249,7 @@ async function initializeThree(){
  renderer.domElement.addEventListener('pointermove',e=>{if(!drag)return;yaw+=(e.clientX-px)*.008;pitch=Math.max(-.5,Math.min(.6,pitch+(e.clientY-py)*.006));px=e.clientX;py=e.clientY});
  renderer.domElement.addEventListener('wheel',e=>{e.preventDefault();distance=Math.max(3.4,Math.min(11,distance+e.deltaY*.007))},{passive:false});
  $('resetCamera').onclick=()=>{yaw=-.4;pitch=.15;distance=5.8};
- let then=0;function frame(t){if(!active)return;requestAnimationFrame(frame);if(document.hidden)return;const dt=Math.min(.05,(t-then)/1000||.016);then=t;if(!drag&&!reduced)yaw+=dt*.06;const ease=Math.min(1,dt*6);viewYaw+=(yaw-viewYaw)*ease;viewPitch+=(pitch-viewPitch)*ease;viewDistance+=(distance-viewDistance)*ease;root.rotation.y=viewYaw;root.rotation.x=viewPitch;camera.position.set(0,.7,viewDistance);camera.lookAt(0,0,0);renderer.render(scene,camera)}requestAnimationFrame(frame);
+ let then=0;function frame(t){if(!active)return;requestAnimationFrame(frame);if(document.hidden || !host.offsetParent)return;const dt=Math.min(.05,(t-then)/1000||.016);then=t;if(!drag&&!reduced)yaw+=dt*.06;const ease=Math.min(1,dt*6);viewYaw+=(yaw-viewYaw)*ease;viewPitch+=(pitch-viewPitch)*ease;viewDistance+=(distance-viewDistance)*ease;root.rotation.y=viewYaw;root.rotation.x=viewPitch;camera.position.set(0,.7,viewDistance);camera.lookAt(0,0,0);renderer.render(scene,camera)}requestAnimationFrame(frame);
  sceneApi={focus:updateFocus};updateFocus(chapters[chapter].steps[step].focus);
  window.addEventListener('pagehide',()=>{active=false;ro?.disconnect();renderer.dispose()},{once:true});
 }
