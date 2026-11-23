@@ -105,6 +105,7 @@
     elements.open.href = current.viewUrl;
     elements.previous.disabled = activeIndex === 0;
     elements.next.disabled = activeIndex === lessons.length - 1;
+    elements.complete.disabled = false;
     elements.complete.textContent = completed[current.id] ? '✓ Aula concluída · desfazer' : 'Marcar como concluída';
     elements.complete.setAttribute('aria-pressed', completed[current.id] === true ? 'true' : 'false');
     elements.status.textContent = 'Aula ' + (activeIndex + 1) + ' de ' + lessons.length + '.';
