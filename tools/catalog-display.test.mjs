@@ -5,7 +5,9 @@ import {filterCatalogOffers} from '../catalog-filters.mjs';
 import {publicOffers} from '../offer-policy.mjs';
 const document=JSON.parse(readFileSync(new URL('../offers.json',import.meta.url),'utf8'));
 const source=document.offers;
-const today=new Date('2026-11-17T12:00:00Z');
+// Usar a data de execução: novas ofertas legítimas não podem ser tratadas como futuras
+// só porque o teste foi escrito em novembro de 2026.
+const today=new Date();
 const published=publicOffers(source,today);
 assert.ok(published.length>=80,'Catálogo elegível inesperadamente pequeno');
 assert.ok(source.every(o=>typeof o.category==='string'&&o.category.length>0),'Todo anúncio deve ter categoria');
