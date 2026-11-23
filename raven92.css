@@ -112,3 +112,16 @@
 .offer-technical.raven-spec-pending>summary{font-size:12px;color:#665c76;padding:8px 10px}
 .offer-technical.raven-spec-pending>.offer-spec-disclaimer{font-size:11px;line-height:1.4;margin:0;padding:0 10px 8px;display:block}
 .raven-official-spec-link{font-size:12px;display:inline-block;margin:10px 0 6px;color:#53338c;font-weight:700;text-decoration:underline;text-underline-offset:2px}
+
+/* Raven PC Builder — campos pendentes, legíveis sem sugerir validação técnica. */
+.offer-technical .offer-fact.raven-spec-unconfirmed dd{color:#f4d6a4;font-weight:600}
+.offer-technical .offer-fact dt{overflow-wrap:anywhere}
+.raven92-facts>div.raven-spec-unconfirmed{background:#fcf8f0;border:1px solid #f1e5d3}
+.raven92-facts>div.raven-spec-unconfirmed dd{color:#745e42}
+@media(max-width:650px){
+  .offer-technical .offer-facts{grid-template-columns:1fr 1fr;gap:6px}
+  .offer-technical .offer-fact{font-size:11px}
+}
+@media(max-width:390px){
+  .offer-technical .offer-facts{grid-template-columns:1fr}
+}
