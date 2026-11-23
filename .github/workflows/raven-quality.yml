@@ -15,6 +15,16 @@ on:
 permissions:
   contents: read
 jobs:
+  academy-lab:
+    name: Laboratório 3D Pro — validação isolada
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+      - name: Testar motor, layout e integração Raven Academy 3D Pro
+        run: node tools/academy-3d-pro.test.mjs
   audit:
     runs-on: ubuntu-latest
     steps:
@@ -52,7 +62,5 @@ jobs:
         run: node tools/raven92-trust.test.mjs
       - name: Verificar ofertas publicadas
         run: node tools/audit-offers.mjs --strict
-      - name: Validar Raven Academy 3D Pro
-        run: node tools/academy-3d-pro.test.mjs
       - name: Verificar links internos e sintaxe
         run: node tools/site-sanity.mjs
