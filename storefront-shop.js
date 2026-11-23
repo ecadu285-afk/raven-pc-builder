@@ -8,7 +8,7 @@ import {publicOffers} from './offer-policy.mjs';
 import {publicPriceState} from './price-visibility.mjs';
 import {filterCatalogOffers} from './catalog-filters.mjs';
 import {catalogDisplayEntries} from './catalog-display.mjs';
-import {productFacts,productFactsDescription} from './product-details.mjs';
+import {productFacts,productFactsDescription,productSpecificationSheet} from './product-details.mjs';
 import {verifiedSpecFor} from './raven-specs-verified.mjs';
 import {evidenceFor} from './raven79-intel.mjs';
 import {offerQuality,rankFeaturedGroups} from './raven90-quality.mjs';
@@ -189,30 +189,30 @@ function productCard(item){
  const note=element('p','offer-trust-note','Compra e pagamento na '+partnerName+'. A Raven não processa pedidos.'+(o.affiliate?' Link de afiliado: podemos receber comissão.':''));
  // Diagnósticos e pendências de revisão permanecem nos dados administrativos.
  content.append(partner,title,store,price);
- const officialSpec=verifiedSpecFor(o);
- const detailFacts=productFacts(o,known.get(o.partId));
+ const sheet=productSpecificationSheet(o,known.get(o.partId));
+ const detailFacts=sheet.facts;
  const technical=element('details','offer-technical');
- const technicalSummary=element('summary','',officialSpec?'Ficha oficial verificada ('+detailFacts.length+' dados)':detailFacts.length?'Detalhes e identificação ('+detailFacts.length+')':'Especificações pendentes');
+ const technicalSummary=element('summary','',
+   sheet.status==='official'?'Ficha oficial do modelo ('+detailFacts.length+' dados)':
+   sheet.status==='partial'?'Ficha do produto · dados parciais':
+   'Ficha do produto · a confirmar');
  technical.append(technicalSummary);
- if(detailFacts.length){
-  const list=element('dl','offer-facts');
-  detailFacts.forEach(f=>{const entry=element('div','offer-fact');
-   entry.append(element('dt','',f.label),element('dd','',f.value+(f.source==='título do anúncio'?' · informado no anúncio':'')));
-   list.append(entry);
-  });
-  technical.append(list);
-  if(officialSpec){
-   const source=element('a','raven-official-spec-link','Ver ficha oficial do fabricante ↗');
-   source.href=officialSpec.officialUrl;source.target='_blank';source.rel='noopener noreferrer';
-   technical.append(source);
-   technical.append(element('small','offer-spec-disclaimer','Ficha do modelo, não verificação do anúncio específico. Confirme o código do produto e a compatibilidade antes da compra.'));
-  }else{
-   technical.append(element('small','offer-spec-disclaimer','Dados cadastrados ou declarados no anúncio, ainda não conferidos com o fabricante.'));
-  }
- }else{
-  technical.classList.add('raven-spec-pending');
-  technical.append(element('small','offer-spec-disclaimer','Especificações ainda não verificadas. Confira o modelo na loja.'));
+ const list=element('dl','offer-facts');
+ detailFacts.forEach(f=>{
+  const entry=element('div','offer-fact');
+  if(f.source==='pendente')entry.classList.add('raven-spec-unconfirmed');
+  const provenance=f.source==='anúncio'?' · anúncio':
+    f.source==='cadastro'?' · cadastro Raven':'';
+  entry.append(element('dt','',f.label),element('dd','',f.value+provenance));
+  list.append(entry);
+ });
+ technical.append(list);
+ if(sheet.officialUrl){
+  const link=element('a','raven-official-spec-link','Consultar ficha do fabricante ↗');
+  link.href=sheet.officialUrl;link.target='_blank';link.rel='noopener noreferrer';
+  technical.append(link);
  }
+ technical.append(element('small','offer-spec-disclaimer',sheet.warning));
  // O histórico de conferências não aparece no cartão público.
  const compareLink=element('a','raven91-card-compare','Comparar lojas');
  compareLink.href='comparar-ofertas.html?produto='+encodeURIComponent(o.partId);
